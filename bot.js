@@ -5,14 +5,15 @@ const cheerio = require("cheerio");
 const { getProductCalories } = require("./api/axiosHttpRequest");
 const { Keyboard, Key } = require("telegram-keyboard");
 require("dotenv").config();
-const { con } = require("./database/database");
 const token = process.env.BOT_TOKEN;
 const bot = new TelegramBot(token, { polling: true });
 const { allVariables } = require("./handlers/allVariables");
 const { handlerQueryKeyboard } = require("./handlers/handlerQueryKeyboard");
+const { handlerText } = require("./handlers/handlerText");
 const {
   keyboardAcceptDecline,
   createKeyboard,
+  keyboardForSevenDaysStatistic,
 } = require("./keyboard/bot_keyboards");
 
 let preparedDataForAccept = {};
@@ -22,14 +23,34 @@ const userMessageText = {};
 bot.on("polling_error", (error) => {
   console.log(`[polling_error] ${error.code}: ${error.message}`);
 });
-console.log("Wake up SAMURAI");
+console.log("Wake up SERVER");
+
+bot.onText(/\/start/, (msg) => {
+  bot.sendMessage(
+    msg.chat.id,
+    "Welcome! If you want to find the calories of your dishes, write the name of your dish followed by the grams after /",
+    keyboardForSevenDaysStatistic
+  );
+});
 
 bot.on("message", async (msg, match) => {
   let dishFromMessage = msg.text
     .toLowerCase()
     .match(/((?!(\s?\d))(?!g\s))[a-z]+/g);
 
-  if (/^\//g.test(msg.text)) {
+  // bot.onText(/\/[s]tart/, (msg) => {
+  //   bot.sendMessage(
+  //     msg.chat.id,
+  //     "Welcome! If you want to find the calories of your dishes, write the name of your dish followed by the grams after /",
+  //     keyboardForSevenDaysStatistic
+  //   );
+  // });
+
+  if (msg.text === "Calories Consumed Per Day") {
+    bot.sendMessage(msg.chat.id, await handlerText(msg));
+  }
+
+  if (/^\//g.test(msg.text) && !/\/\b[Ss]tart/g.test(msg.text)) {
     userId = msg.from.id;
 
     userMessageText[userId] = { text: msg.text };
@@ -52,7 +73,6 @@ bot.on("message", async (msg, match) => {
   }
 });
 let result;
-// let userIdFromTelegramm;
 let dishFromRequest;
 let caloriesFromRequestChosenPortion;
 let postAcceptedData;
@@ -60,15 +80,17 @@ let portionFromSource;
 let caloriesPerUserPortion;
 let dishPortionFromUserMessage;
 let nameDishFromRequest;
+
 bot.on("callback_query", async (query) => {
   userId = query.message.chat.id;
-
+  //
+  // console.log(userRequest[userId]["text"][query.data]);
+  //
   if (query.data) {
+    // console.log(query.data);
     if (userRequest?.[userId]?.text?.length) {
-      console.log(userId);
       if (userRequest[userId]["text"].length > 0) {
         if (query.data.match("action")) {
-          console.log("rabotaet");
           result = allVariables(
             query.data,
             userMessageText[userId]["text"],
@@ -80,8 +102,6 @@ bot.on("callback_query", async (query) => {
             ...preparedDataForAccept,
             [userId]: result,
           };
-
-          // return preparedDataForAccept;
         }
         let messageText = handlerQueryKeyboard(
           preparedDataForAccept,
@@ -90,11 +110,6 @@ bot.on("callback_query", async (query) => {
           userRequest[userId]["text"],
           userId
         );
-        // console.log("______");
-        // console.log(messageText);
-        // console.log(messageText["text"]);
-        // console.log(messageText["keyboardAndParseMode"]);
-        // console.log("______");
         bot.sendMessage(
           query.message.chat.id,
           messageText["text"],

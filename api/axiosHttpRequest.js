@@ -2,6 +2,8 @@ const cheerio = require("cheerio");
 const axios = require("axios");
 
 async function getProductCalories(product) {
+  console.log("!!!FIX AXIOS URL FOR DISH CONSISNED MORE THEN ONE WORD");
+  // AD URL WAY FOR COMPLICATED WORDS CONSISTS FROM MORE THEN ONE WORD "https://www.nutracheck.co.uk/CaloriesIn/Product/Search?desc=chiken+thigs"
   const url = `https://www.nutracheck.co.uk/CaloriesIn/Product/Search?desc=${product}`;
   try {
     const response = await axios.get(url);

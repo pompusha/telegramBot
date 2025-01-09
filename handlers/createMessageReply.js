@@ -1,5 +1,8 @@
 // const { allVariablesFinalText } = require("./allVariablesFinalText");
-const { keyboardAcceptDecline } = require("../keyboard/bot_keyboards");
+const {
+  keyboardAcceptDecline,
+  keyboardForSevenDaysStatistic,
+} = require("../keyboard/bot_keyboards");
 function createMessageReply(
   dishPortionFromUserMessage,
   dishFromRequest,
@@ -8,12 +11,6 @@ function createMessageReply(
   caloriesPerUserPortion,
   nameDishFromRequest
 ) {
-  // console.log(dishPortionFromUserMessage);
-  // console.log(dishFromRequest);
-  // console.log(caloriesFromRequestChosenPortion);
-  // console.log(portionFromSource);
-  // console.log(caloriesPerUserPortion);
-
   let strPortionFromSource;
 
   if (portionFromSource) {
@@ -25,6 +22,7 @@ function createMessageReply(
         keyboardAndParseMode: {
           parse_mode: "HTML",
           reply_markup: keyboardAcceptDecline.reply_markup,
+          keyboardForSevenDaysStatistic,
         },
       };
     } else if (/\d+(g|ml)/.test(strPortionFromSource)) {
@@ -42,16 +40,24 @@ function createMessageReply(
         keyboardAndParseMode: {
           parse_mode: "HTML",
           reply_markup: keyboardAcceptDecline.reply_markup,
+          // reply_markup: keyboardForSevenDaysStatistic.reply_markup,
         },
       };
     }
   } else {
+    console.log(
+      "Change message and keyboard here for unusual type of dishes to see what i mean create simple request /white vine tesko 234"
+    );
+    //
+    console.log(dishFromRequest);
     messageReply = dishFromRequest;
     return {
       text: messageReply,
       keyboardAndParseMode: {
         parse_mode: "HTML",
+        reply_markup: keyboardAcceptDecline.reply_markup,
       },
+      //
     };
   }
   // messageReply = "bla";

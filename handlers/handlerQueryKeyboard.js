@@ -1,18 +1,24 @@
-const { allVariables } = require("./allVariables");
+// const { allVariables } = require("./allVariables");
 const { createMessageReply } = require("./createMessageReply");
-const { summOfCallories } = require("./summOfCallories");
-const { keyboardAcceptDecline } = require("../keyboard/bot_keyboards");
+// const { summOfCallories } = require("./summOfCallories");
+const { keyboardForSevenDaysStatistic } = require("../keyboard/bot_keyboards");
+const { insert } = require("../database/insert");
+const { insertAcceptedData } = require("../database/insert");
+const { postAcceptedDataToDatabase } = require("../database/statistic");
 function handlerQueryKeyboard(
   preparedDataForAccept,
   queryData,
   userMessageText,
   userRequest,
-  // queryMessageChatId,
   userId
 ) {
   console.log(
     "!!!!!!!!!!!EBANAT U TEBIA /0 =>0 porcia 1.3 a vidaet 3g isparavit NE ZABYD !!!!!!!!!"
   );
+  console.log(userMessageText);
+  if (userMessageText === "Average Calories (7 Days)") {
+    console.log("send Average Calories (7 Days)");
+  }
   if (/\w+\d/g.test(queryData)) {
     return createMessageReply(
       preparedDataForAccept[userId]["dishPortionFromUserMessage"],
@@ -24,10 +30,7 @@ function handlerQueryKeyboard(
     );
   } else if (/\w+/g.test(queryData)) {
     if (queryData === "Accept") {
-      // console.log(insertIntoDataBase);
-      // console.log("Accepted");
-
-      // console.log(preparedDataForAccept[userId]["postAcceptedData"]);
+      insert(preparedDataForAccept[userId]["postAcceptedData"]);
       messageReply = "That data is Accepted and saved into your Statistik";
       return {
         text: messageReply,

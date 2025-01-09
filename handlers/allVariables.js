@@ -1,15 +1,13 @@
-const { createMessageReply } = require("./createMessageReply");
+// const { createMessageReply } = require("./createMessageReply");
 const { summOfCallories } = require("./summOfCallories");
 
 function allVariables(queryData, userMessageText, userRequest, userId) {
-  // console.log(queryData);
-  // console.log(userMessageText);
-  // console.log(userRequest);
-  // console.log(queryMessageChatId);
-  // console.log(userId);
   dishPortionFromUserMessage = parseInt(userMessageText.match(/\d+/g));
+  //  dishFromRequest.match(/\d+(?=\s\bcalories\b)/g)
+  console.log(
+    "ERRor   dishFromRequest.match(/d+(?=s\bcalories\b)/g) /Warburtons 7"
+  );
   dishFromRequest = userRequest[parseInt(queryData.match(/\d/g))];
-  // console.log(dishFromRequest);
   caloriesFromRequestChosenPortion = parseInt(
     dishFromRequest.match(/\d+(?=\s\bcalories\b)/g)
   );
@@ -24,16 +22,17 @@ function allVariables(queryData, userMessageText, userRequest, userId) {
   userIdFromTelegramm = userId;
   //
   //
-  nameDishFromRequest = dishFromRequest.match(/(?<=\bin\s)(.*)(?=\bPer)/g);
-  // (?<=\s\bin\s)(\w+,?\s?\&?\s?)+
-  //
-  //
+  nameDishFromRequest = dishFromRequest
+    .match(/(?<=\bin\s)(.*)(?=\bPer)/g)
+    .toString()
+    .trim();
+
   postAcceptedData = [
     userIdFromTelegramm,
-    dishFromRequest,
+    nameDishFromRequest,
+    // dishFromRequest,
     dishPortionFromUserMessage,
     caloriesFromRequestChosenPortion,
-    nameDishFromRequest,
   ];
   return {
     dishPortionFromUserMessage: dishPortionFromUserMessage,

@@ -13,11 +13,16 @@ function createKeyboard(request, userId) {
   for (i = 0; i < rows; i++) {
     finalArrayForKeyBoard = [...finalArrayForKeyBoard, ...[keys.splice(0, 5)]];
   }
-  // console.log(finalArrayForKeyBoard);
+
   return Keyboard.make(finalArrayForKeyBoard).inline();
 }
+
+const keyboardForSevenDaysStatistic = Keyboard.reply([
+  "Calories Consumed Per Day",
+]);
 
 module.exports = {
   keyboardAcceptDecline,
   createKeyboard,
+  keyboardForSevenDaysStatistic,
 };
