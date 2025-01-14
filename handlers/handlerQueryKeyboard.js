@@ -1,25 +1,37 @@
 // const { allVariables } = require("./allVariables");
 const { createMessageReply } = require("./createMessageReply");
 // const { summOfCallories } = require("./summOfCallories");
-const { keyboardForSevenDaysStatistic } = require("../keyboard/bot_keyboards");
+const {
+  keyboardForSevenDaysStatistic,
+  keyboardAcceptDecline,
+} = require("../keyboard/bot_keyboards");
 const { insert } = require("../database/insert");
 const { insertAcceptedData } = require("../database/insert");
 const { postAcceptedDataToDatabase } = require("../database/statistic");
+const { createKeyboard } = require("../keyboard/bot_keyboards");
+const { pagination } = require("../api/pagination");
+
 function handlerQueryKeyboard(
   preparedDataForAccept,
   queryData,
   userMessageText,
   userRequest,
-  userId
+  userId,
+  currentUrl,
+  userRequestFUll
 ) {
   console.log(
-    "!!!!!!!!!!!EBANAT U TEBIA /0 =>0 porcia 1.3 a vidaet 3g isparavit NE ZABYD !!!!!!!!!"
+    "!!!MISTAKES TEBIA /0 =>0 porcia 1.3 a vidaet 3g isparavit NE ZABYD !"
   );
-  console.log(userMessageText);
-  if (userMessageText === "Average Calories (7 Days)") {
-    console.log("send Average Calories (7 Days)");
-  }
+  console.log("++++++++");
+  console.log(queryData);
+  console.log("++++++++");
+  // console.log(userMessageText);
+  // if (userMessageText === "Average Calories (7 Days)") {
+  // console.log("send Average Calories (7 Days)");
+
   if (/\w+\d/g.test(queryData)) {
+    console.log("worked");
     return createMessageReply(
       preparedDataForAccept[userId]["dishPortionFromUserMessage"],
       preparedDataForAccept[userId]["dishFromRequest"],
@@ -36,8 +48,46 @@ function handlerQueryKeyboard(
         text: messageReply,
         keyboardAndParseMode: {
           parse_mode: "HTML",
+          keyboard,
         },
       };
+    } else if (queryData === "Next") {
+      let keyboard = createKeyboard(userRequestFUll, userId);
+      console.log("Query otrabotal next");
+
+      // console.log(a);
+      messageReply = userRequest.reduce((el, acc, index) => {
+        return `${index}. ${acc}\n${el}`;
+      }, "");
+      testreq = "proverca n izmenchivost";
+
+      return {
+        text: messageReply,
+        keyboardAndParseMode: {
+          parse_mode: "HTML",
+          keyboard,
+        },
+      };
+    } else if (queryData === "Previous") {
+      //
+      let reply_markup = createKeyboard(userRequestFUll, userId);
+      console.log("Query otrabotal next");
+
+      // console.log(a);
+      messageReply = userRequest.reduce((el, acc, index) => {
+        return `${index}. ${acc}\n${el}`;
+      }, "");
+      testreq = "proverca n izmenchivost";
+
+      return {
+        text: messageReply,
+        keyboardAndParseMode: {
+          parse_mode: "HTML",
+          keyboard,
+        },
+      };
+
+      //
     } else {
       messageReply =
         "Choose something different from the list or write something new.";
@@ -45,9 +95,13 @@ function handlerQueryKeyboard(
         text: messageReply,
         keyboardAndParseMode: {
           parse_mode: "HTML",
+          keyboard,
         },
       };
     }
+    //
+
+    //
   } else {
     return;
   }

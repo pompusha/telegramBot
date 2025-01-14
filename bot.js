@@ -10,15 +10,30 @@ const bot = new TelegramBot(token, { polling: true });
 const { allVariables } = require("./handlers/allVariables");
 const { handlerQueryKeyboard } = require("./handlers/handlerQueryKeyboard");
 const { handlerText } = require("./handlers/handlerText");
+
+const { testHandlerText } = require("./handlers/testHandlerText");
 const {
   keyboardAcceptDecline,
   createKeyboard,
   keyboardForSevenDaysStatistic,
 } = require("./keyboard/bot_keyboards");
+const { pagination } = require("./api/pagination");
 
 let preparedDataForAccept = {};
 const userRequest = {};
 const userMessageText = {};
+let testreq = "nichego";
+
+// const currentUrl = "";
+
+let result;
+let dishFromRequest;
+let caloriesFromRequestChosenPortion;
+let postAcceptedData;
+let portionFromSource;
+let caloriesPerUserPortion;
+let dishPortionFromUserMessage;
+let nameDishFromRequest;
 
 bot.on("polling_error", (error) => {
   console.log(`[polling_error] ${error.code}: ${error.message}`);
@@ -37,14 +52,9 @@ bot.on("message", async (msg, match) => {
   let dishFromMessage = msg.text
     .toLowerCase()
     .match(/((?!(\s?\d))(?!g\s))[a-z]+/g);
-
-  // bot.onText(/\/[s]tart/, (msg) => {
-  //   bot.sendMessage(
-  //     msg.chat.id,
-  //     "Welcome! If you want to find the calories of your dishes, write the name of your dish followed by the grams after /",
-  //     keyboardForSevenDaysStatistic
-  //   );
-  // });
+  // console.log("_____");
+  // console.log(dishFromMessage);
+  // console.log("_____");
 
   if (msg.text === "Calories Consumed Per Day") {
     bot.sendMessage(msg.chat.id, await handlerText(msg));
@@ -55,15 +65,16 @@ bot.on("message", async (msg, match) => {
 
     userMessageText[userId] = { text: msg.text };
     userRequest[userId] = {
-      text: await getProductCalories(dishFromMessage),
+      data: await getProductCalories(`desc=${dishFromMessage}`),
     };
 
-    if (userRequest[userId]["text"][0] == "") {
+    if (userRequest[userId]["data"]["text"][0] == "") {
       bot.sendMessage(msg.chat.id, "No any results pls format your request");
     } else {
       bot.sendMessage(
+        // ne nraica
         msg.chat.id,
-        userRequest[userId]["text"].reduce((el, acc, index) => {
+        userRequest[userId]["data"]["text"].reduce((el, acc, index) => {
           return `${index}. ${acc}\n${el}`;
         }, ""),
         createKeyboard(userRequest, userId)
@@ -72,29 +83,41 @@ bot.on("message", async (msg, match) => {
     }
   }
 });
-let result;
-let dishFromRequest;
-let caloriesFromRequestChosenPortion;
-let postAcceptedData;
-let portionFromSource;
-let caloriesPerUserPortion;
-let dishPortionFromUserMessage;
-let nameDishFromRequest;
 
 bot.on("callback_query", async (query) => {
   userId = query.message.chat.id;
   //
-  // console.log(userRequest[userId]["text"][query.data]);
-  //
+  // console.log(query.data);
+
   if (query.data) {
-    // console.log(query.data);
-    if (userRequest?.[userId]?.text?.length) {
-      if (userRequest[userId]["text"].length > 0) {
+    //
+    if (query.data === "Next") {
+      if (userRequest.length != 0 || userRequest != "undundefined") {
+        try {
+          // console.log(userRequest.length);
+          // console.log(userRequest);
+          let nextDatapage;
+          nextDatapage = await pagination(
+            userRequest[userId]["data"]["url"],
+            query.data
+          );
+          console.log(nextDatapage);
+          userRequest[query.from.id]["data"] = nextDatapage;
+          console.log(userRequest);
+        } catch (error) {
+          console.log(error);
+          return;
+        }
+      }
+    }
+    //
+    if (userRequest?.[userId]?.["data"]?.text?.length) {
+      if (userRequest[userId]["data"]["text"].length > 0) {
         if (query.data.match("action")) {
           result = allVariables(
             query.data,
             userMessageText[userId]["text"],
-            userRequest[userId]["text"],
+            userRequest[userId]["data"]["text"],
             userId
           );
 
@@ -103,18 +126,23 @@ bot.on("callback_query", async (query) => {
             [userId]: result,
           };
         }
+        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!HANDLER
         let messageText = handlerQueryKeyboard(
           preparedDataForAccept,
           query.data,
           userMessageText[userId]["text"],
-          userRequest[userId]["text"],
-          userId
+          userRequest[userId]["data"]["text"],
+          userId,
+          userRequest[userId]["data"]["url"],
+          userRequest
         );
-        bot.sendMessage(
-          query.message.chat.id,
-          messageText["text"],
-          messageText["keyboardAndParseMode"]
-        );
+        // console.log(messageText["keyboardAndParseMode"]["reply_markup"]);
+        bot.sendMessage(query.message.chat.id, messageText["text"], {
+          parse_mode: messageText["keyboardAndParseMode"].parse_mode,
+          reply_markup:
+            messageText["keyboardAndParseMode"]["keyboard"]["reply_markup"],
+        });
+        // console.log(messageText);
       } else {
         return bot.sendMessage(
           query.message.chat.id,

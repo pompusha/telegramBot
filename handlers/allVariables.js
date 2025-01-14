@@ -5,7 +5,7 @@ function allVariables(queryData, userMessageText, userRequest, userId) {
   dishPortionFromUserMessage = parseInt(userMessageText.match(/\d+/g));
   //  dishFromRequest.match(/\d+(?=\s\bcalories\b)/g)
   console.log(
-    "ERRor   dishFromRequest.match(/d+(?=s\bcalories\b)/g) /Warburtons 7"
+    "!!!Error dishFromRequest.match(/d+(?=s\bcalories\b)/g) /Warburtons 7"
   );
   dishFromRequest = userRequest[parseInt(queryData.match(/\d/g))];
   caloriesFromRequestChosenPortion = parseInt(

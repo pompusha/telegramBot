@@ -7,8 +7,8 @@ async function insert(postData) {
     const sqlINSERT =
       "INSERT INTO `dailycalories` ( `id_from_phone_contact`, `dish`, `dish_portion`, `calories_per_portion`, `date`) VALUES (?, ?, ?, ?, CURDATE())";
     const [result, fields] = await pool.query(sqlINSERT, postData);
-    console.log(result);
-    console.log(fields);
+    // console.log(result);
+    // console.log(fields);
   } catch (err) {
     console.log(err);
   }

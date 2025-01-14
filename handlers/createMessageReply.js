@@ -17,14 +17,23 @@ function createMessageReply(
     strPortionFromSource = portionFromSource.toString();
     if (/[aA-zZ]{3,}/.test(strPortionFromSource)) {
       messageReply = `The dish <i>${nameDishFromRequest}</i> contains <b>${caloriesFromRequestChosenPortion} calories</b> per <b>${portionFromSource}</b> portion.`;
+      keyboard = keyboardAcceptDecline;
       return {
         text: messageReply,
         keyboardAndParseMode: {
           parse_mode: "HTML",
-          reply_markup: keyboardAcceptDecline.reply_markup,
-          keyboardForSevenDaysStatistic,
+          keyboard,
         },
       };
+      // return {
+      //   text: messageReply,
+      //   keyboardAndParseMode: {
+      //     parse_mode: "HTML",
+      //     reply_markup: keyboardAcceptDecline,
+      //   },
+      // };
+      //
+      //
     } else if (/\d+(g|ml)/.test(strPortionFromSource)) {
       portionFromSource = parseInt(portionFromSource);
       caloriesPerUserPortion = (
@@ -35,33 +44,46 @@ function createMessageReply(
   per portion of <b>${portionFromSource}g</b>.
   If you consume a portion of <b>${~~dishPortionFromUserMessage}g</b>, it will amount to approximately <b>${~~caloriesPerUserPortion} calories</b>.`;
 
+      keyboard = keyboardAcceptDecline;
       return {
         text: messageReply,
         keyboardAndParseMode: {
           parse_mode: "HTML",
-          reply_markup: keyboardAcceptDecline.reply_markup,
-          // reply_markup: keyboardForSevenDaysStatistic.reply_markup,
+          keyboard,
         },
       };
+      //   return {
+      //     text: messageReply,
+      //     keyboardAndParseMode: {
+      //       parse_mode: "HTML",
+      //       reply_markup: keyboardAcceptDecline,
+      //     },
+      //   };
     }
   } else {
     console.log(
       "Change message and keyboard here for unusual type of dishes to see what i mean create simple request /white vine tesko 234"
     );
-    //
-    console.log(dishFromRequest);
     messageReply = dishFromRequest;
+    //
+    keyboard = keyboardAcceptDecline;
     return {
       text: messageReply,
       keyboardAndParseMode: {
         parse_mode: "HTML",
-        reply_markup: keyboardAcceptDecline.reply_markup,
+        keyboard,
       },
-      //
     };
+
+    //
+    // return {
+    //   text: messageReply,
+    //   keyboardAndParseMode: {
+    //     parse_mode: "HTML",
+    //     reply_markup: keyboardAcceptDecline,
+    //   },
+    // };
   }
-  // messageReply = "bla";
-  // return messageReply;
 }
 
 module.exports = {
