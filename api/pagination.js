@@ -4,6 +4,7 @@ const { URL } = require("url");
 const { getProductCalories } = require("./axiosHttpRequest");
 // const { Url } = require("url");
 async function pagination(requestURL, command) {
+  console.log(`COMMAND IN pagination : ${command}`);
   if (command === "Next") {
     try {
       // console.log(requestURL);
@@ -15,7 +16,7 @@ async function pagination(requestURL, command) {
       const newUrl = new URL(requestURL);
       const pageNumber = parseInt(~~newUrl.searchParams.get("page"));
       newUrl.searchParams.set("page", pageNumber + 1);
-      console.log(newUrl.searchParams.toString());
+      // console.log(newUrl.searchParams.toString());
       return getProductCalories(newUrl.searchParams.toString());
     } catch (error) {
       console.error(error);

@@ -23,9 +23,9 @@ function handlerQueryKeyboard(
   console.log(
     "!!!MISTAKES TEBIA /0 =>0 porcia 1.3 a vidaet 3g isparavit NE ZABYD !"
   );
-  console.log("++++++++");
-  console.log(queryData);
-  console.log("++++++++");
+
+  console.log(`handlerQueryKeyboard :${queryData}`);
+
   // console.log(userMessageText);
   // if (userMessageText === "Average Calories (7 Days)") {
   // console.log("send Average Calories (7 Days)");
@@ -53,7 +53,7 @@ function handlerQueryKeyboard(
       };
     } else if (queryData === "Next") {
       let keyboard = createKeyboard(userRequestFUll, userId);
-      console.log("Query otrabotal next");
+      console.log(`handlequery v Next : ${queryData}`);
 
       // console.log(a);
       messageReply = userRequest.reduce((el, acc, index) => {
@@ -70,15 +70,16 @@ function handlerQueryKeyboard(
       };
     } else if (queryData === "Previous") {
       //
+      console.log(`handlequery v Prev : ${queryData}`);
       let reply_markup = createKeyboard(userRequestFUll, userId);
-      console.log("Query otrabotal next");
+      // console.log("handlequery Previous");
 
       // console.log(a);
       messageReply = userRequest.reduce((el, acc, index) => {
         return `${index}. ${acc}\n${el}`;
       }, "");
       testreq = "proverca n izmenchivost";
-
+      keyboard = createKeyboard(userRequestFUll, userId);
       return {
         text: messageReply,
         keyboardAndParseMode: {

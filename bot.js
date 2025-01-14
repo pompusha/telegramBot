@@ -91,6 +91,7 @@ bot.on("callback_query", async (query) => {
 
   if (query.data) {
     //
+    console.log(`QUERY.data bot.js:${query.data} `);
     if (query.data === "Next") {
       if (userRequest.length != 0 || userRequest != "undundefined") {
         try {
@@ -101,16 +102,25 @@ bot.on("callback_query", async (query) => {
             userRequest[userId]["data"]["url"],
             query.data
           );
-          console.log(nextDatapage);
           userRequest[query.from.id]["data"] = nextDatapage;
-          console.log(userRequest);
         } catch (error) {
           console.log(error);
           return;
         }
       }
+    } else if (query.data === "Previous") {
+      try {
+        console.log("previous");
+        let nextDatapage;
+        nextDatapage = await pagination(
+          userRequest[userId]["data"]["url"],
+          query.data
+        );
+        userRequest[query.from.id]["data"] = nextDatapage;
+      } catch (error) {
+        console.log(error);
+      }
     }
-    //
     if (userRequest?.[userId]?.["data"]?.text?.length) {
       if (userRequest[userId]["data"]["text"].length > 0) {
         if (query.data.match("action")) {
