@@ -2,7 +2,7 @@ const TelegramBot = require("node-telegram-bot-api");
 const axios = require("axios");
 const { errors } = require("node-telegram-bot-api/src/telegram");
 const cheerio = require("cheerio");
-const { getProductCalories } = require("./api/axiosHttpRequest");
+const { getProductCalories } = require("./api/getProductCalories");
 const { Keyboard, Key } = require("telegram-keyboard");
 require("dotenv").config();
 const token = process.env.BOT_TOKEN;
@@ -22,9 +22,6 @@ const { pagination } = require("./api/pagination");
 let preparedDataForAccept = {};
 const userRequest = {};
 const userMessageText = {};
-let testreq = "nichego";
-
-// const currentUrl = "";
 
 let result;
 let dishFromRequest;
@@ -62,7 +59,7 @@ bot.on("message", async (msg, match) => {
 
   if (/^\//g.test(msg.text) && !/\/\b[Ss]tart/g.test(msg.text)) {
     userId = msg.from.id;
-
+    // console.log(userMessageText);
     userMessageText[userId] = { text: msg.text };
     userRequest[userId] = {
       data: await getProductCalories(`desc=${dishFromMessage}`),
@@ -110,13 +107,22 @@ bot.on("callback_query", async (query) => {
       }
     } else if (query.data === "Previous") {
       try {
-        console.log("previous");
+        // console.log("previous");
         let nextDatapage;
         nextDatapage = await pagination(
           userRequest[userId]["data"]["url"],
           query.data
         );
-        userRequest[query.from.id]["data"] = nextDatapage;
+        // console.log(nextDatapage);
+        if (nextDatapage === undefined) {
+          console.log(`prev 0 :${nextDatapage}`);
+          // console.log(userRequest);
+          return;
+        } else {
+          userRequest[query.from.id]["data"] = nextDatapage;
+          console.log(`else otrabativaet ${userRequest}`);
+        }
+        // console.log(userRequest);
       } catch (error) {
         console.log(error);
       }
@@ -124,13 +130,14 @@ bot.on("callback_query", async (query) => {
     if (userRequest?.[userId]?.["data"]?.text?.length) {
       if (userRequest[userId]["data"]["text"].length > 0) {
         if (query.data.match("action")) {
-          result = allVariables(
+          result = await allVariables(
             query.data,
             userMessageText[userId]["text"],
             userRequest[userId]["data"]["text"],
-            userId
+            userId,
+            userRequest[userId]["data"]["response"]
           );
-
+          // console.log(userRequest[userId]["data"]["response"]);
           preparedDataForAccept = {
             ...preparedDataForAccept,
             [userId]: result,

@@ -14,9 +14,11 @@ async function getProductCalories(product) {
   // console.log("_____");
   // console.log(url);
   // console.log("_____");
+  // console.log(url);
   try {
     const response = await axios.get(url);
     // console.log(response["config"]["url"]);
+    // console.log(response);
     const $ = cheerio.load(response.data);
     // currentUrl = response;
     const searchNextOnPage = $(
@@ -25,12 +27,18 @@ async function getProductCalories(product) {
       .text()
       .replace(/\s+/g, " ");
     // console.log(searchNextOnPage);
+    // console.log(
+    //   $(
+    //     "body > div.contentStretch > div.CenterContent > div > table > tbody"
+    //   ).text()
+    // );
     if (searchNextOnPage) {
       // console.log("searchNextOnPage exists");
     } else {
       // console.log("searchNextOnPage not exists");
     }
     const calorieInfo = {
+      response: response,
       url: response["config"]["url"],
       text: $(
         "body > div.contentStretch > div.CenterContent > div > table > tbody"

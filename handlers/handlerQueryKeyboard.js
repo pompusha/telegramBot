@@ -24,14 +24,19 @@ function handlerQueryKeyboard(
     "!!!MISTAKES TEBIA /0 =>0 porcia 1.3 a vidaet 3g isparavit NE ZABYD !"
   );
 
-  console.log(`handlerQueryKeyboard :${queryData}`);
+  // console.log(`handlerQueryKeyboard :${queryData}`);
 
   // console.log(userMessageText);
   // if (userMessageText === "Average Calories (7 Days)") {
   // console.log("send Average Calories (7 Days)");
 
   if (/\w+\d/g.test(queryData)) {
-    console.log("worked");
+    // console.log("worked");
+    // console.log(userId);
+    // console.log(preparedDataForAccept[userId]["dishFromRequest"]);
+    // console.log(preparedDataForAccept);
+    // console.log(dishFromRequest);
+    // console.log("worked");
     return createMessageReply(
       preparedDataForAccept[userId]["dishPortionFromUserMessage"],
       preparedDataForAccept[userId]["dishFromRequest"],
@@ -44,6 +49,7 @@ function handlerQueryKeyboard(
     if (queryData === "Accept") {
       insert(preparedDataForAccept[userId]["postAcceptedData"]);
       messageReply = "That data is Accepted and saved into your Statistik";
+      keyboard = {};
       return {
         text: messageReply,
         keyboardAndParseMode: {
@@ -55,11 +61,9 @@ function handlerQueryKeyboard(
       let keyboard = createKeyboard(userRequestFUll, userId);
       console.log(`handlequery v Next : ${queryData}`);
 
-      // console.log(a);
       messageReply = userRequest.reduce((el, acc, index) => {
         return `${index}. ${acc}\n${el}`;
       }, "");
-      testreq = "proverca n izmenchivost";
 
       return {
         text: messageReply,
@@ -78,7 +82,7 @@ function handlerQueryKeyboard(
       messageReply = userRequest.reduce((el, acc, index) => {
         return `${index}. ${acc}\n${el}`;
       }, "");
-      testreq = "proverca n izmenchivost";
+
       keyboard = createKeyboard(userRequestFUll, userId);
       return {
         text: messageReply,

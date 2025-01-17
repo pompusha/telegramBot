@@ -1,7 +1,8 @@
 const cheerio = require("cheerio");
 const axios = require("axios");
 const { URL } = require("url");
-const { getProductCalories } = require("./axiosHttpRequest");
+const { getProductCalories } = require("./getProductCalories");
+
 // const { Url } = require("url");
 async function pagination(requestURL, command) {
   console.log(`COMMAND IN pagination : ${command}`);
@@ -28,10 +29,9 @@ async function pagination(requestURL, command) {
       const pageNumber = parseInt(~~newUrl.searchParams.get("page"));
       if (pageNumber > 0) {
         newUrl.searchParams.set("page", pageNumber - 1);
-        // console.log(newUrl.searchParams.toString());
         return getProductCalories(newUrl.searchParams.toString());
       } else {
-        console.log("menishe null");
+        console.log("pagination Inoe null");
       }
     } catch (error) {
       console.log(error);
