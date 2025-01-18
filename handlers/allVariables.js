@@ -23,14 +23,21 @@ async function allVariables(
   // console.log(
   //   "/234gpotato tkni 1 <   Calories in Sainsbury's Santa's Grotto Sweets Selection 250g Frosty Foams Per 1/2 pack - 76 calories | 0.1 fat"
   // );
-  portionFromSource = dishFromRequest.match(
-    /(?<=\bpot\s\()\d+(g|ml)|\d+(g|ml)((?=\)\s-))|(?<=\bPer\s)\d+(g|ml)|((?<=\bPer\s)\w+(?=\s-))/g
-  );
-
+  console.log("/cake query 2 SERVING ERROR");
+  portionFromSource = dishFromRequest
+    .match(/((?<=\bPer\s)(.*)(?=\s\-))/g)
+    .toString()
+    .match(/\d+\.?(\d+)?(g|\bml)/g);
+  console.log(dishFromRequest);
+  // if (
+  //   /\//g.test(dishFromRequest.match(/((?<=\bPer\s)(.*)(?=\s\-))/g).toString())
+  // )
   if (
-    /\//g.test(dishFromRequest.match(/((?<=\bPer\s)(.*)(?=\s\-))/g).toString())
+    /\d+(\ml|g)/g.test(
+      dishFromRequest.match(/((?<=\bPer\s)(.*)(?=\s\-))/g).toString()
+    )
   ) {
-    console.log(dishFromRequest);
+  } else {
     gramsCalorisFromDeepParse = await deeperRequestForUnusualDish(
       userRequestUserIdDataResponse,
       queryData,
@@ -40,11 +47,11 @@ async function allVariables(
       gramsCalorisFromDeepParse["gramsForPortionFromDeepParse"];
     caloriesFromRequestChosenPortion =
       gramsCalorisFromDeepParse["callForGramsFromDeepParse"];
-    // console.log("validateUnusualValue");
-    // console.log(gramsCalorisFromDeepParse);
-    // console.log(portionFromSource);
+    console.log("validateUnusualValue");
+    console.log(gramsCalorisFromDeepParse);
+    console.log(portionFromSource);
     // console.log(caloriesFromRequestChosenPortion);
-    // console.log("validateUnusualValue");
+    console.log("validateUnusualValue");
   }
 
   caloriesPerUserPortion = summOfCallories(

@@ -74,7 +74,7 @@ function handlerQueryKeyboard(
       };
     } else if (queryData === "Previous") {
       //
-      console.log(`handlequery v Prev : ${queryData}`);
+      // console.log(`handlequery v Prev : ${queryData}`);
       let reply_markup = createKeyboard(userRequestFUll, userId);
       // console.log("handlequery Previous");
 
