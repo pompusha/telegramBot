@@ -40,7 +40,7 @@ async function getProductCalories(product) {
       // console.log("searchNextOnPage not exists");
     }
     const calorieInfo = {
-      response: response,
+      // response: response,
       url: response["config"]["url"],
       text: $(
         "body > div.contentStretch > div.CenterContent > div > table > tbody"

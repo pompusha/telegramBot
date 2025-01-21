@@ -1,10 +1,13 @@
-function checkUserCache(
+const { getProductCalories } = require("../api/getProductCalories");
+
+async function checkUserCache(
   userId,
   currDate,
   userMessageText,
   dishFromMessage,
   userCache,
-  userRequest
+  userRequest,
+  msgText
 ) {
   // console.log("SYKA");
   if (!userCache[userId]) {
@@ -20,7 +23,8 @@ function checkUserCache(
     userCache[userId][currDate][dishFromMessage] = {
       data: { text: new Set() },
     };
-  } else if (
+  }
+  if (
     userCache[userId][currDate][dishFromMessage] &&
     userCache[userId][currDate][dishFromMessage]["data"]["text"].size > 0
   ) {
@@ -28,16 +32,36 @@ function checkUserCache(
     let keyUserCasheDishFromUserMessage = Object.keys(
       userCache[userId][currDate]
     );
-    userMessageText[userId] = { text: keyUserCasheDishFromUserMessage };
+    // userMessageText[userId] = { text: keyUserCasheDishFromUserMessage };
     userRequest[userId]["data"]["text"] = [
       ...userCache[userId][currDate][dishFromMessage]["data"]["text"],
     ];
-
-    console.log("SYAKKAKAKAKAKAKKA");
-    console.log(userRequest[userId]);
-    console.log(userRequest[userId]);
-    console.log("SYAKKAKAKAKAKAKKA");
   }
+  if (
+    // userCache[userId][currDate][dishFromMessage] &&
+    userCache[userId][currDate][dishFromMessage]["data"]["text"].size === 0
+  ) {
+    // console.log(
+    //   userCache[userId][currDate][dishFromMessage]["data"]["text"].size
+    // );
+    console.log("cachau");
+    // let testUserReq = {};
+    // let a = {};
+    // a[userId] = { text: msgText };
+    userRequest[userId] = {
+      data: await getProductCalories(`desc=${dishFromMessage}`),
+    };
+    // userMessageText[userId] = { text: msgText };
+    // userRequest[userId] = {
+    //   data: await getProductCalories(`desc=${dishFromMessage}`),
+    // };
+    // console.log("AAAAAAAAAAAAAAA");
+    // console.log();
+    // console.log("AAAAAAAAAAAAAAA");
+  }
+  // console.log(
+  //   userCache[userId][currDate][dishFromMessage]["data"]["text"].size
+  // );
 }
 // {
 //   '339084941': {

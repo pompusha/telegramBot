@@ -82,22 +82,24 @@ bot.on("message", async (msg, match) => {
 
     currDate = `${dd}-${mm}-${yy}`;
 
-    checkUserCache(
+    await checkUserCache(
       userId,
       currDate,
       userMessageText,
       dishFromMessage,
       userCache,
-      userRequest
+      userRequest,
+      msg.text
     );
     // console.log(userCache);
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     //
     userMessageText[userId] = { text: msg.text };
-    userRequest[userId] = {
-      data: await getProductCalories(`desc=${dishFromMessage}`),
-    };
-    // console.log(JSON.stringify(userRequest));
+    // userRequest[userId] = {
+    //   data: await getProductCalories(`desc=${dishFromMessage}`),
+    // };
+    // console.log(userMessageText);
+    console.log(userRequest);
     //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     if (userRequest[userId]["data"]["text"][0] == "") {
       bot.sendMessage(msg.chat.id, "No any results pls format your request");
@@ -126,8 +128,6 @@ bot.on("callback_query", async (query) => {
     if (query.data === "Next") {
       if (userRequest.length != 0 || userRequest != "undundefined") {
         try {
-          // console.log(userRequest.length);
-          // console.log(userRequest);
           let nextDatapage;
           nextDatapage = await pagination(
             userRequest[userId]["data"]["url"],
@@ -175,7 +175,7 @@ bot.on("callback_query", async (query) => {
             [userId]: result,
           };
         }
-        // console.log(JSON.stringify(userRequest));
+
         let messageText = handlerQueryKeyboard(
           preparedDataForAccept,
           query.data,
