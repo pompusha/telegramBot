@@ -10,7 +10,7 @@ const bot = new TelegramBot(token, { polling: true });
 const { allVariables } = require("./handlers/allVariables");
 const { handlerQueryKeyboard } = require("./handlers/handlerQueryKeyboard");
 const { handlerText } = require("./handlers/handlerText");
-
+const { checkUserCache } = require("./cache/checkUserCache");
 const { testHandlerText } = require("./handlers/testHandlerText");
 const {
   keyboardAcceptDecline,
@@ -22,7 +22,19 @@ const { pagination } = require("./api/pagination");
 let preparedDataForAccept = {};
 const userRequest = {};
 const userMessageText = {};
-
+//  id: { date: { dishFromMessage: [results, result], meet: [results, result] } },
+let userCache = {
+  // "0123304": { "20-01-2020": {} },
+  // 30000: { "01-01-2000": {} },
+  // 339084941: {
+  //   "01-01-2000": {},
+  //   "21-01-2025": {
+  //     potato: [
+  //       "Calories in Baby Potatoes, In Skins, Boiled or Steamed Per Average potatons, Boiled or Steamed Per Average potato (35g) - 24 calories | 0 fat",
+  //     ],
+  //   },
+  // },
+};
 let result;
 let dishFromRequest;
 let caloriesFromRequestChosenPortion;
@@ -31,13 +43,15 @@ let portionFromSource;
 let caloriesPerUserPortion;
 let dishPortionFromUserMessage;
 let nameDishFromRequest;
-
+let currDate;
+let dishFromMessage;
+const regExpSlashStart = /\/start/;
 bot.on("polling_error", (error) => {
   console.log(`[polling_error] ${error.code}: ${error.message}`);
 });
 console.log("Wake up SERVER");
 
-bot.onText(/\/start/, (msg) => {
+bot.onText(regExpSlashStart, (msg) => {
   bot.sendMessage(
     msg.chat.id,
     "Welcome! If you want to find the calories of your dishes, write the name of your dish followed by the grams after /",
@@ -46,9 +60,7 @@ bot.onText(/\/start/, (msg) => {
 });
 
 bot.on("message", async (msg, match) => {
-  let dishFromMessage = msg.text
-    .toLowerCase()
-    .match(/((?!(\s?\d))(?!g\s))[a-z]+/g);
+  dishFromMessage = msg.text.toLowerCase().match(/((?!(\s?\d))(?!g\s))[a-z]+/g);
   // console.log("_____");
   // console.log(dishFromMessage);
   // console.log("_____");
@@ -60,11 +72,33 @@ bot.on("message", async (msg, match) => {
   if (/^\//g.test(msg.text) && !/\/\b[Ss]tart/g.test(msg.text)) {
     userId = msg.from.id;
     // console.log(userMessageText);
+    let date = new Date();
+    let yy = date.getFullYear();
+    let mm =
+      date.getMonth() + 1 < 10
+        ? `0${date.getMonth() + 1}`
+        : date.getMonth() + 1;
+    let dd = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
+
+    currDate = `${dd}-${mm}-${yy}`;
+
+    checkUserCache(
+      userId,
+      currDate,
+      userMessageText,
+      dishFromMessage,
+      userCache,
+      userRequest
+    );
+    // console.log(userCache);
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //
     userMessageText[userId] = { text: msg.text };
     userRequest[userId] = {
       data: await getProductCalories(`desc=${dishFromMessage}`),
     };
-
+    // console.log(JSON.stringify(userRequest));
+    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     if (userRequest[userId]["data"]["text"][0] == "") {
       bot.sendMessage(msg.chat.id, "No any results pls format your request");
     } else {
@@ -85,10 +119,10 @@ bot.on("callback_query", async (query) => {
   userId = query.message.chat.id;
   //
   // console.log(query.data);
-
+  //
   if (query.data) {
     //
-    console.log(`QUERY.data bot.js:${query.data} `);
+    // console.log(`QUERY.data bot.js:${query.data} `);
     if (query.data === "Next") {
       if (userRequest.length != 0 || userRequest != "undundefined") {
         try {
@@ -113,16 +147,14 @@ bot.on("callback_query", async (query) => {
           userRequest[userId]["data"]["url"],
           query.data
         );
-        // console.log(nextDatapage);
+
         if (nextDatapage === undefined) {
           console.log(`prev 0 :${nextDatapage}`);
-          // console.log(userRequest);
+
           return;
         } else {
           userRequest[query.from.id]["data"] = nextDatapage;
-          console.log(`else otrabativaet ${userRequest}`);
         }
-        // console.log(userRequest);
       } catch (error) {
         console.log(error);
       }
@@ -137,13 +169,13 @@ bot.on("callback_query", async (query) => {
             userId,
             userRequest[userId]["data"]["response"]
           );
-          // console.log(userRequest[userId]["data"]["response"]);
+
           preparedDataForAccept = {
             ...preparedDataForAccept,
             [userId]: result,
           };
         }
-        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!HANDLER
+        // console.log(JSON.stringify(userRequest));
         let messageText = handlerQueryKeyboard(
           preparedDataForAccept,
           query.data,
@@ -151,15 +183,16 @@ bot.on("callback_query", async (query) => {
           userRequest[userId]["data"]["text"],
           userId,
           userRequest[userId]["data"]["url"],
-          userRequest
+          userRequest,
+          userCache,
+          currDate,
+          dishFromMessage
         );
-        // console.log(messageText["keyboardAndParseMode"]["reply_markup"]);
         bot.sendMessage(query.message.chat.id, messageText["text"], {
           parse_mode: messageText["keyboardAndParseMode"].parse_mode,
           reply_markup:
             messageText["keyboardAndParseMode"]["keyboard"]["reply_markup"],
         });
-        // console.log(messageText);
       } else {
         return bot.sendMessage(
           query.message.chat.id,
@@ -167,6 +200,16 @@ bot.on("callback_query", async (query) => {
         );
       }
     }
+    // console.log("endBOT");
+    // console.log("__________");
+    // console.log(userCache);
+    // console.log("__________");
+    // console.log(userCache[userId][currDate][dishFromMessage]);
+    // console.log("__________");
+    // console.log(JSON.stringify(userCache));
+    // console.log("__________");
+    // console.log("endBOT");
+
     return;
   }
 });

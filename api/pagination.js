@@ -5,7 +5,7 @@ const { getProductCalories } = require("./getProductCalories");
 
 // const { Url } = require("url");
 async function pagination(requestURL, command) {
-  console.log(`COMMAND IN pagination : ${command}`);
+  // console.log(`COMMAND IN pagination : ${command}`);
   if (command === "Next") {
     try {
       // console.log(requestURL);
@@ -31,7 +31,7 @@ async function pagination(requestURL, command) {
         newUrl.searchParams.set("page", pageNumber - 1);
         return getProductCalories(newUrl.searchParams.toString());
       } else {
-        console.log("pagination Inoe null");
+        // console.log("pagination Inoe null");
       }
     } catch (error) {
       console.log(error);

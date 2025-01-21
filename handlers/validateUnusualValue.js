@@ -30,7 +30,10 @@ async function validateUnusualValue(
     );
 
     console.log("validateUnusualValue");
-    console.log(gramsCalorisFromDeepParse);
+    console.log(
+      "необходимо пофиксть дип чек ибо долбоебы иногда используют куски и прочую хуйню то есть безграммов"
+    );
+    // console.log(gramsCalorisFromDeepParse);
     console.log("validateUnusualValue");
     // return gramsCalorisFromDeepParse;
     if (/\d+g/g.test(dishFromRequest)) {

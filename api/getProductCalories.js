@@ -2,6 +2,7 @@ const cheerio = require("cheerio");
 const axios = require("axios");
 const URL = require("url");
 const { text } = require("stream/consumers");
+const { stringify } = require("querystring");
 async function getProductCalories(product) {
   // console.log("!!!FIX AXIOS URL FOR DISH CONSISNED MORE THEN ONE WORD");
   // https://www.nutracheck.co.uk/CaloriesIn/Product/Search?desc=Chicken+Thigh
@@ -17,7 +18,8 @@ async function getProductCalories(product) {
   // console.log(url);
   try {
     const response = await axios.get(url);
-    // console.log(response["config"]["url"]);
+    // let sepRep = JSON.stringify(response);
+    // console.log(sepRep);
     // console.log(response);
     const $ = cheerio.load(response.data);
     // currentUrl = response;
@@ -51,9 +53,14 @@ async function getProductCalories(product) {
           return el.trim();
         }),
     };
+    // let returStrinGifyRequest = JSON.parse(JSON.stringify(calorieInfo));
     // console.log(new URL(response));
+    //  console.log(calorieInfo);
     // console.log(calorieInfo);
+    // console.log(returStrinGifyRequest);
+    // console.log(returStrinGifyRequest === calorieInfo);
     return calorieInfo;
+    // return returStrinGifyRequest;
     // .trim()
     // .split(/(?<=\bfat)\s(?=Calories)/g)
     // .map((el) => {

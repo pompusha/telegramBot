@@ -10,9 +10,9 @@ async function allVariables(
   userRequestUserIdDataResponse
 ) {
   dishPortionFromUserMessage = parseInt(userMessageText.match(/\d+/g));
-  console.log(
-    "!!!Error dishFromRequest.match(/d+(?=s\bcalories\b)/g) /Warburtons 7"
-  );
+  // console.log(
+  //   "!!!Error dishFromRequest.match(/d+(?=s\bcalories\b)/g) /Warburtons 7"
+  // );
   dishFromRequest = userRequest[parseInt(queryData.match(/\d/g))];
   // НУжна отладка но не уверен console.log(dishFromRequest);
   caloriesFromRequestChosenPortion = parseInt(
@@ -28,7 +28,7 @@ async function allVariables(
     .match(/((?<=\bPer\s)(.*)(?=\s\-))/g)
     .toString()
     .match(/\d+\.?(\d+)?(g|\bml)/g);
-  console.log(dishFromRequest);
+  // console.log(dishFromRequest);
   // if (
   //   /\//g.test(dishFromRequest.match(/((?<=\bPer\s)(.*)(?=\s\-))/g).toString())
   // )
@@ -47,11 +47,11 @@ async function allVariables(
       gramsCalorisFromDeepParse["gramsForPortionFromDeepParse"];
     caloriesFromRequestChosenPortion =
       gramsCalorisFromDeepParse["callForGramsFromDeepParse"];
-    console.log("validateUnusualValue");
-    console.log(gramsCalorisFromDeepParse);
-    console.log(portionFromSource);
+    // console.log("validateUnusualValue");
+    // console.log(gramsCalorisFromDeepParse);
+    // console.log(portionFromSource);
     // console.log(caloriesFromRequestChosenPortion);
-    console.log("validateUnusualValue");
+    // console.log("validateUnusualValue");
   }
 
   caloriesPerUserPortion = summOfCallories(

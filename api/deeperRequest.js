@@ -59,8 +59,8 @@ async function deeperRequestForUnusualDish(
     // );
     // console.log("aaaa");
     //(?<=\bhref="\/CaloriesIn\/Product\/)(.*)(?=\"\s\bclass)
-    console.log(callForGramsFromDeepParse);
-    console.log(gramsForPortionFromDeepParse);
+    // console.log(callForGramsFromDeepParse);
+    // console.log(gramsForPortionFromDeepParse);
     return { callForGramsFromDeepParse, gramsForPortionFromDeepParse };
   } catch (error) {
     console.log(error);

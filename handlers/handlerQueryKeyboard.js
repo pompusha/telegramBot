@@ -10,19 +10,24 @@ const { insertAcceptedData } = require("../database/insert");
 const { postAcceptedDataToDatabase } = require("../database/statistic");
 const { createKeyboard } = require("../keyboard/bot_keyboards");
 const { pagination } = require("../api/pagination");
-
+const { addDataIntoUserCache } = require("../cache/addDataIntoUserCache");
+// userRequestUserIdDataText"]
+// userRequest
 function handlerQueryKeyboard(
   preparedDataForAccept,
   queryData,
   userMessageText,
-  userRequest,
+  userRequestUserIdDataText,
   userId,
   currentUrl,
-  userRequestFUll
+  userRequest,
+  userCache,
+  currDate,
+  dishFromMessage
 ) {
-  console.log(
-    "!!!MISTAKES TEBIA /0 =>0 porcia 1.3 a vidaet 3g isparavit NE ZABYD !"
-  );
+  // console.log(
+  //   "!!!MISTAKES TEBIA /0 =>0 porcia 1.3 a vidaet 3g isparavit NE ZABYD !"
+  // );
 
   // console.log(`handlerQueryKeyboard :${queryData}`);
 
@@ -31,12 +36,6 @@ function handlerQueryKeyboard(
   // console.log("send Average Calories (7 Days)");
 
   if (/\w+\d/g.test(queryData)) {
-    // console.log("worked");
-    // console.log(userId);
-    // console.log(preparedDataForAccept[userId]["dishFromRequest"]);
-    // console.log(preparedDataForAccept);
-    // console.log(dishFromRequest);
-    // console.log("worked");
     return createMessageReply(
       preparedDataForAccept[userId]["dishPortionFromUserMessage"],
       preparedDataForAccept[userId]["dishFromRequest"],
@@ -47,8 +46,15 @@ function handlerQueryKeyboard(
     );
   } else if (/\w+/g.test(queryData)) {
     if (queryData === "Accept") {
-      insert(preparedDataForAccept[userId]["postAcceptedData"]);
       messageReply = "That data is Accepted and saved into your Statistik";
+      console.log(dishFromMessage);
+      addDataIntoUserCache(
+        userCache,
+        preparedDataForAccept[userId]["dishFromRequest"],
+        currDate,
+        dishFromMessage ? dishFromMessage[0] : ["null"],
+        userRequest
+      );
       keyboard = {};
       return {
         text: messageReply,
@@ -58,10 +64,10 @@ function handlerQueryKeyboard(
         },
       };
     } else if (queryData === "Next") {
-      let keyboard = createKeyboard(userRequestFUll, userId);
+      let keyboard = createKeyboard(userRequest, userId);
       console.log(`handlequery v Next : ${queryData}`);
 
-      messageReply = userRequest.reduce((el, acc, index) => {
+      messageReply = userRequestUserIdDataText.reduce((el, acc, index) => {
         return `${index}. ${acc}\n${el}`;
       }, "");
 
@@ -75,15 +81,15 @@ function handlerQueryKeyboard(
     } else if (queryData === "Previous") {
       //
       // console.log(`handlequery v Prev : ${queryData}`);
-      let reply_markup = createKeyboard(userRequestFUll, userId);
+      let reply_markup = createKeyboard(userRequest, userId);
       // console.log("handlequery Previous");
 
       // console.log(a);
-      messageReply = userRequest.reduce((el, acc, index) => {
+      messageReply = userRequestUserIdDataText.reduce((el, acc, index) => {
         return `${index}. ${acc}\n${el}`;
       }, "");
 
-      keyboard = createKeyboard(userRequestFUll, userId);
+      keyboard = createKeyboard(userRequest, userId);
       return {
         text: messageReply,
         keyboardAndParseMode: {
