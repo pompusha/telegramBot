@@ -51,12 +51,14 @@ async function checkUserCache(
     userRequest[userId] = {
       data: await getProductCalories(`desc=${dishFromMessage}`),
     };
+
     // userMessageText[userId] = { text: msgText };
     // userRequest[userId] = {
     //   data: await getProductCalories(`desc=${dishFromMessage}`),
     // };
     // console.log("AAAAAAAAAAAAAAA");
-    // console.log();
+    // console.log(userRequest[userId]["data"]["urlForUnusualDishes"][3]);
+    // console.log(userRequest[userId]["data"][" urlForUnusualDishes"]);
     // console.log("AAAAAAAAAAAAAAA");
   }
   // console.log(

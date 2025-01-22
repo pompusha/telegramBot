@@ -91,6 +91,7 @@ bot.on("message", async (msg, match) => {
       userRequest,
       msg.text
     );
+    // console.log(userRequest[userId]["data"]["url"]);
     // console.log(userCache);
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     //
@@ -99,7 +100,7 @@ bot.on("message", async (msg, match) => {
     //   data: await getProductCalories(`desc=${dishFromMessage}`),
     // };
     // console.log(userMessageText);
-    console.log(userRequest);
+    // console.log(userRequest);
     //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     if (userRequest[userId]["data"]["text"][0] == "") {
       bot.sendMessage(msg.chat.id, "No any results pls format your request");
@@ -162,14 +163,17 @@ bot.on("callback_query", async (query) => {
     if (userRequest?.[userId]?.["data"]?.text?.length) {
       if (userRequest[userId]["data"]["text"].length > 0) {
         if (query.data.match("action")) {
+          // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
           result = await allVariables(
             query.data,
             userMessageText[userId]["text"],
             userRequest[userId]["data"]["text"],
             userId,
-            userRequest[userId]["data"]["response"]
+            userRequest[userId]["data"]["urlForUnusualDishes"]
           );
+          // console.log(userRequest[userId]["data"]["url"]);
 
+          // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
           preparedDataForAccept = {
             ...preparedDataForAccept,
             [userId]: result,

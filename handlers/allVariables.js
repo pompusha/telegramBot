@@ -7,7 +7,7 @@ async function allVariables(
   userMessageText,
   userRequest,
   userId,
-  userRequestUserIdDataResponse
+  urlForUnusualDishes
 ) {
   dishPortionFromUserMessage = parseInt(userMessageText.match(/\d+/g));
   // console.log(
@@ -38,10 +38,13 @@ async function allVariables(
     )
   ) {
   } else {
+    console.log("______________");
+    console.log(urlForUnusualDishes);
+    console.log("______________");
     gramsCalorisFromDeepParse = await deeperRequestForUnusualDish(
-      userRequestUserIdDataResponse,
-      queryData,
-      userRequest
+      urlForUnusualDishes,
+      queryData
+      // userRequest
     );
     portionFromSource =
       gramsCalorisFromDeepParse["gramsForPortionFromDeepParse"];

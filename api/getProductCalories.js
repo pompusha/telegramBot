@@ -39,8 +39,18 @@ async function getProductCalories(product) {
     } else {
       // console.log("searchNextOnPage not exists");
     }
+    let urlPartForDeeperPage = Array.from(
+      new Set(
+        response.data.match(
+          /(?<=\bhref="\/CaloriesIn\/Product\/)(.*)(?=\"\>\<\bimg)/g
+        )
+      )
+    );
+    // console.log(urlPart);
+
     const calorieInfo = {
       // response: response,
+      urlForUnusualDishes: urlPartForDeeperPage,
       url: response["config"]["url"],
       text: $(
         "body > div.contentStretch > div.CenterContent > div > table > tbody"

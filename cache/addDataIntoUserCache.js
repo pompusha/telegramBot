@@ -3,16 +3,16 @@ function addDataIntoUserCache(
   dishFromRequest,
   currDate,
   dishFromMessage,
-  userRequestFUll
+  userRequest
 ) {
-  // userCache[userId][currDate][dishFromMessage]["data"]["response"] = JSON.parse(
-  //   JSON.stringify(userRequestFUll[userId]["data"]["response"])
+  // userCache[userId][currDate][dishFromMessage]["data"]["response"] = userRequest[userId]["data"]["response"]
+  // };
   // );
-  // userRequestFUll;
+  // userRequest;
   // console.log(Array.isArray(userRequestFUll[userId]["data"]["response"]));
   // console.log(userRequestFUll[userId]);
   userCache[userId][currDate][dishFromMessage]["data"]["url"] = JSON.parse(
-    JSON.stringify(userRequestFUll[userId]["data"]["url"])
+    JSON.stringify(userRequest[userId]["data"]["url"])
   );
   // userCache[userId][currDate][dishFromMessage]["data"]["url"] = {
   //   ...userRequestFUll[userId]["data"]["url"],
@@ -29,7 +29,7 @@ function addDataIntoUserCache(
   userCache[userId][currDate][dishFromMessage]["data"]["text"].add(
     JSON.parse(JSON.stringify(dishFromRequest))
   );
-  console.log(userCache[userId][currDate][dishFromMessage]["data"]["text"]);
+  console.log(userCache[userId][currDate][dishFromMessage]);
   // console.log(JSON.stringify(userCache));
 
   //
