@@ -19,7 +19,7 @@ function createKeyboard(request, userId, previousPage, nextPage) {
     Key.callback(`${nextPage} Next`, "Next"),
     //
   ]);
-  // console.log(finalArrayForKeyBoard);
+
   return Keyboard.make(finalArrayForKeyBoard).inline();
 }
 

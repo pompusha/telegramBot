@@ -11,8 +11,8 @@ const { postAcceptedDataToDatabase } = require("../database/statistic");
 const { createKeyboard } = require("../keyboard/bot_keyboards");
 const { pagination } = require("../api/pagination");
 const { addDataIntoUserCache } = require("../cache/addDataIntoUserCache");
-// userRequestUserIdDataText"]
-// userRequest
+//
+//
 function handlerQueryKeyboard(
   preparedDataForAccept,
   queryData,
@@ -23,18 +23,9 @@ function handlerQueryKeyboard(
   userRequest,
   userCache,
   currDate,
-  dishFromMessage
+  dishFromMessage,
+  result
 ) {
-  // console.log(
-  //   "!!!MISTAKES TEBIA /0 =>0 porcia 1.3 a vidaet 3g isparavit NE ZABYD !"
-  // );
-
-  // console.log(`handlerQueryKeyboard :${queryData}`);
-
-  // console.log(userMessageText);
-  // if (userMessageText === "Average Calories (7 Days)") {
-  // console.log("send Average Calories (7 Days)");
-
   if (/\w+\d/g.test(queryData)) {
     return createMessageReply(
       preparedDataForAccept[userId]["dishPortionFromUserMessage"],
@@ -46,14 +37,17 @@ function handlerQueryKeyboard(
     );
   } else if (/\w+/g.test(queryData)) {
     if (queryData === "Accept") {
+      // console.log(result["urlForUnusualChoosenDish"]);
+      // console.log("+++++++++++++++ACCEPTED");
       messageReply = "That data is Accepted and saved into your Statistik";
-      console.log(dishFromMessage);
+      // console.log(preparedDataForAccept[userId]["dishFromRequest"]);
       addDataIntoUserCache(
         userCache,
         preparedDataForAccept[userId]["dishFromRequest"],
         currDate,
-        dishFromMessage ? dishFromMessage[0] : ["null"],
-        userRequest
+        dishFromMessage ? dishFromMessage : ["null"],
+        userRequest,
+        result["urlForUnusualChoosenDish"]
       );
       keyboard = {};
       return {
@@ -65,7 +59,6 @@ function handlerQueryKeyboard(
       };
     } else if (queryData === "Next") {
       let keyboard = createKeyboard(userRequest, userId);
-      console.log(`handlequery v Next : ${queryData}`);
 
       messageReply = userRequestUserIdDataText.reduce((el, acc, index) => {
         return `${index}. ${acc}\n${el}`;
@@ -79,12 +72,8 @@ function handlerQueryKeyboard(
         },
       };
     } else if (queryData === "Previous") {
-      //
-      // console.log(`handlequery v Prev : ${queryData}`);
       let reply_markup = createKeyboard(userRequest, userId);
-      // console.log("handlequery Previous");
 
-      // console.log(a);
       messageReply = userRequestUserIdDataText.reduce((el, acc, index) => {
         return `${index}. ${acc}\n${el}`;
       }, "");
@@ -97,8 +86,6 @@ function handlerQueryKeyboard(
           keyboard,
         },
       };
-
-      //
     } else {
       messageReply =
         "Choose something different from the list or write something new.";
@@ -110,9 +97,6 @@ function handlerQueryKeyboard(
         },
       };
     }
-    //
-
-    //
   } else {
     return;
   }

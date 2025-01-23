@@ -17,26 +17,13 @@ async function deeperRequestForUnusualDish(
 
   // console.log("aaaa");
   try {
-    // let urlPart = Array.from(
-    //   new Set(
-    //     userRequestUserIdDataResponse.data.match(
-    //       /(?<=\bhref="\/CaloriesIn\/Product\/)(.*)(?=\"\>\<\bimg)/g
-    //     )
-    //   )
-    // );
-    // console.log(urlForUnusualDishes);
-
-    console.log("+++++++++++++");
-    console.log(urlForUnusualDishes[parseFloat(queryData.match(/\d+/g))]);
-    console.log("+++++++++++++");
     let url = `https://www.nutracheck.co.uk/CaloriesIn/Product/${
       urlForUnusualDishes[parseFloat(queryData.match(/\d+/g))]
     }`;
     let request = await axios.get(url);
-    // https://www.nutracheck.co.uk/CaloriesIn/Product/70/Brazil+Nuts
+
     const $ = cheerio.load(request.data);
     let callForGramsFromDeepParse = $("#prodDetails2 > h2 > span").text();
-    console.log(`callForGramsFrom: ----- ${callForGramsFromDeepParse}`);
 
     let gramsForPortionFromDeepParse = $(
       "#prodbreakdown > select > option:nth-child(2)"
@@ -59,7 +46,7 @@ async function deeperRequestForUnusualDish(
       callForGramsFromDeepParse = callForGramsFromDeepParse
         .match(/\d+/g)
         .toString();
-      console.log(`callForGramsFrom: ----- ${callForGramsFromDeepParse}`);
+      // console.log(`callForGramsFrom: ----- ${callForGramsFromDeepParse}`);
       return { callForGramsFromDeepParse, gramsForPortionFromDeepParse };
     }
 

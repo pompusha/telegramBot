@@ -1,5 +1,4 @@
-const { getProductCalories } = require("../api/getProductCalories");
-
+const { cacheCheck } = require("./cacheCheck");
 async function checkUserCache(
   userId,
   currDate,
@@ -9,71 +8,85 @@ async function checkUserCache(
   userRequest,
   msgText
 ) {
-  // console.log("SYKA");
   if (!userCache[userId]) {
     userCache[userId] = {};
-    // console.log("userID");
   }
   if (!userCache[userId][currDate]) {
     userCache[userId][currDate] = {};
-    // console.log("currDate");
   }
-  //  id: { date: { dishFromMessage: [results, result], meet: [results, result] } },
+
   if (!userCache[userId][currDate][dishFromMessage]) {
     userCache[userId][currDate][dishFromMessage] = {
-      data: { text: new Set() },
+      data: { text: new Set(), urlForUnusualDishes: new Set() },
     };
   }
+
   if (
-    userCache[userId][currDate][dishFromMessage] &&
+    userCache[userId][currDate][dishFromMessage]["data"]["text"].size === 0 ||
+    // (userCache[userId][currDate][dishFromMessage] &&
     userCache[userId][currDate][dishFromMessage]["data"]["text"].size > 0
   ) {
-    console.log("checkUserCache past SIZE test");
-    let keyUserCasheDishFromUserMessage = Object.keys(
-      userCache[userId][currDate]
-    );
-    // userMessageText[userId] = { text: keyUserCasheDishFromUserMessage };
-    userRequest[userId]["data"]["text"] = [
-      ...userCache[userId][currDate][dishFromMessage]["data"]["text"],
-    ];
-  }
-  if (
-    // userCache[userId][currDate][dishFromMessage] &&
-    userCache[userId][currDate][dishFromMessage]["data"]["text"].size === 0
-  ) {
-    // console.log(
-    //   userCache[userId][currDate][dishFromMessage]["data"]["text"].size
-    // );
-    console.log("cachau");
-    // let testUserReq = {};
-    // let a = {};
-    // a[userId] = { text: msgText };
-    userRequest[userId] = {
-      data: await getProductCalories(`desc=${dishFromMessage}`),
-    };
-
-    // userMessageText[userId] = { text: msgText };
+    console.log("checkUserCache.preparing to us cacheCheck");
+    await cacheCheck(userCache, dishFromMessage, userRequest);
     // userRequest[userId] = {
     //   data: await getProductCalories(`desc=${dishFromMessage}`),
     // };
-    // console.log("AAAAAAAAAAAAAAA");
-    // console.log(userRequest[userId]["data"]["urlForUnusualDishes"][3]);
-    // console.log(userRequest[userId]["data"][" urlForUnusualDishes"]);
-    // console.log("AAAAAAAAAAAAAAA");
   }
-  // console.log(
-  //   userCache[userId][currDate][dishFromMessage]["data"]["text"].size
-  // );
+
+  // async function cacheCheck() {
+  //   let mergeTextForAllCache = [];
+  //   let mergeUrlForUnusualDishesAllCashe = [];
+  //   let cacheUrl;
+  //   let keysFromCasheWithCurrDate = Object.keys(userCache[userId]);
+  //   if (userCache[userId]) {
+  //     console.log("1");
+  //     keysFromCasheWithCurrDate.forEach((el) => {
+  //       if (dishFromMessage in userCache[userId][el]) {
+  //         // console.log("2");
+  //         console.log(`we have this key ${dishFromMessage} in obj`);
+  //         mergeTextForAllCache.push(
+  //           ...userCache[userId][el][dishFromMessage]["data"]["text"]
+  //         );
+  //         mergeUrlForUnusualDishesAllCashe.push(
+  //           ...userCache[userId][el][dishFromMessage]["data"][
+  //             "urlForUnusualDishes"
+  //           ]
+  //         );
+  //       }
+  //     });
+  //   }
+
+  //   if (
+  //     (mergeTextForAllCache.length === 0) &
+  //     (mergeUrlForUnusualDishesAllCashe.length === 0)
+  //   ) {
+  //     console.log("Have no data in cache began download");
+  //     userRequest[userId] = {
+  //       data: await getProductCalories(`desc=${dishFromMessage}`),
+  //     };
+  //   }
+  //   if (mergeTextForAllCache.length > 0) {
+  //     console.log("i have data in cache");
+
+  //     userRequest[userId] = {
+  //       data: {},
+  //     };
+  //     cacheUrl =
+  //       userCache[userId][keysFromCasheWithCurrDate[0]][dishFromMessage][
+  //         "data"
+  //       ]["url"];
+
+  //     userRequest[userId]["data"]["text"] = JSON.parse(
+  //       JSON.stringify([...mergeTextForAllCache])
+  //     );
+  //     userRequest[userId]["data"]["urlForUnusualDishes"] = JSON.parse(
+  //       JSON.stringify([...mergeUrlForUnusualDishesAllCashe])
+  //     );
+
+  //     userRequest[userId]["data"]["url"] = cacheUrl;
+  //     console.log(userRequest);
+  //   }
+  // }
 }
-// {
-//   '339084941': {
-//     data: {
-//       response: [Object],
-//       url: 'https://www.nutracheck.co.uk/CaloriesIn/Product/Search?desc=potato',
-//       text: [Array]
-//     }
-//   }
-// }
-// checkUserCache();
 
 module.exports = { checkUserCache };

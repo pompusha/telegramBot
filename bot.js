@@ -22,19 +22,59 @@ const { pagination } = require("./api/pagination");
 let preparedDataForAccept = {};
 const userRequest = {};
 const userMessageText = {};
-//  id: { date: { dishFromMessage: [results, result], meet: [results, result] } },
+
 let userCache = {
-  // "0123304": { "20-01-2020": {} },
-  // 30000: { "01-01-2000": {} },
-  // 339084941: {
-  //   "01-01-2000": {},
-  //   "21-01-2025": {
-  //     potato: [
-  //       "Calories in Baby Potatoes, In Skins, Boiled or Steamed Per Average potatons, Boiled or Steamed Per Average potato (35g) - 24 calories | 0 fat",
-  //     ],
-  //   },
-  // },
+  339084941: {
+    "22-01-2020": {
+      null: {
+        data: {
+          text: new Set([
+            "Calories in Pecan Nuts Per Nut (2g) - 14 calories | 1.4 fat",
+            "Calories in Cashew Nuts, Roasted & Salted Per Nut (2g) - 12 calories | 1 fat",
+            "Calories in Fearne & Rosie Raspberry Jam 200g Per 10g serving - 16 calories | 0 fat",
+            "Calories in Fearne & Rosie Raspberry Jam 227g Per 10g serving - 16 calories | 0 fat",
+            "Calories in Roast Potatoes, Cooked in Vegetable Oil Per Small potato (50g) - 81 calories | 2.8 fat",
+            "Calories in Sweet Potato, Baked Per 100g - 115 calories | 0.4 fat",
+            "Calories in Roast Potatoes, Cooked with Low Calorie Spray Oil Per Small potato (50g) - 61 calories | 0.3 fat",
+            "Calories in Low Fat Fruit Yogurt Per Heaped dessertspoon (28g) - 22 calories | 0.3 fat",
+            "Calories in Fat Free Natural Diet Yogurt Per Heaped dessertspoon (28g) - 15 calories | 0.1 fat",
+            "Calories in Whole Milk Fruit Yogurt Per Heaped dessertspoon (28g) - 31 calories | 0.8 fat",
+            "Calories in Roast Chicken Breast Meat, No Skin (Cooked with Skin) Per 1 Slice (40g) - 61 calories | 1.4 fat",
+            "Calories in Chicken Curry, Homemade Per Small serving (180g) - 210 calories | 13.6 fat",
+            "Calories in Whole Chicken, Roasted, Meat & Skin, Weighed with Bone Per 100g - 138 calories | 7.9 fat",
+          ]),
+          urlForUnusualDishes: new Set([
+            "https://example.com/calories/chicken-soup",
+            "https://example.com/calories/chicken-blood",
+          ]),
+          url: "https://www.nutracheck.co.uk/CaloriesIn/Product/Search?desc=null",
+        },
+      },
+    },
+  },
 };
+// {'339084941':{'22-01-2020': { null: {data: { text: [Set],
+//     urlForUnusualDishes: [Set],
+//     url: 'https://www.nutracheck.co.uk/CaloriesIn/Product/Search?desc=null'}}}
+// *
+// {
+//   data: {
+//     text: Set(1) {
+//       'Calories in Almonds, Whole Per Almond (1.3g) - 7 calories | 0.6 fat'
+//     },
+//     urlForUnusualDishes: Set(1) { '49/Almonds%2C+Whole' },
+//     url: 'https://www.nutracheck.co.uk/CaloriesIn/Product/Search?desc=null'
+//   }
+// }
+// *
+// null: {
+//   data: {
+// text: [Set],
+// urlForUnusualDishes: [Set],
+// url: 'https://www.nutracheck.co.uk/CaloriesIn/Product/Search?desc=null'
+//   }
+// }
+// }
 let result;
 let dishFromRequest;
 let caloriesFromRequestChosenPortion;
@@ -61,9 +101,6 @@ bot.onText(regExpSlashStart, (msg) => {
 
 bot.on("message", async (msg, match) => {
   dishFromMessage = msg.text.toLowerCase().match(/((?!(\s?\d))(?!g\s))[a-z]+/g);
-  // console.log("_____");
-  // console.log(dishFromMessage);
-  // console.log("_____");
 
   if (msg.text === "Calories Consumed Per Day") {
     bot.sendMessage(msg.chat.id, await handlerText(msg));
@@ -71,7 +108,7 @@ bot.on("message", async (msg, match) => {
 
   if (/^\//g.test(msg.text) && !/\/\b[Ss]tart/g.test(msg.text)) {
     userId = msg.from.id;
-    // console.log(userMessageText);
+
     let date = new Date();
     let yy = date.getFullYear();
     let mm =
@@ -91,17 +128,13 @@ bot.on("message", async (msg, match) => {
       userRequest,
       msg.text
     );
-    // console.log(userRequest[userId]["data"]["url"]);
-    // console.log(userCache);
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //
+
     userMessageText[userId] = { text: msg.text };
-    // userRequest[userId] = {
-    //   data: await getProductCalories(`desc=${dishFromMessage}`),
-    // };
-    // console.log(userMessageText);
+    // console.log("userRequest");
+    // console.log("userRequest");
     // console.log(userRequest);
-    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // console.log("userRequest");
+    // console.log("userRequest");
     if (userRequest[userId]["data"]["text"][0] == "") {
       bot.sendMessage(msg.chat.id, "No any results pls format your request");
     } else {
@@ -120,14 +153,21 @@ bot.on("message", async (msg, match) => {
 
 bot.on("callback_query", async (query) => {
   userId = query.message.chat.id;
-  //
-  // console.log(query.data);
-  //
+
   if (query.data) {
     //
-    // console.log(`QUERY.data bot.js:${query.data} `);
+
     if (query.data === "Next") {
       if (userRequest.length != 0 || userRequest != "undundefined") {
+        console.log("BOT NEXT pagintion");
+        console.log("BOT NEXT pagintion");
+        console.log("BOT NEXT pagintion");
+        console.log(userRequest[userId]);
+        console.log("-------------------");
+        console.log(query.data);
+        console.log("BOT NEXT pagintion");
+        console.log("BOT NEXT pagintion");
+        console.log("BOT NEXT pagintion");
         try {
           let nextDatapage;
           nextDatapage = await pagination(
@@ -164,6 +204,9 @@ bot.on("callback_query", async (query) => {
       if (userRequest[userId]["data"]["text"].length > 0) {
         if (query.data.match("action")) {
           // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+          // console.log("BOT");
+          // console.log(userRequest[userId]["data"]["text"]);
+          // console.log("BOT");
           result = await allVariables(
             query.data,
             userMessageText[userId]["text"],
@@ -172,14 +215,16 @@ bot.on("callback_query", async (query) => {
             userRequest[userId]["data"]["urlForUnusualDishes"]
           );
           // console.log(userRequest[userId]["data"]["url"]);
-
+          // console.log("FROM BOT");
+          // console.log(userRequest[userId]["data"]);
+          // console.log("FROM BOT");
           // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
           preparedDataForAccept = {
             ...preparedDataForAccept,
             [userId]: result,
           };
         }
-
+        // console.log(userRequest);
         let messageText = handlerQueryKeyboard(
           preparedDataForAccept,
           query.data,
@@ -190,7 +235,8 @@ bot.on("callback_query", async (query) => {
           userRequest,
           userCache,
           currDate,
-          dishFromMessage
+          dishFromMessage,
+          result
         );
         bot.sendMessage(query.message.chat.id, messageText["text"], {
           parse_mode: messageText["keyboardAndParseMode"].parse_mode,
@@ -204,15 +250,6 @@ bot.on("callback_query", async (query) => {
         );
       }
     }
-    // console.log("endBOT");
-    // console.log("__________");
-    // console.log(userCache);
-    // console.log("__________");
-    // console.log(userCache[userId][currDate][dishFromMessage]);
-    // console.log("__________");
-    // console.log(JSON.stringify(userCache));
-    // console.log("__________");
-    // console.log("endBOT");
 
     return;
   }
