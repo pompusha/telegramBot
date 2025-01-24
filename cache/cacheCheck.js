@@ -21,7 +21,12 @@ async function cacheCheck(userCache, dishFromMessage, userRequest) {
             "urlForUnusualDishes"
           ]
         );
-        cacheUrl = userCache[userId][el][dishFromMessage]["data"]["url"];
+        if (userCache[userId][el][dishFromMessage]["data"]["url"]) {
+          cacheUrl = userCache[userId][el][dishFromMessage]["data"]["url"];
+        }
+        //
+        // cacheUrl = userCache[userId][el][dishFromMessage]["data"]["url"];
+        //
       }
     });
   }
@@ -46,12 +51,12 @@ async function cacheCheck(userCache, dishFromMessage, userRequest) {
     // console.log(...keysFromCasheWithCurrDate);
     // console.log(userCache[userId]);
     // console.log("cacheCheck");
-    if (!userRequest[userId]["data"]) {
-      console.log("cachecheck add obj data");
-      userRequest[userId] = {
-        data: {},
-      };
-    }
+    // if (userRequest[userId]) {
+    console.log("cachecheck add obj data");
+    userRequest[userId] = {
+      data: {},
+    };
+    // }
 
     // cacheUrl =
     //   userCache[userId][keysFromCasheWithCurrDate[0]][dishFromMessage]["data"][

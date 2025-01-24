@@ -159,8 +159,8 @@ bot.on("callback_query", async (query) => {
           //   );
           //   let imitRequest = JSON.parse(JSON.stringify(userRequest));
           //   imitRequest[userId]["data"]["text"] = [
-          //     [...imitRequest[userId]["data"]["text"]],
-          //     [...nextDatapage["text"]],
+          //     ...imitRequest[userId]["data"]["text"],
+          //     ...nextDatapage["text"],
           //   ];
           //   console.log("-------------------");
           //   console.log("BOT NEXT pagintion");
