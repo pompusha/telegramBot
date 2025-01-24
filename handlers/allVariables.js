@@ -40,7 +40,7 @@ async function allVariables(
   ) {
   } else {
     gramsCalorisFromDeepParse = await deeperRequestForUnusualDish(
-      urlForUnusualDishes,
+      urlForUnusualDishes[0],
       queryData
       // userRequest
     );

@@ -22,7 +22,6 @@ const { pagination } = require("./api/pagination");
 let preparedDataForAccept = {};
 const userRequest = {};
 const userMessageText = {};
-const page = 9;
 
 let userCache = {
   339084941: {
@@ -30,6 +29,8 @@ let userCache = {
       null: {
         data: {
           text: new Set([
+            //13 el
+
             "Calories in Pecan Nuts Per Nut (2g) - 14 calories | 1.4 fat",
             "Calories in Cashew Nuts, Roasted & Salted Per Nut (2g) - 12 calories | 1 fat",
             "Calories in Fearne & Rosie Raspberry Jam 200g Per 10g serving - 16 calories | 0 fat",
@@ -43,10 +44,12 @@ let userCache = {
             "Calories in Roast Chicken Breast Meat, No Skin (Cooked with Skin) Per 1 Slice (40g) - 61 calories | 1.4 fat",
             "Calories in Chicken Curry, Homemade Per Small serving (180g) - 210 calories | 13.6 fat",
             "Calories in Whole Chicken, Roasted, Meat & Skin, Weighed with Bone Per 100g - 138 calories | 7.9 fat",
+            ,
           ]),
           urlForUnusualDishes: new Set([
             "https://example.com/calories/chicken-soup",
             "https://example.com/calories/chicken-blood",
+            ,
           ]),
           url: "https://www.nutracheck.co.uk/CaloriesIn/Product/Search?desc=null",
         },
@@ -98,6 +101,10 @@ bot.on("message", async (msg, match) => {
     let dd = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
 
     currDate = `${dd}-${mm}-${yy}`;
+    //
+    //
+    //
+    //
 
     await checkUserCache(
       userId,
@@ -108,18 +115,32 @@ bot.on("message", async (msg, match) => {
       userRequest,
       msg.text
     );
-
+    // console.log("BOT userRequest");
+    // console.log(userRequest[userId]);
+    // console.log(userRequest[userId]["data"]);
+    // console.log("BOT userRequest");
+    //
+    //
+    //
     userMessageText[userId] = { text: msg.text };
-
-    if (userRequest[userId]["data"]["text"][0] == "") {
+    //
+    if (userRequest[userId]["data"]["text"][0][0] == "") {
+      //
       bot.sendMessage(msg.chat.id, "No any results pls format your request");
     } else {
+      // console.log();
+      let page;
+      page = userRequest[userId]["data"]["page"];
+      // console.log("_________________________________________");
+      // console.log(userRequest);
+      // console.log("_________________________________________");
       bot.sendMessage(
         // ne nraica
         msg.chat.id,
-        userRequest[userId]["data"]["text"].reduce((el, acc, index) => {
+        `You chose ${msg.text}
+        ${userRequest[userId]["data"]["text"][0].reduce((el, acc, index) => {
           return `${index}. ${acc}\n${el}`;
-        }, ""),
+        }, "")}`,
         createKeyboard(userRequest, userId)
       );
       return userRequest, userMessageText;
@@ -127,6 +148,7 @@ bot.on("message", async (msg, match) => {
   }
 });
 //
+
 bot.on("callback_query", async (query) => {
   userId = query.message.chat.id;
 
@@ -135,41 +157,33 @@ bot.on("callback_query", async (query) => {
 
     if (query.data === "Next") {
       if (userRequest.length != 0 || userRequest != "undundefined") {
-        // console.log("BOT NEXT pagintion");
-        // console.log("BOT NEXT pagintion");
-        // console.log("BOT NEXT pagintion");
-        // console.log(userRequest[userId]);
-        // console.log("-------------------");
-        // console.log(query.data);
-        // console.log("BOT NEXT pagintion");
-        // console.log("BOT NEXT pagintion");
-        // console.log("BOT NEXT pagintion");
         try {
           let nextDatapage;
+          userRequest[userId]["data"]["page"] =
+            userRequest[userId]["data"]["page"] + 1;
           nextDatapage = await pagination(
             userRequest[userId]["data"]["url"],
-            query.data
+            query.data,
+            userRequest[userId]["data"]["page"]
           );
+          console.log(`page ${userRequest[userId]["data"]["page"]}`);
+          //
 
-          // isolated();
-          // async function isolated() {
-          //   nextDatapage = await pagination(
-          //     userRequest[userId]["data"]["url"],
-          //     query.data
-          //   );
-          //   let imitRequest = JSON.parse(JSON.stringify(userRequest));
-          //   imitRequest[userId]["data"]["text"] = [
-          //     ...imitRequest[userId]["data"]["text"],
-          //     ...nextDatapage["text"],
-          //   ];
-          //   console.log("-------------------");
-          //   console.log("BOT NEXT pagintion");
-          //   console.log(imitRequest[userId]["data"]);
-          //   console.log("BOT NEXT pagintion");
-          //   console.log("-------------------");
-          // }
-
-          userRequest[query.from.id]["data"] = nextDatapage;
+          //
+          userRequest[query.from.id]["data"]["text"] = [
+            ...userRequest[query.from.id]["data"]["text"],
+            ...nextDatapage["text"],
+          ];
+          userRequest[query.from.id]["data"]["urlForUnusualDishes"] = [
+            ...userRequest[query.from.id]["data"]["urlForUnusualDishes"],
+            ...nextDatapage["urlForUnusualDishes"],
+          ];
+          userRequest[query.from.id]["data"]["url"] = JSON.parse(
+            JSON.stringify(nextDatapage["url"])
+          );
+          // userRequest[query.from.id]["data"] = nextDatapage;
+          // console.log(nextDatapage);
+          // console.log(userRequest[userId]["data"]);
         } catch (error) {
           console.log(error);
           return;
@@ -177,50 +191,57 @@ bot.on("callback_query", async (query) => {
       }
     } else if (query.data === "Previous") {
       try {
+        //
+        console.log(`page ${userRequest[userId]["data"]["page"]}`);
+        userRequest[userId]["data"]["page"] =
+          userRequest[userId]["data"]["page"] - 1;
+        //
         // console.log("previous");
-        let nextDatapage;
-        nextDatapage = await pagination(
-          userRequest[userId]["data"]["url"],
-          query.data
-        );
+        // let nextDatapage;
+        // nextDatapage = await pagination(
+        //   userRequest[userId]["data"]["url"],
+        //   query.data
+        // );
 
-        if (nextDatapage === undefined) {
-          console.log(`prev 0 :${nextDatapage}`);
+        if (userRequest[query.from.id]["data"] === undefined) {
+          console.log(`BOTgdeto 205 strochka `);
 
           return;
         } else {
-          userRequest[query.from.id]["data"] = nextDatapage;
+          userRequest[query.from.id]["data"];
         }
+
+        //
+
+        //
       } catch (error) {
         console.log(error);
       }
     }
     if (userRequest?.[userId]?.["data"]?.text?.length) {
-      if (userRequest[userId]["data"]["text"].length > 0) {
+      if (userRequest[userId]["data"]["text"][0].length > 0) {
         if (query.data.match("action")) {
           result = await allVariables(
             query.data,
             userMessageText[userId]["text"],
-            userRequest[userId]["data"]["text"],
+            userRequest[userId]["data"]["text"][0],
             userId,
             userRequest[userId]["data"]["urlForUnusualDishes"]
           );
-          // console.log(userRequest[userId]["data"]["url"]);
-          // console.log("FROM BOT");
-          // console.log(userRequest[userId]["data"]);
-          // console.log("FROM BOT");
-          // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
           preparedDataForAccept = {
             ...preparedDataForAccept,
             [userId]: result,
           };
         }
-        // console.log(userRequest);
+
         let messageText = handlerQueryKeyboard(
           preparedDataForAccept,
           query.data,
           userMessageText[userId]["text"],
-          userRequest[userId]["data"]["text"],
+          userRequest[userId]["data"]["text"][
+            userRequest[userId]["data"]["page"]
+          ],
           userId,
           userRequest[userId]["data"]["url"],
           userRequest,
@@ -241,7 +262,9 @@ bot.on("callback_query", async (query) => {
         );
       }
     }
-
+    // console.log("+++++++++");
+    // console.log(userRequest[userId]["data"]["text"]);
+    // console.log("+++++++++");
     return;
   }
 });

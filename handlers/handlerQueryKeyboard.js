@@ -72,8 +72,8 @@ function handlerQueryKeyboard(
         },
       };
     } else if (queryData === "Previous") {
-      let reply_markup = createKeyboard(userRequest, userId);
-
+      // let reply_markup = createKeyboard(userRequest, userId);
+      console.log("previus !!!!!");
       messageReply = userRequestUserIdDataText.reduce((el, acc, index) => {
         return `${index}. ${acc}\n${el}`;
       }, "");

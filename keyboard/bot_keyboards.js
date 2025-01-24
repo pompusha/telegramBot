@@ -6,8 +6,8 @@ const keyboardAcceptDecline = Keyboard.make([
 
 function createKeyboard(request, userId, previousPage, nextPage) {
   let finalArrayForKeyBoard = [];
-  let rows = Math.ceil(request[userId]["data"]["text"].length / 5);
-  let keys = request[userId]["data"]["text"].map((el, index) =>
+  let rows = Math.ceil(request[userId]["data"]["text"][0].length / 5);
+  let keys = request[userId]["data"]["text"][0].map((el, index) =>
     Key.callback(`${index}`, `action${index}`)
   );
   for (i = 0; i < rows; i++) {

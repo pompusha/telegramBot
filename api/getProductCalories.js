@@ -31,18 +31,26 @@ async function getProductCalories(product) {
       )
     );
     const calorieInfo = {
-      urlForUnusualDishes: urlPartForDeeperPage,
+      page: 0,
+      urlForUnusualDishes: [urlPartForDeeperPage],
       url: response["config"]["url"],
-      text: $(
-        "body > div.contentStretch > div.CenterContent > div > table > tbody"
-      )
-        .text()
-        .replace(/\s+/g, " ")
-        .trim()
-        .split(/(?<=\bfat)\s(?=Calories)/g)
-        .map((el) => {
-          return el.trim();
-        }),
+      text:
+        //
+        [
+          //
+          $(
+            "body > div.contentStretch > div.CenterContent > div > table > tbody"
+          )
+            .text()
+            .replace(/\s+/g, " ")
+            .trim()
+            .split(/(?<=\bfat)\s(?=Calories)/g)
+            .map((el) => {
+              return el.trim();
+            }),
+          //
+        ],
+      //
     };
     return calorieInfo;
   } catch (error) {

@@ -67,32 +67,6 @@ async function deeperRequestForUnusualDish(
     //   return { callForGramsFromDeepParse, gramsForPortionFromDeepParse };
     // } else {
     //   return { callForGramsFromDeepParse, gramsForPortionFromDeepParse };
-    // }
-
-    //
-    //
-    // console.log(request.data.replace(/\s+/g, " "));
-
-    // console.log(callForGrams.text());
-    // console.log(callGramsForCallories.text());
-    // console.log(a);
-    // const newLine = deepLink.text();
-    // .match(/(?<=\bhref="\/CaloriesIn\/Product\/)(.*)(?=\"\s\bclass)/g);
-    // console.log(deepLink.text());
-    // console.log(deepLink);
-    // console.log(typeof deepLink);
-    // console.log(
-    //   deepLink.text().replace(/\s+/g, " ").replace(/\s+/g, " ")
-    //   // .trim()
-    //   // .match(/(?<=\bhref="\/CaloriesIn\/Product\/)(.*)(?=\"\s\bclass)/g)
-    //   // .map((el) => {
-    //   //   return el.trim();
-    //   // })
-    // );
-    // console.log("aaaa");
-    //(?<=\bhref="\/CaloriesIn\/Product\/)(.*)(?=\"\s\bclass)
-    // console.log(callForGramsFromDeepParse);
-    // console.log(gramsForPortionFromDeepParse);
   } catch (error) {
     console.log(error);
   }

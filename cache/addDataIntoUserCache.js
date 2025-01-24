@@ -12,13 +12,10 @@ function addDataIntoUserCache(
 
   userCache[userId][currDate][dishFromMessage]["data"][
     "urlForUnusualDishes"
-  ].add(JSON.parse(JSON.stringify(urlForUnusualChoosenDish)));
-  userCache[userId][currDate][dishFromMessage]["data"]["text"].add(
-    JSON.parse(JSON.stringify(dishFromRequest))
-  );
-  console.log("++++++++++++++++++++");
-  console.log(userCache[userId][currDate][dishFromMessage]);
-  console.log("++++++++++++++++++++");
+  ].add([JSON.parse(JSON.stringify(urlForUnusualChoosenDish))]);
+  userCache[userId][currDate][dishFromMessage]["data"]["text"].add([
+    JSON.parse(JSON.stringify(dishFromRequest)),
+  ]);
 }
 
 module.exports = { addDataIntoUserCache };
