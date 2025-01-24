@@ -9,7 +9,7 @@ const { insert } = require("../database/insert");
 const { insertAcceptedData } = require("../database/insert");
 const { postAcceptedDataToDatabase } = require("../database/statistic");
 const { createKeyboard } = require("../keyboard/bot_keyboards");
-const { pagination } = require("../api/pagination");
+// const { pagination } = require("../api/pagination");
 const { addDataIntoUserCache } = require("../cache/addDataIntoUserCache");
 //
 //

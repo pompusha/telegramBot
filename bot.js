@@ -22,6 +22,7 @@ const { pagination } = require("./api/pagination");
 let preparedDataForAccept = {};
 const userRequest = {};
 const userMessageText = {};
+const page = 0;
 
 let userCache = {
   339084941: {
@@ -150,7 +151,7 @@ bot.on("message", async (msg, match) => {
     }
   }
 });
-
+//
 bot.on("callback_query", async (query) => {
   userId = query.message.chat.id;
 
@@ -159,21 +160,40 @@ bot.on("callback_query", async (query) => {
 
     if (query.data === "Next") {
       if (userRequest.length != 0 || userRequest != "undundefined") {
-        console.log("BOT NEXT pagintion");
-        console.log("BOT NEXT pagintion");
-        console.log("BOT NEXT pagintion");
-        console.log(userRequest[userId]);
-        console.log("-------------------");
-        console.log(query.data);
-        console.log("BOT NEXT pagintion");
-        console.log("BOT NEXT pagintion");
-        console.log("BOT NEXT pagintion");
+        // console.log("BOT NEXT pagintion");
+        // console.log("BOT NEXT pagintion");
+        // console.log("BOT NEXT pagintion");
+        // console.log(userRequest[userId]);
+        // console.log("-------------------");
+        // console.log(query.data);
+        // console.log("BOT NEXT pagintion");
+        // console.log("BOT NEXT pagintion");
+        // console.log("BOT NEXT pagintion");
         try {
           let nextDatapage;
           nextDatapage = await pagination(
             userRequest[userId]["data"]["url"],
             query.data
           );
+
+          isolated();
+          async function isolated() {
+            nextDatapage = await pagination(
+              userRequest[userId]["data"]["url"],
+              query.data
+            );
+            let imitRequest = JSON.parse(JSON.stringify(userRequest));
+            imitRequest[userId]["data"]["text"] = [
+              [...imitRequest[userId]["data"]["text"]],
+              [...nextDatapage["text"]],
+            ];
+            console.log("-------------------");
+            console.log("BOT NEXT pagintion");
+            console.log(imitRequest[userId]["data"]);
+            console.log("BOT NEXT pagintion");
+            console.log("-------------------");
+          }
+
           userRequest[query.from.id]["data"] = nextDatapage;
         } catch (error) {
           console.log(error);
@@ -203,10 +223,6 @@ bot.on("callback_query", async (query) => {
     if (userRequest?.[userId]?.["data"]?.text?.length) {
       if (userRequest[userId]["data"]["text"].length > 0) {
         if (query.data.match("action")) {
-          // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-          // console.log("BOT");
-          // console.log(userRequest[userId]["data"]["text"]);
-          // console.log("BOT");
           result = await allVariables(
             query.data,
             userMessageText[userId]["text"],
