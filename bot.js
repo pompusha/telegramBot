@@ -22,7 +22,7 @@ const { pagination } = require("./api/pagination");
 let preparedDataForAccept = {};
 const userRequest = {};
 const userMessageText = {};
-const page = 0;
+const page = 9;
 
 let userCache = {
   339084941: {
@@ -54,28 +54,7 @@ let userCache = {
     },
   },
 };
-// {'339084941':{'22-01-2020': { null: {data: { text: [Set],
-//     urlForUnusualDishes: [Set],
-//     url: 'https://www.nutracheck.co.uk/CaloriesIn/Product/Search?desc=null'}}}
-// *
-// {
-//   data: {
-//     text: Set(1) {
-//       'Calories in Almonds, Whole Per Almond (1.3g) - 7 calories | 0.6 fat'
-//     },
-//     urlForUnusualDishes: Set(1) { '49/Almonds%2C+Whole' },
-//     url: 'https://www.nutracheck.co.uk/CaloriesIn/Product/Search?desc=null'
-//   }
-// }
-// *
-// null: {
-//   data: {
-// text: [Set],
-// urlForUnusualDishes: [Set],
-// url: 'https://www.nutracheck.co.uk/CaloriesIn/Product/Search?desc=null'
-//   }
-// }
-// }
+
 let result;
 let dishFromRequest;
 let caloriesFromRequestChosenPortion;
@@ -131,11 +110,7 @@ bot.on("message", async (msg, match) => {
     );
 
     userMessageText[userId] = { text: msg.text };
-    // console.log("userRequest");
-    // console.log("userRequest");
-    // console.log(userRequest);
-    // console.log("userRequest");
-    // console.log("userRequest");
+
     if (userRequest[userId]["data"]["text"][0] == "") {
       bot.sendMessage(msg.chat.id, "No any results pls format your request");
     } else {
@@ -176,23 +151,23 @@ bot.on("callback_query", async (query) => {
             query.data
           );
 
-          isolated();
-          async function isolated() {
-            nextDatapage = await pagination(
-              userRequest[userId]["data"]["url"],
-              query.data
-            );
-            let imitRequest = JSON.parse(JSON.stringify(userRequest));
-            imitRequest[userId]["data"]["text"] = [
-              [...imitRequest[userId]["data"]["text"]],
-              [...nextDatapage["text"]],
-            ];
-            console.log("-------------------");
-            console.log("BOT NEXT pagintion");
-            console.log(imitRequest[userId]["data"]);
-            console.log("BOT NEXT pagintion");
-            console.log("-------------------");
-          }
+          // isolated();
+          // async function isolated() {
+          //   nextDatapage = await pagination(
+          //     userRequest[userId]["data"]["url"],
+          //     query.data
+          //   );
+          //   let imitRequest = JSON.parse(JSON.stringify(userRequest));
+          //   imitRequest[userId]["data"]["text"] = [
+          //     [...imitRequest[userId]["data"]["text"]],
+          //     [...nextDatapage["text"]],
+          //   ];
+          //   console.log("-------------------");
+          //   console.log("BOT NEXT pagintion");
+          //   console.log(imitRequest[userId]["data"]);
+          //   console.log("BOT NEXT pagintion");
+          //   console.log("-------------------");
+          // }
 
           userRequest[query.from.id]["data"] = nextDatapage;
         } catch (error) {

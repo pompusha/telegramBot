@@ -6,8 +6,6 @@ function addDataIntoUserCache(
   userRequest,
   urlForUnusualChoosenDish
 ) {
-  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  //
   userCache[userId][currDate][dishFromMessage]["data"]["url"] = JSON.parse(
     JSON.stringify(userRequest[userId]["data"]["url"])
   );
@@ -18,6 +16,9 @@ function addDataIntoUserCache(
   userCache[userId][currDate][dishFromMessage]["data"]["text"].add(
     JSON.parse(JSON.stringify(dishFromRequest))
   );
+  console.log("++++++++++++++++++++");
+  console.log(userCache[userId][currDate][dishFromMessage]);
+  console.log("++++++++++++++++++++");
 }
 
 module.exports = { addDataIntoUserCache };
