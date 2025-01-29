@@ -9,7 +9,6 @@ const { insert } = require("../database/insert");
 const { insertAcceptedData } = require("../database/insert");
 const { postAcceptedDataToDatabase } = require("../database/statistic");
 const { createKeyboard } = require("../keyboard/bot_keyboards");
-// const { pagination } = require("../api/pagination");
 const { addDataIntoUserCache } = require("../cache/addDataIntoUserCache");
 //
 //
@@ -41,6 +40,13 @@ function handlerQueryKeyboard(
       // console.log("+++++++++++++++ACCEPTED");
       messageReply = "That data is Accepted and saved into your Statistik";
       // console.log(preparedDataForAccept[userId]["dishFromRequest"]);
+      // console.log("+++++++++++++++ACCEPTED");
+      // console.log(userRequest);
+      // console.log("const");
+      // console.log("+++++++++++++++ACCEPTED");
+      // console.log("resultrrrrrrrrrrrrrrrr");
+      // console.log(result);
+      // console.log("resultrrrrrrrrrrrrrrrr");
       addDataIntoUserCache(
         userCache,
         preparedDataForAccept[userId]["dishFromRequest"],
@@ -59,7 +65,10 @@ function handlerQueryKeyboard(
       };
     } else if (queryData === "Next") {
       let keyboard = createKeyboard(userRequest, userId);
-
+      // console.log()
+      // console.log("userrequestuserrequestuserrequestuserrequest");
+      // console.log(userRequest[userId]["data"]);
+      // console.log("userrequestuserrequestuserrequestuserrequest");
       messageReply = userRequestUserIdDataText.reduce((el, acc, index) => {
         return `${index}. ${acc}\n${el}`;
       }, "");

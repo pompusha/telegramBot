@@ -5,7 +5,9 @@ const { deeperRequestForUnusualDish } = require("../api/deeperRequest");
 async function allVariables(
   queryData,
   userMessageText,
-  userRequest,
+  //
+  userRequestUserId,
+  //
   userId,
   urlForUnusualDishes
 ) {
@@ -15,14 +17,35 @@ async function allVariables(
   // console.log(
   //   "!!!Error dishFromRequest.match(/d+(?=s\bcalories\b)/g) /Warburtons 7"
   // );
-  dishFromRequest = userRequest[parseInt(queryData.match(/\d/g))];
-  // console.log("__________________________");
-  // console.log(parseInt(queryData.match(/\d/g)));
-  // console.log(userRequest);
+  // console.log(userRequestUserId);
+  if (userRequestUserId["data"]) {
+    dishFromRequest =
+      userRequestUserId["data"]["text"][userRequestUserId["data"]["page"]][
+        parseInt(queryData.match(/\d/g))
+      ].toString();
+  }
+  if (userRequestUserId["cacheData"]) {
+    // console.log("!!!!!!!");
+    // console.log(userRequestUserId["cacheData"]["text"][0]);
+    // console.log("!!!!!!!");
+    if (userRequestUserId["cacheData"]["page"] === "cachePage") {
+      // console.log("cache page");
+      // console.log(userRequestUserId["cacheData"]["text"][0][0]);
+      // console.log("cache page");
+      // console.log("parseInt(queryData.match(/d/g))");
+      // console.log(parseInt(queryData.match(/\d/g)));
+      // console.log("parseInt(queryData.match(/d/g))");
+      dishFromRequest =
+        userRequestUserId["cacheData"]["text"][
+          parseInt(queryData.match(/\d/g))
+        ].toString();
+    }
+  }
+  // console.log("------------");
   // console.log(dishFromRequest);
-  // console.log("__________________________");
-  // console.log();
+  // console.log("------------");
   // НУжна отладка но не уверен console.log(dishFromRequest);
+
   caloriesFromRequestChosenPortion = parseInt(
     dishFromRequest.match(/\d+(?=\s\bcalories\b)/g)
   );
@@ -42,8 +65,8 @@ async function allVariables(
     gramsCalorisFromDeepParse = await deeperRequestForUnusualDish(
       urlForUnusualDishes[0],
       queryData
-      // userRequest
     );
+
     portionFromSource =
       gramsCalorisFromDeepParse["gramsForPortionFromDeepParse"];
     caloriesFromRequestChosenPortion =

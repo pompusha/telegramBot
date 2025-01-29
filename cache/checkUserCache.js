@@ -16,8 +16,15 @@ async function checkUserCache(
   }
   if (!userCache[userId][currDate][dishFromMessage]) {
     userCache[userId][currDate][dishFromMessage] = {
-      data: { text: new Set(), urlForUnusualDishes: new Set() },
+      data: {
+        text: new Set(),
+        urlForUnusualDishes: [],
+        page: 0,
+        url: "",
+      },
     };
+    //
+    //
   }
   if (
     userCache[userId][currDate][dishFromMessage]["data"]["text"].size === 0 ||

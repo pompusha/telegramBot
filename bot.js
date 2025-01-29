@@ -35,24 +35,23 @@ let userCache = {
             "Calories in Cashew Nuts, Roasted & Salted Per Nut (2g) - 12 calories | 1 fat",
             "Calories in Fearne & Rosie Raspberry Jam 200g Per 10g serving - 16 calories | 0 fat",
             "Calories in Fearne & Rosie Raspberry Jam 227g Per 10g serving - 16 calories | 0 fat",
-            "Calories in Roast Potatoes, Cooked in Vegetable Oil Per Small potato (50g) - 81 calories | 2.8 fat",
-            "Calories in Sweet Potato, Baked Per 100g - 115 calories | 0.4 fat",
-            "Calories in Roast Potatoes, Cooked with Low Calorie Spray Oil Per Small potato (50g) - 61 calories | 0.3 fat",
-            "Calories in Low Fat Fruit Yogurt Per Heaped dessertspoon (28g) - 22 calories | 0.3 fat",
-            "Calories in Fat Free Natural Diet Yogurt Per Heaped dessertspoon (28g) - 15 calories | 0.1 fat",
-            "Calories in Whole Milk Fruit Yogurt Per Heaped dessertspoon (28g) - 31 calories | 0.8 fat",
-            "Calories in Roast Chicken Breast Meat, No Skin (Cooked with Skin) Per 1 Slice (40g) - 61 calories | 1.4 fat",
-            "Calories in Chicken Curry, Homemade Per Small serving (180g) - 210 calories | 13.6 fat",
-            "Calories in Whole Chicken, Roasted, Meat & Skin, Weighed with Bone Per 100g - 138 calories | 7.9 fat",
-            ,
+            // "Calories in Roast Potatoes, Cooked in Vegetable Oil Per Small potato (50g) - 81 calories | 2.8 fat",
+            // "Calories in Sweet Potato, Baked Per 100g - 115 calories | 0.4 fat",
+            // "Calories in Roast Potatoes, Cooked with Low Calorie Spray Oil Per Small potato (50g) - 61 calories | 0.3 fat",
+            // "Calories in Low Fat Fruit Yogurt Per Heaped dessertspoon (28g) - 22 calories | 0.3 fat",
+            // "Calories in Fat Free Natural Diet Yogurt Per Heaped dessertspoon (28g) - 15 calories | 0.1 fat",
+            // "Calories in Whole Milk Fruit Yogurt Per Heaped dessertspoon (28g) - 31 calories | 0.8 fat",
+            // "Calories in Roast Chicken Breast Meat, No Skin (Cooked with Skin) Per 1 Slice (40g) - 61 calories | 1.4 fat",
+            // "Calories in Chicken Curry, Homemade Per Small serving (180g) - 210 calories | 13.6 fat",
+            // "Calories in Whole Chicken, Roasted, Meat & Skin, Weighed with Bone Per 100g - 138 calories | 7.9 fat",
           ]),
           urlForUnusualDishes: new Set([
             "https://example.com/calories/chicken-soup",
             "https://example.com/calories/chicken-blood",
-            ,
           ]),
           url: "https://www.nutracheck.co.uk/CaloriesIn/Product/Search?desc=null",
         },
+        page: 0,
       },
     },
   },
@@ -154,68 +153,101 @@ bot.on("callback_query", async (query) => {
 
   if (query.data) {
     //
-
+    let nextDatapage;
     if (query.data === "Next") {
-      if (userRequest.length != 0 || userRequest != "undundefined") {
-        try {
-          let nextDatapage;
-          userRequest[userId]["data"]["page"] =
-            userRequest[userId]["data"]["page"] + 1;
-          nextDatapage = await pagination(
-            userRequest[userId]["data"]["url"],
-            query.data,
-            userRequest[userId]["data"]["page"]
-          );
-          console.log(`page ${userRequest[userId]["data"]["page"]}`);
-          //
+      // console.log(`userRequest.length :${userRequest.length}`);
+      // console.log(userRequest);
+      // console.log("nety");
+      if (userRequest[userId]) {
+        // console.log("SYKA TI RABISH");
+        // console.log(`page ${userRequest[userId]["data"]["page"]}`);
+        // console.log("SYKA TI RABISH");
+        // console.log("cosiak tyt");
+        // console.log(userRequest.length);
+        if (userRequest[userId]["data"] != undefined) {
+          try {
+            if (
+              userRequest[userId]["data"]["text"].length >
+              userRequest[userId]["data"]["page"] + 1
+            ) {
+              userRequest[userId]["data"]["page"] =
+                userRequest[userId]["data"]["page"] + 1;
+              // console.log(
+              //   `length of userRequestText more then PAGE+1 :${userRequest[userId]["data"]["text"].length} >${userRequest[userId]["data"]["page"]} + 1`
+              // );
+              // return userRequest;
+            } else if (
+              userRequest[userId]["data"]["text"].length ===
+              userRequest[userId]["data"]["page"] + 1
+            ) {
+              //
+              //
+              // console.log(
+              //   `length of userRequestText LESS then PAGE+1 beganDOwnload :${
+              //     userRequest[userId]["data"]["text"].length
+              //   } === ${userRequest[userId]["data"]["page"] + 1}`
+              // );
+              //
+              //
+              nextDatapage = await pagination(
+                userRequest[userId],
+                // ["data"]["url"],
+                query.data,
+                userRequest[userId]["data"]["page"]
+              );
 
-          //
-          userRequest[query.from.id]["data"]["text"] = [
-            ...userRequest[query.from.id]["data"]["text"],
-            ...nextDatapage["text"],
-          ];
-          userRequest[query.from.id]["data"]["urlForUnusualDishes"] = [
-            ...userRequest[query.from.id]["data"]["urlForUnusualDishes"],
-            ...nextDatapage["urlForUnusualDishes"],
-          ];
-          userRequest[query.from.id]["data"]["url"] = JSON.parse(
-            JSON.stringify(nextDatapage["url"])
-          );
-          // userRequest[query.from.id]["data"] = nextDatapage;
-          // console.log(nextDatapage);
-          // console.log(userRequest[userId]["data"]);
-        } catch (error) {
-          console.log(error);
-          return;
+              userRequest[query.from.id]["data"]["text"] = [
+                ...userRequest[query.from.id]["data"]["text"],
+                ...nextDatapage["text"],
+              ];
+              userRequest[query.from.id]["data"]["urlForUnusualDishes"] = [
+                ...userRequest[query.from.id]["data"]["urlForUnusualDishes"],
+                ...nextDatapage["urlForUnusualDishes"],
+              ];
+              userRequest[query.from.id]["data"]["url"] = JSON.parse(
+                JSON.stringify(nextDatapage["url"])
+              );
+            }
+
+            //
+          } catch (error) {
+            console.log(error);
+            return;
+          }
         }
       }
     } else if (query.data === "Previous") {
-      try {
-        //
-        console.log(`page ${userRequest[userId]["data"]["page"]}`);
-        userRequest[userId]["data"]["page"] =
-          userRequest[userId]["data"]["page"] - 1;
-        //
-        // console.log("previous");
-        // let nextDatapage;
-        // nextDatapage = await pagination(
-        //   userRequest[userId]["data"]["url"],
-        //   query.data
-        // );
+      if (userRequest[userId]) {
+        try {
+          //
+          // console.log(`page ${userRequest[userId]["data"]["page"]}`);
+          if (userRequest[userId]["data"]["page"] > 0) {
+            userRequest[userId]["data"]["page"] =
+              userRequest[userId]["data"]["page"] - 1;
+          }
+          console.log(`page ${userRequest[userId]["data"]["page"]}`);
+          //
+          // console.log("previous");
+          // let nextDatapage;
+          // nextDatapage = await pagination(
+          //   userRequest[userId]["data"]["url"],
+          //   query.data
+          // );
 
-        if (userRequest[query.from.id]["data"] === undefined) {
-          console.log(`BOTgdeto 205 strochka `);
+          if (userRequest[query.from.id]["data"] === undefined) {
+            console.log(`BOTgdeto 205 strochka `);
 
-          return;
-        } else {
-          userRequest[query.from.id]["data"];
+            return;
+          } else {
+            userRequest[query.from.id]["data"];
+          }
+
+          //
+
+          //
+        } catch (error) {
+          console.log(error);
         }
-
-        //
-
-        //
-      } catch (error) {
-        console.log(error);
       }
     }
     if (userRequest?.[userId]?.["data"]?.text?.length) {
@@ -224,7 +256,9 @@ bot.on("callback_query", async (query) => {
           result = await allVariables(
             query.data,
             userMessageText[userId]["text"],
-            userRequest[userId]["data"]["text"][0],
+            //
+            userRequest[userId],
+            //
             userId,
             userRequest[userId]["data"]["urlForUnusualDishes"]
           );
@@ -234,14 +268,20 @@ bot.on("callback_query", async (query) => {
             [userId]: result,
           };
         }
-
+        // console.log("++++++++++");
+        // console.log(userRequest[userId]);
+        // console.log("++++++++++++");
         let messageText = handlerQueryKeyboard(
           preparedDataForAccept,
           query.data,
           userMessageText[userId]["text"],
+          //
+          //
           userRequest[userId]["data"]["text"][
             userRequest[userId]["data"]["page"]
           ],
+          //
+          //
           userId,
           userRequest[userId]["data"]["url"],
           userRequest,
