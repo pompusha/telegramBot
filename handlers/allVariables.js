@@ -8,8 +8,9 @@ async function allVariables(
   //
   userRequestUserId,
   //
-  userId,
-  urlForUnusualDishes
+  userId
+  //
+  // urlForUnusualDishes
 ) {
   let dishFromRequest;
   let urlForUnusualChoosenDish;
@@ -55,15 +56,49 @@ async function allVariables(
     .match(/((?<=\bPer\s)(.*)(?=\s\-))/g)
     .toString()
     .match(/\d+\.?(\d+)?(g|\bml)/g);
-
+  console.log("============");
+  console.log(userRequestUserId["data"]["urlForUnusualDishes"]);
+  console.log("------------");
+  console.log(userRequestUserId);
+  console.log("------------");
+  console.log(
+    userRequestUserId["data"]["urlForUnusualDishes"][
+      userRequestUserId["data"]["page"]
+    ][parseInt(queryData.match(/\d/g))]
+  );
+  console.log("============");
   if (
     /\d+(\ml|g)/g.test(
       dishFromRequest.match(/((?<=\bPer\s)(.*)(?=\s\-))/g).toString()
     )
   ) {
   } else {
+    let cashOrDownoladed;
+    if (userRequestUserId["cacheData"]) {
+      if (userRequestUserId["cacheData"]["page"] === "cachePage") {
+        console.log("cache");
+        cashOrDownoladed = userRequestUserId["data"]["urlForUnusualDishes"][0];
+      } else if (userRequestUserId["cacheData"]["page"] === "downloaded") {
+        console.log("download");
+        cashOrDownoladed =
+          userRequestUserId["data"]["urlForUnusualDishes"][
+            userRequestUserId["data"]["page"]
+          ][parseInt(queryData.match(/\d/g))];
+      }
+    } else {
+      console.log("else downloaded");
+      cashOrDownoladed =
+        userRequestUserId["data"]["urlForUnusualDishes"][
+          userRequestUserId["data"]["page"]
+        ][parseInt(queryData.match(/\d/g))];
+    }
+    //
     gramsCalorisFromDeepParse = await deeperRequestForUnusualDish(
-      urlForUnusualDishes[0],
+      cashOrDownoladed,
+      // userRequestUserId["data"]["urlForUnusualDishes"][
+      //   userRequestUserId["data"]["page"]
+      // ][parseInt(queryData.match(/\d/g))],
+      // urlForUnusualDishes[0],
       queryData
     );
 
@@ -85,9 +120,23 @@ async function allVariables(
     .toString()
     .trim();
 
-  if (urlForUnusualDishes.length > 1) {
+  // userRequestUserId["data"]["urlForUnusualDishes"][
+  //   userRequestUserId["data"]["page"]
+  // ][parseInt(queryData.match(/\d/g))];
+
+  if (
+    userRequestUserId["data"]["urlForUnusualDishes"][
+      userRequestUserId["data"]["page"]
+    ].length > 1
+  ) {
+    //
+    console.log(
+      `urlForUnusualChoosenDish: ${urlForUnusualChoosenDish} allVariables`
+    );
     urlForUnusualChoosenDish =
-      urlForUnusualDishes[parseFloat(queryData.match(/\d+/g))];
+      userRequestUserId["data"]["urlForUnusualDishes"][
+        userRequestUserId["data"]["page"]
+      ][parseInt(queryData.match(/\d/g))];
   } else {
     urlForUnusualChoosenDish = "deep links are not available.";
   }

@@ -15,6 +15,7 @@ async function getProductCalories(product) {
   try {
     const response = await axios.get(url);
     const $ = cheerio.load(response.data);
+
     const searchNextOnPage = $(
       "body > div.contentStretch > div.CenterContent > div > div:nth-child(4) > div.vMargin.textMedium > a.pull-right"
     )
@@ -30,27 +31,29 @@ async function getProductCalories(product) {
         )
       )
     );
+    const nextPage = $(
+      "body > div.contentStretch > div.CenterContent > div > div:nth-child(4) > div.vMargin.textMedium > a.pull-right"
+    ).text();
+
+    // console.log("findNextOnPagefindNextOnPagefindNextOnPage");
+    // console.log(findNextOnPage);
+    // console.log("findNextOnPagefindNextOnPagefindNextOnPage");
+
     const calorieInfo = {
       page: 0,
       urlForUnusualDishes: [urlPartForDeeperPage],
       url: response["config"]["url"],
-      text:
-        //
-        [
-          //
-          $(
-            "body > div.contentStretch > div.CenterContent > div > table > tbody"
-          )
-            .text()
-            .replace(/\s+/g, " ")
-            .trim()
-            .split(/(?<=\bfat)\s(?=Calories)/g)
-            .map((el) => {
-              return el.trim();
-            }),
-          //
-        ],
-      //
+      nextPage: nextPage,
+      text: [
+        $("body > div.contentStretch > div.CenterContent > div > table > tbody")
+          .text()
+          .replace(/\s+/g, " ")
+          .trim()
+          .split(/(?<=\bfat)\s(?=Calories)/g)
+          .map((el) => {
+            return el.trim();
+          }),
+      ],
     };
     return calorieInfo;
   } catch (error) {

@@ -259,8 +259,8 @@ bot.on("callback_query", async (query) => {
             //
             userRequest[userId],
             //
-            userId,
-            userRequest[userId]["data"]["urlForUnusualDishes"]
+            userId
+            // userRequest[userId]["data"]["urlForUnusualDishes"]
           );
 
           preparedDataForAccept = {

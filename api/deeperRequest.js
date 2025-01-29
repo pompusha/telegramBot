@@ -17,9 +17,7 @@ async function deeperRequestForUnusualDish(
 
   // console.log("aaaa");
   try {
-    let url = `https://www.nutracheck.co.uk/CaloriesIn/Product/${
-      urlForUnusualDishes[parseFloat(queryData.match(/\d+/g))]
-    }`;
+    let url = `https://www.nutracheck.co.uk/CaloriesIn/Product/${urlForUnusualDishes}`;
     let request = await axios.get(url);
 
     const $ = cheerio.load(request.data);
