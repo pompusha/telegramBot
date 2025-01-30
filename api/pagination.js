@@ -35,26 +35,35 @@ async function pagination(userRequestUserId, command, page) {
           return getProductCalories(newUrl.searchParams.toString());
         }
       }
+      //
       console.log(
         "!!!!!!!!!!!!!!!!!!!!!!FIX NEXT PAGE do not CHECK NEXT ON PAGE ETERNAL PAGINATION!!!!!!!!!!!!!!!!!!!!"
       );
+      //
       if (
         !userRequestUserId["cacheData"] ||
         userRequestUserId["cacheData"]["page"] === "downloaded"
       ) {
-        // && userRequestUserId["data"]["nextPage"] === "Next"
-        {
+        if (userRequestUserId["data"]["nextPage"] === "Next") {
+          // && userRequestUserId["data"]["nextPage"] === "Next"
           // console.log(
           //   `!userRequestUserId["cacheData"] doesn't exist ${userRequestUserId}`
           // );
-          console.log(userRequestUserId);
+          //
+          // console.log(userRequestUserId);
+          //
           newUrl = new URL(userRequestUserId["data"]["url"]);
           pageNumber = parseInt(~~newUrl.searchParams.get("page"));
           userRequestUserId["data"]["page"] =
             userRequestUserId["data"]["page"] + 1;
           newUrl.searchParams.set("page", pageNumber + 1);
           console.log(`newUrl : ${newUrl}`);
+          // console.log("have no next");
+          // console.log(userRequestUserId["data"]);
+          // console.log("have no next");
           return getProductCalories(newUrl.searchParams.toString());
+        } else {
+          return userRequestUserId["data"];
         }
       }
       // const newUrl = new URL(userRequestUserId["data"]["url"]);

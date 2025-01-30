@@ -195,7 +195,9 @@ bot.on("callback_query", async (query) => {
                 query.data,
                 userRequest[userId]["data"]["page"]
               );
-
+              // console.log("0000000000000000000000");
+              // console.log(nextDatapage);
+              // console.log("0000000000000000000000");
               userRequest[query.from.id]["data"]["text"] = [
                 ...userRequest[query.from.id]["data"]["text"],
                 ...nextDatapage["text"],
