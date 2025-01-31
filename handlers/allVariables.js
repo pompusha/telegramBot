@@ -10,7 +10,6 @@ async function allVariables(
   //
   userId
   //
-  // urlForUnusualDishes
 ) {
   let dishFromRequest;
   let urlForUnusualChoosenDish;
@@ -57,16 +56,18 @@ async function allVariables(
     .toString()
     .match(/\d+\.?(\d+)?(g|\bml)/g);
   console.log("============");
-  console.log(userRequestUserId["data"]["urlForUnusualDishes"]);
-  console.log("------------");
-  console.log(userRequestUserId);
-  console.log("------------");
+  // console.log(userRequestUserId["data"]["urlForUnusualDishes"]);
+  // console.log("------------");
+  // console.log(userRequestUserId);
+  // console.log("------------");
   console.log(
     userRequestUserId["data"]["urlForUnusualDishes"][
       userRequestUserId["data"]["page"]
     ][parseInt(queryData.match(/\d/g))]
   );
   console.log("============");
+  //
+  //
   if (
     /\d+(\ml|g)/g.test(
       dishFromRequest.match(/((?<=\bPer\s)(.*)(?=\s\-))/g).toString()
@@ -92,6 +93,8 @@ async function allVariables(
           userRequestUserId["data"]["page"]
         ][parseInt(queryData.match(/\d/g))];
     }
+    //
+    //
     //
     gramsCalorisFromDeepParse = await deeperRequestForUnusualDish(
       cashOrDownoladed,
@@ -133,12 +136,20 @@ async function allVariables(
     console.log(
       `urlForUnusualChoosenDish: ${urlForUnusualChoosenDish} allVariables`
     );
+    //
+    console.log(
+      "Такое ощущение что тут ошибка и он дробит юрл как то криво allvariables.js"
+    );
     urlForUnusualChoosenDish =
       userRequestUserId["data"]["urlForUnusualDishes"][
         userRequestUserId["data"]["page"]
       ][parseInt(queryData.match(/\d/g))];
+    //
+    console.log(
+      `urlForUnusualChoosenDish: ${urlForUnusualChoosenDish} allVariables`
+    );
   } else {
-    urlForUnusualChoosenDish = "deep links are not available.";
+    urlForUnusualChoosenDish = ["deep links are not available."];
   }
   // console.log(parseFloat(queryData.match(/\d+/g)));
   // console.log(urlForUnusualDishes[parseFloat(queryData.match(/\d+/g))]);

@@ -83,9 +83,26 @@ function handlerQueryKeyboard(
     } else if (queryData === "Previous") {
       // let reply_markup = createKeyboard(userRequest, userId);
       console.log("previus !!!!!");
-      messageReply = userRequestUserIdDataText.reduce((el, acc, index) => {
-        return `${index}. ${acc}\n${el}`;
-      }, "");
+
+      //
+      if (userRequest[userId]["cacheData"]["page"] === "cachePage") {
+        //
+        // console.log("--------------234");
+        // console.log(userRequest[userId]["cacheData"]["text"]);
+        // console.log("--------------234");
+        messageReply = userRequest[userId]["cacheData"]["text"].reduce(
+          (el, acc, index) => {
+            return `${index}. ${acc}\n${el}`;
+          },
+          ""
+        );
+        console.log(messageReply);
+        //
+      }
+      //
+      // messageReply = userRequestUserIdDataText.reduce((el, acc, index) => {
+      //   return `${index}. ${acc}\n${el}`;
+      // }, "");
 
       keyboard = createKeyboard(userRequest, userId);
       return {

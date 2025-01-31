@@ -11,7 +11,8 @@ const { allVariables } = require("./handlers/allVariables");
 const { handlerQueryKeyboard } = require("./handlers/handlerQueryKeyboard");
 const { handlerText } = require("./handlers/handlerText");
 const { checkUserCache } = require("./cache/checkUserCache");
-const { testHandlerText } = require("./handlers/testHandlerText");
+// const { testHandlerText } = require("./handlers/testHandlerText");
+const { cacheFirstMessage } = require("./handlers/cacheFirstMessage");
 const {
   keyboardAcceptDecline,
   createKeyboard,
@@ -114,35 +115,90 @@ bot.on("message", async (msg, match) => {
       userRequest,
       msg.text
     );
+    // console.log("!!!!!!!");
+    // console.log(JSON.stringify(userRequest));
+    // console.log("!!!!!!!");
     // console.log("BOT userRequest");
     // console.log(userRequest[userId]);
     // console.log(userRequest[userId]["data"]);
     // console.log("BOT userRequest");
     //
+    // console.log("cacheFirstMessage");
+    // console.log(JSON.stringify(userRequest));
+    // console.log("cacheFirstMessage");
     //
     //
     userMessageText[userId] = { text: msg.text };
     //
-    if (userRequest[userId]["data"]["text"][0][0] == "") {
-      //
-      bot.sendMessage(msg.chat.id, "No any results pls format your request");
-    } else {
-      // console.log();
-      let page;
-      page = userRequest[userId]["data"]["page"];
-      // console.log("_________________________________________");
-      // console.log(userRequest);
-      // console.log("_________________________________________");
-      bot.sendMessage(
-        // ne nraica
-        msg.chat.id,
-        `You chose ${msg.text}
-        ${userRequest[userId]["data"]["text"][0].reduce((el, acc, index) => {
+    // убрал тут было  if (userRequest[userId]["data"]["text"][0][0] == "")
+    if (userRequest[userId]["cacheData"] || userRequest[userId]["data"]) {
+      // console.log("aaaaaa");
+      // console.log("!!!!!!!");
+      // console.log(JSON.stringify(userRequest));
+      // console.log("!!!!!!!");
+      if (
+        //
+        !userRequest[userId]["data"]["text"] &&
+        userRequest[userId]["cacheData"]["page"] === "downloaded"
+        //
+      ) {
+        //
+        // console.log("bbbbb");
+        bot.sendMessage(msg.chat.id, "No any results pls format your request");
+      } else {
+        // console.log("cccccc");
+        // console.log("111111111111111111111");
+        // console.log(JSON.stringify(userRequest));
+        // console.log("111111111111111111111");
+        // console.log();
+        // let page;
+        let textMessage;
+
+        // page = userRequest[userId]["data"]["page"];
+        // console.log("_________________________________________");
+        // console.log(userRequest);
+        // console.log("_________________________________________");
+        textMessage = cacheFirstMessage(userRequest);
+        // console.log("BOT 142");
+        // console.log(textMessage);
+        // console.log("BOT 142");
+        // function cacheFirstMessage(userRequest) {
+        //   let page;
+        //   let firstAnswer;
+        //   if (userRequest[userId]["cacheData"]) {
+        //     if (userRequest[userId]["cacheData"]["page"] === "cachePage") {
+        //       console.log("Выбирает первый массив с перечнем из кеша");
+        //       console.log(userRequest[userId]["cacheData"]["text"]);
+        //       console.log("Выбирает первый массив с перечнем из кеша");
+        //       firstAnswer = userRequest[userId]["cacheData"]["text"];
+        //       return firstAnswer;
+        //     }
+        //   } else {
+        //     page = userRequest[userId]["data"]["page"];
+        //     console.log("Выбирает первое сообщение в массиве если нет кеша");
+        //     console.log(userRequest[userId]["data"]["text"][0]);
+        //     console.log("Выбирает первое сообщение в массиве если нет кеша");
+        //     firstAnswer = userRequest[userId]["data"]["text"][page];
+        //     return firstAnswer;
+        //   }
+        //   console.log("cacheFirstMessage");
+        //   console.log(userRequest);
+        //   console.log("cacheFirstMessage");
+        // }
+        // cacheFirstMessage();
+        bot.sendMessage(
+          // ne nraica
+
+          msg.chat.id,
+          `You chose ${msg.text}
+        ${textMessage.reduce((el, acc, index) => {
           return `${index}. ${acc}\n${el}`;
-        }, "")}`,
-        createKeyboard(userRequest, userId)
-      );
-      return userRequest, userMessageText;
+        }, "")}
+        `,
+          createKeyboard(userRequest, userId)
+        );
+        return userRequest, userMessageText;
+      }
     }
   }
 });
@@ -156,48 +212,54 @@ bot.on("callback_query", async (query) => {
     let nextDatapage;
     if (query.data === "Next") {
       // console.log(`userRequest.length :${userRequest.length}`);
-      // console.log(userRequest);
+
       // console.log("nety");
       if (userRequest[userId]) {
-        // console.log("SYKA TI RABISH");
-        // console.log(`page ${userRequest[userId]["data"]["page"]}`);
-        // console.log("SYKA TI RABISH");
-        // console.log("cosiak tyt");
-        // console.log(userRequest.length);
-        if (userRequest[userId]["data"] != undefined) {
-          try {
+        // console.log("ВОТ ТУТ ПОРАБОТАЙ С ИФОМ");
+        // console.log("BOT userRequest");
+        // console.log(userRequest);
+        // console.log("BOT userRequest");
+        //
+        //
+        await controlNextPage();
+        async function controlNextPage() {
+          if (!userRequest[userId]["data"]["text"]) {
+            //
+
+            //
+            let takeAllSighnAfterEquival = /(?<=\=)(.*)/g;
+            url = userRequest[userId]["cacheData"]["url"]
+              .match(takeAllSighnAfterEquival)
+              .toString();
+            // nextDatapage = await getProductCalories(url);
+            userRequest[userId]["cacheData"]["page"] = "downloaded";
+            //
+            let data = await getProductCalories(`desc=${url}`);
+            // userRequest[userId] = { ...userRequest[userId], ...data };
+            userRequest[userId]["data"] = await getProductCalories(
+              `desc=${url}`
+            );
+            // {
+            //   data: await getProductCalories(`desc=${url}`),
+            // };
+          } else {
             if (
               userRequest[userId]["data"]["text"].length >
               userRequest[userId]["data"]["page"] + 1
             ) {
               userRequest[userId]["data"]["page"] =
                 userRequest[userId]["data"]["page"] + 1;
-              // console.log(
-              //   `length of userRequestText more then PAGE+1 :${userRequest[userId]["data"]["text"].length} >${userRequest[userId]["data"]["page"]} + 1`
-              // );
-              // return userRequest;
             } else if (
               userRequest[userId]["data"]["text"].length ===
               userRequest[userId]["data"]["page"] + 1
             ) {
               //
-              //
-              // console.log(
-              //   `length of userRequestText LESS then PAGE+1 beganDOwnload :${
-              //     userRequest[userId]["data"]["text"].length
-              //   } === ${userRequest[userId]["data"]["page"] + 1}`
-              // );
-              //
-              //
               nextDatapage = await pagination(
                 userRequest[userId],
-                // ["data"]["url"],
                 query.data,
                 userRequest[userId]["data"]["page"]
               );
-              // console.log("0000000000000000000000");
-              // console.log(nextDatapage);
-              // console.log("0000000000000000000000");
+              //
               userRequest[query.from.id]["data"]["text"] = [
                 ...userRequest[query.from.id]["data"]["text"],
                 ...nextDatapage["text"],
@@ -210,53 +272,116 @@ bot.on("callback_query", async (query) => {
                 JSON.stringify(nextDatapage["url"])
               );
             }
-
-            //
-          } catch (error) {
-            console.log(error);
-            return;
           }
+          // console.log("NEXTNEXTNEXTNEXTNEXT");
+          // console.log(userRequest);
+          // console.log("=====================");
+          // console.log(JSON.stringify(userRequest));
+          // console.log("NEXTNEXTNEXTNEXTNEXT");
         }
-      }
-    } else if (query.data === "Previous") {
-      if (userRequest[userId]) {
-        try {
-          //
-          // console.log(`page ${userRequest[userId]["data"]["page"]}`);
-          if (userRequest[userId]["data"]["page"] > 0) {
-            userRequest[userId]["data"]["page"] =
-              userRequest[userId]["data"]["page"] - 1;
-          }
-          console.log(`page ${userRequest[userId]["data"]["page"]}`);
-          //
-          // console.log("previous");
-          // let nextDatapage;
-          // nextDatapage = await pagination(
-          //   userRequest[userId]["data"]["url"],
-          //   query.data
-          // );
-
-          if (userRequest[query.from.id]["data"] === undefined) {
-            console.log(`BOTgdeto 205 strochka `);
-
-            return;
-          } else {
-            userRequest[query.from.id]["data"];
-          }
-
-          //
-
-          //
-        } catch (error) {
-          console.log(error);
-        }
+        //
+        //
+        //
+        //   if (userRequest[userId]["data"]) {
+        //     try {
+        //       if (
+        //         userRequest[userId]["data"]["text"].length >
+        //         userRequest[userId]["data"]["page"] + 1
+        //       ) {
+        //         userRequest[userId]["data"]["page"] =
+        //           userRequest[userId]["data"]["page"] + 1;
+        //       } else if (
+        //         userRequest[userId]["data"]["text"].length ===
+        //         userRequest[userId]["data"]["page"] + 1
+        //       ) {
+        //         nextDatapage = await pagination(
+        //           userRequest[userId],
+        //           query.data,
+        //           userRequest[userId]["data"]["page"]
+        //         );
+        //         userRequest[query.from.id]["data"]["text"] = [
+        //           ...userRequest[query.from.id]["data"]["text"],
+        //           ...nextDatapage["text"],
+        //         ];
+        //         userRequest[query.from.id]["data"]["urlForUnusualDishes"] = [
+        //           ...userRequest[query.from.id]["data"]["urlForUnusualDishes"],
+        //           ...nextDatapage["urlForUnusualDishes"],
+        //         ];
+        //         userRequest[query.from.id]["data"]["url"] = JSON.parse(
+        //           JSON.stringify(nextDatapage["url"])
+        //         );
+        //       }
+        //     } catch (error) {
+        //       console.log(error);
+        //       return;
+        //     }
+        //   }
       }
     }
+    //
+
+    async function controlPrefiousPage() {
+      if (userRequest[userId]) {
+        // console.log("PreviousPreviousPreviousPrevious");
+        // console.log(userRequest[userId]["data"]);
+        // console.log("==========");
+        // console.log(userRequest[userId]["cacheData"]);
+        // console.log(JSON.stringify(userRequest));
+        // console.log("PreviousPreviousPreviousPrevious");
+        if (userRequest[userId]["data"]["page"] > 0) {
+          userRequest[userId]["data"]["page"] =
+            userRequest[userId]["data"]["page"] - 1;
+        } else if (userRequest[userId]["data"]["page"] === 0) {
+          //
+
+          //
+          if (userRequest[userId]["cacheData"]["text"]) {
+            userRequest[userId]["cacheData"]["page"] = "cachePage";
+            console.log("буду испольщовать кэшь обратно");
+          }
+        }
+
+        console.log(`page ${userRequest[userId]["data"]["page"]}`);
+
+        //
+      }
+    }
+    //
+    //
+    if (query.data === "Previous") {
+      console.log("Настроить пагинацию в КЭШЬ массив (после нулевого)");
+      await controlPrefiousPage();
+      // if (userRequest[userId]) {
+      //   try {
+
+      //     if (userRequest[userId]["data"]["page"] > 0) {
+      //       userRequest[userId]["data"]["page"] =
+      //         userRequest[userId]["data"]["page"] - 1;
+      //     }
+      //     console.log(`page ${userRequest[userId]["data"]["page"]}`);
+      //     if (userRequest[query.from.id]["data"] === undefined) {
+      //       console.log(`BOTgdeto 205 strochka `);
+      //       return;
+      //     } else {
+      //       userRequest[query.from.id]["data"];
+      //     }
+      //   } catch (error) {
+      //     console.log(error);
+      //   }
+      // }
+    }
+    //
+    //
     if (userRequest?.[userId]?.["data"]?.text?.length) {
+      // console.log("bot 274");
+      // console.log(userMessageText[userId]);
+      // console.log("bot 274");
+
       if (userRequest[userId]["data"]["text"][0].length > 0) {
         if (query.data.match("action")) {
           result = await allVariables(
             query.data,
+            // вот тут хуйня почему то иногда выпадает понять как воспроизвести
             userMessageText[userId]["text"],
             //
             userRequest[userId],
@@ -270,20 +395,15 @@ bot.on("callback_query", async (query) => {
             [userId]: result,
           };
         }
-        // console.log("++++++++++");
-        // console.log(userRequest[userId]);
-        // console.log("++++++++++++");
+
         let messageText = handlerQueryKeyboard(
           preparedDataForAccept,
           query.data,
           userMessageText[userId]["text"],
-          //
-          //
           userRequest[userId]["data"]["text"][
             userRequest[userId]["data"]["page"]
           ],
-          //
-          //
+
           userId,
           userRequest[userId]["data"]["url"],
           userRequest,
@@ -304,9 +424,7 @@ bot.on("callback_query", async (query) => {
         );
       }
     }
-    // console.log("+++++++++");
-    // console.log(userRequest[userId]["data"]["text"]);
-    // console.log("+++++++++");
+
     return;
   }
 });

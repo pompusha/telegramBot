@@ -31,6 +31,9 @@ function addDataIntoUserCache(
     JSON.parse(JSON.stringify(dishFromRequest)),
   ]);
   //
+  // console.log("addDataIntoUserCacheaddDataIntoUserCache");
+  // console.log(JSON.stringify(userCache));
+  // console.log("addDataIntoUserCacheaddDataIntoUserCache");
 }
 
 module.exports = { addDataIntoUserCache };
