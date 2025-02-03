@@ -25,6 +25,7 @@ function handlerQueryKeyboard(
   dishFromMessage,
   result
 ) {
+  let keyboard;
   if (/\w+\d/g.test(queryData)) {
     return createMessageReply(
       preparedDataForAccept[userId]["dishPortionFromUserMessage"],
@@ -36,17 +37,8 @@ function handlerQueryKeyboard(
     );
   } else if (/\w+/g.test(queryData)) {
     if (queryData === "Accept") {
-      // console.log(result["urlForUnusualChoosenDish"]);
-      // console.log("+++++++++++++++ACCEPTED");
       messageReply = "That data is Accepted and saved into your Statistik";
-      // console.log(preparedDataForAccept[userId]["dishFromRequest"]);
-      // console.log("+++++++++++++++ACCEPTED");
-      // console.log(userRequest);
-      // console.log("const");
-      // console.log("+++++++++++++++ACCEPTED");
-      // console.log("resultrrrrrrrrrrrrrrrr");
-      // console.log(result);
-      // console.log("resultrrrrrrrrrrrrrrrr");
+
       addDataIntoUserCache(
         userCache,
         preparedDataForAccept[userId]["dishFromRequest"],
@@ -64,11 +56,8 @@ function handlerQueryKeyboard(
         },
       };
     } else if (queryData === "Next") {
-      let keyboard = createKeyboard(userRequest, userId);
-      // console.log()
-      // console.log("userrequestuserrequestuserrequestuserrequest");
-      // console.log(userRequest[userId]["data"]);
-      // console.log("userrequestuserrequestuserrequestuserrequest");
+      keyboard = createKeyboard(userRequest, userId);
+
       messageReply = userRequestUserIdDataText.reduce((el, acc, index) => {
         return `${index}. ${acc}\n${el}`;
       }, "");
@@ -80,48 +69,61 @@ function handlerQueryKeyboard(
           keyboard,
         },
       };
+      //
     } else if (queryData === "Previous") {
-      // let reply_markup = createKeyboard(userRequest, userId);
       console.log("previus !!!!!");
 
-      //
-      if (userRequest[userId]["cacheData"]["page"] === "cachePage") {
-        //
-        // console.log("--------------234");
-        // console.log(userRequest[userId]["cacheData"]["text"]);
-        // console.log("--------------234");
-        messageReply = userRequest[userId]["cacheData"]["text"].reduce(
-          (el, acc, index) => {
-            return `${index}. ${acc}\n${el}`;
+      if (userRequest[userId]["cacheData"]) {
+        if (userRequest[userId]["cacheData"]["page"] === "cachePage") {
+          messageReply = userRequest[userId]["cacheData"]["text"].reduce(
+            (el, acc, index) => {
+              return `${index}. ${acc}\n${el}`;
+            },
+            ""
+          );
+          console.log(messageReply);
+        }
+        keyboard = createKeyboard(userRequest, userId);
+        return {
+          text: messageReply,
+          keyboardAndParseMode: {
+            parse_mode: "HTML",
+            keyboard,
           },
-          ""
-        );
-        console.log(messageReply);
+        };
+      } else if (userRequest[userId]["data"]) {
         //
-      }
-      //
-      // messageReply = userRequestUserIdDataText.reduce((el, acc, index) => {
-      //   return `${index}. ${acc}\n${el}`;
-      // }, "");
 
-      keyboard = createKeyboard(userRequest, userId);
-      return {
-        text: messageReply,
-        keyboardAndParseMode: {
-          parse_mode: "HTML",
-          keyboard,
-        },
-      };
-    } else {
-      messageReply =
-        "Choose something different from the list or write something new.";
-      return {
-        text: messageReply,
-        keyboardAndParseMode: {
-          parse_mode: "HTML",
-          keyboard,
-        },
-      };
+        messageReply = userRequest[userId]["data"]["text"][
+          userRequest[userId]["data"]["page"]
+        ].reduce((el, acc, index) => {
+          return `${index}. ${acc}\n${el}`;
+        }, "");
+        keyboard = createKeyboard(userRequest, userId);
+        console.log("!!!!!!!!!!zashelElseif");
+        return {
+          text: messageReply,
+          keyboardAndParseMode: {
+            parse_mode: "HTML",
+            keyboard,
+          },
+        };
+
+        //
+      } else {
+        console.log(
+          "previus else doesnt wor because here we should change keyboard not in BOT"
+        );
+        messageReply =
+          "Choose something different from the list or write something new.";
+        return {
+          text: messageReply,
+          keyboardAndParseMode: {
+            parse_mode: "HTML",
+            keyboard,
+          },
+        };
+      }
     }
   } else {
     return;

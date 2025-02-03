@@ -13,6 +13,8 @@ const { handlerText } = require("./handlers/handlerText");
 const { checkUserCache } = require("./cache/checkUserCache");
 // const { testHandlerText } = require("./handlers/testHandlerText");
 const { cacheFirstMessage } = require("./handlers/cacheFirstMessage");
+const { controlPrefiousPage } = require("./handlers/controlPrefiousPage");
+const { controlNextPage } = require("./handlers/controlNextPage");
 const {
   keyboardAcceptDecline,
   createKeyboard,
@@ -221,64 +223,64 @@ bot.on("callback_query", async (query) => {
         // console.log("BOT userRequest");
         //
         //
-        await controlNextPage();
-        async function controlNextPage() {
-          if (!userRequest[userId]["data"]["text"]) {
-            //
+        await controlNextPage(userRequest, query);
+        // async function controlNextPage() {
+        //   if (!userRequest[userId]["data"]["text"]) {
+        //     //
 
-            //
-            let takeAllSighnAfterEquival = /(?<=\=)(.*)/g;
-            url = userRequest[userId]["cacheData"]["url"]
-              .match(takeAllSighnAfterEquival)
-              .toString();
-            // nextDatapage = await getProductCalories(url);
-            userRequest[userId]["cacheData"]["page"] = "downloaded";
-            //
-            let data = await getProductCalories(`desc=${url}`);
-            // userRequest[userId] = { ...userRequest[userId], ...data };
-            userRequest[userId]["data"] = await getProductCalories(
-              `desc=${url}`
-            );
-            // {
-            //   data: await getProductCalories(`desc=${url}`),
-            // };
-          } else {
-            if (
-              userRequest[userId]["data"]["text"].length >
-              userRequest[userId]["data"]["page"] + 1
-            ) {
-              userRequest[userId]["data"]["page"] =
-                userRequest[userId]["data"]["page"] + 1;
-            } else if (
-              userRequest[userId]["data"]["text"].length ===
-              userRequest[userId]["data"]["page"] + 1
-            ) {
-              //
-              nextDatapage = await pagination(
-                userRequest[userId],
-                query.data,
-                userRequest[userId]["data"]["page"]
-              );
-              //
-              userRequest[query.from.id]["data"]["text"] = [
-                ...userRequest[query.from.id]["data"]["text"],
-                ...nextDatapage["text"],
-              ];
-              userRequest[query.from.id]["data"]["urlForUnusualDishes"] = [
-                ...userRequest[query.from.id]["data"]["urlForUnusualDishes"],
-                ...nextDatapage["urlForUnusualDishes"],
-              ];
-              userRequest[query.from.id]["data"]["url"] = JSON.parse(
-                JSON.stringify(nextDatapage["url"])
-              );
-            }
-          }
-          // console.log("NEXTNEXTNEXTNEXTNEXT");
-          // console.log(userRequest);
-          // console.log("=====================");
-          // console.log(JSON.stringify(userRequest));
-          // console.log("NEXTNEXTNEXTNEXTNEXT");
-        }
+        //     //
+        //     let takeAllSighnAfterEquival = /(?<=\=)(.*)/g;
+        //     url = userRequest[userId]["cacheData"]["url"]
+        //       .match(takeAllSighnAfterEquival)
+        //       .toString();
+        //     // nextDatapage = await getProductCalories(url);
+        //     userRequest[userId]["cacheData"]["page"] = "downloaded";
+        //     //
+        //     let data = await getProductCalories(`desc=${url}`);
+        //     // userRequest[userId] = { ...userRequest[userId], ...data };
+        //     userRequest[userId]["data"] = await getProductCalories(
+        //       `desc=${url}`
+        //     );
+        //     // {
+        //     //   data: await getProductCalories(`desc=${url}`),
+        //     // };
+        //   } else {
+        //     if (
+        //       userRequest[userId]["data"]["text"].length >
+        //       userRequest[userId]["data"]["page"] + 1
+        //     ) {
+        //       userRequest[userId]["data"]["page"] =
+        //         userRequest[userId]["data"]["page"] + 1;
+        //     } else if (
+        //       userRequest[userId]["data"]["text"].length ===
+        //       userRequest[userId]["data"]["page"] + 1
+        //     ) {
+        //       //
+        //       nextDatapage = await pagination(
+        //         userRequest[userId],
+        //         query.data,
+        //         userRequest[userId]["data"]["page"]
+        //       );
+        //       //
+        //       userRequest[query.from.id]["data"]["text"] = [
+        //         ...userRequest[query.from.id]["data"]["text"],
+        //         ...nextDatapage["text"],
+        //       ];
+        //       userRequest[query.from.id]["data"]["urlForUnusualDishes"] = [
+        //         ...userRequest[query.from.id]["data"]["urlForUnusualDishes"],
+        //         ...nextDatapage["urlForUnusualDishes"],
+        //       ];
+        //       userRequest[query.from.id]["data"]["url"] = JSON.parse(
+        //         JSON.stringify(nextDatapage["url"])
+        //       );
+        //     }
+        //   }
+        //   // console.log("NEXTNEXTNEXTNEXTNEXT");
+        //   // console.log(userRequest);
+        //   // console.log("=====================");
+        //   // console.log(JSON.stringify(userRequest));
+        //   // console.log("NEXTNEXTNEXTNEXTNEXT");
+        // }
         //
         //
         //
@@ -320,37 +322,32 @@ bot.on("callback_query", async (query) => {
     }
     //
 
-    async function controlPrefiousPage() {
-      if (userRequest[userId]) {
-        // console.log("PreviousPreviousPreviousPrevious");
-        // console.log(userRequest[userId]["data"]);
-        // console.log("==========");
-        // console.log(userRequest[userId]["cacheData"]);
-        // console.log(JSON.stringify(userRequest));
-        // console.log("PreviousPreviousPreviousPrevious");
-        if (userRequest[userId]["data"]["page"] > 0) {
-          userRequest[userId]["data"]["page"] =
-            userRequest[userId]["data"]["page"] - 1;
-        } else if (userRequest[userId]["data"]["page"] === 0) {
-          //
+    // async function controlPrefiousPage() {
+    //   if (userRequest[userId]) {
 
-          //
-          if (userRequest[userId]["cacheData"]["text"]) {
-            userRequest[userId]["cacheData"]["page"] = "cachePage";
-            console.log("буду испольщовать кэшь обратно");
-          }
-        }
+    //     if (userRequest[userId]["data"]["page"] > 0) {
+    //       userRequest[userId]["data"]["page"] =
+    //         userRequest[userId]["data"]["page"] - 1;
+    //     } else if (userRequest[userId]["data"]["page"] === 0) {
+    //       //
 
-        console.log(`page ${userRequest[userId]["data"]["page"]}`);
+    //       //
+    //       if (userRequest[userId]["cacheData"]["text"]) {
+    //         userRequest[userId]["cacheData"]["page"] = "cachePage";
+    //         console.log("буду испольщовать кэшь обратно");
+    //       }
+    //     }
 
-        //
-      }
-    }
-    //
-    //
+    //     console.log(`page ${userRequest[userId]["data"]["page"]}`);
+
+    //     //
+    //   }
+    // }
+    // //
+    // //
     if (query.data === "Previous") {
       console.log("Настроить пагинацию в КЭШЬ массив (после нулевого)");
-      await controlPrefiousPage();
+      await controlPrefiousPage(userRequest);
       // if (userRequest[userId]) {
       //   try {
 
