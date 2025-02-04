@@ -20,7 +20,8 @@ const {
   createKeyboard,
   keyboardForSevenDaysStatistic,
 } = require("./keyboard/bot_keyboards");
-const { pagination } = require("./api/pagination");
+const { cacheCheck } = require("./cache/cacheCheck");
+// const { pagination } = require("./api/pagination");
 
 let preparedDataForAccept = {};
 const userRequest = {};
@@ -54,7 +55,7 @@ let userCache = {
           ]),
           url: "https://www.nutracheck.co.uk/CaloriesIn/Product/Search?desc=null",
         },
-        page: 0,
+        page: "cacheCheck",
       },
     },
   },
@@ -85,121 +86,74 @@ bot.onText(regExpSlashStart, (msg) => {
 });
 
 bot.on("message", async (msg, match) => {
-  dishFromMessage = msg.text.toLowerCase().match(/((?!(\s?\d))(?!g\s))[a-z]+/g);
+  if (msg.text) {
+    dishFromMessage = msg.text
+      .toLowerCase()
+      .match(/((?!(\s?\d))(?!g\s))[a-z]+/g);
 
-  if (msg.text === "Calories Consumed Per Day") {
-    bot.sendMessage(msg.chat.id, await handlerText(msg));
-  }
+    if (msg.text === "Calories Consumed Per Day") {
+      bot.sendMessage(msg.chat.id, await handlerText(msg));
+    }
 
-  if (/^\//g.test(msg.text) && !/\/\b[Ss]tart/g.test(msg.text)) {
-    userId = msg.from.id;
+    if (/^\//g.test(msg.text) && !/\/\b[Ss]tart/g.test(msg.text)) {
+      userId = msg.from.id;
 
-    let date = new Date();
-    let yy = date.getFullYear();
-    let mm =
-      date.getMonth() + 1 < 10
-        ? `0${date.getMonth() + 1}`
-        : date.getMonth() + 1;
-    let dd = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
+      let date = new Date();
+      let yy = date.getFullYear();
+      let mm =
+        date.getMonth() + 1 < 10
+          ? `0${date.getMonth() + 1}`
+          : date.getMonth() + 1;
+      let dd = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
 
-    currDate = `${dd}-${mm}-${yy}`;
-    //
-    //
-    //
-    //
+      currDate = `${dd}-${mm}-${yy}`;
+      //
 
-    await checkUserCache(
-      userId,
-      currDate,
-      userMessageText,
-      dishFromMessage,
-      userCache,
-      userRequest,
-      msg.text
-    );
-    // console.log("!!!!!!!");
-    // console.log(JSON.stringify(userRequest));
-    // console.log("!!!!!!!");
-    // console.log("BOT userRequest");
-    // console.log(userRequest[userId]);
-    // console.log(userRequest[userId]["data"]);
-    // console.log("BOT userRequest");
-    //
-    // console.log("cacheFirstMessage");
-    // console.log(JSON.stringify(userRequest));
-    // console.log("cacheFirstMessage");
-    //
-    //
-    userMessageText[userId] = { text: msg.text };
-    //
-    // убрал тут было  if (userRequest[userId]["data"]["text"][0][0] == "")
-    if (userRequest[userId]["cacheData"] || userRequest[userId]["data"]) {
-      // console.log("aaaaaa");
-      // console.log("!!!!!!!");
-      // console.log(JSON.stringify(userRequest));
-      // console.log("!!!!!!!");
-      if (
-        //
-        !userRequest[userId]["data"]["text"] &&
-        userRequest[userId]["cacheData"]["page"] === "downloaded"
-        //
-      ) {
-        //
-        // console.log("bbbbb");
-        bot.sendMessage(msg.chat.id, "No any results pls format your request");
-      } else {
-        // console.log("cccccc");
-        // console.log("111111111111111111111");
-        // console.log(JSON.stringify(userRequest));
-        // console.log("111111111111111111111");
-        // console.log();
-        // let page;
-        let textMessage;
+      //
 
-        // page = userRequest[userId]["data"]["page"];
-        // console.log("_________________________________________");
-        // console.log(userRequest);
-        // console.log("_________________________________________");
-        textMessage = cacheFirstMessage(userRequest);
-        // console.log("BOT 142");
-        // console.log(textMessage);
-        // console.log("BOT 142");
-        // function cacheFirstMessage(userRequest) {
-        //   let page;
-        //   let firstAnswer;
-        //   if (userRequest[userId]["cacheData"]) {
-        //     if (userRequest[userId]["cacheData"]["page"] === "cachePage") {
-        //       console.log("Выбирает первый массив с перечнем из кеша");
-        //       console.log(userRequest[userId]["cacheData"]["text"]);
-        //       console.log("Выбирает первый массив с перечнем из кеша");
-        //       firstAnswer = userRequest[userId]["cacheData"]["text"];
-        //       return firstAnswer;
-        //     }
-        //   } else {
-        //     page = userRequest[userId]["data"]["page"];
-        //     console.log("Выбирает первое сообщение в массиве если нет кеша");
-        //     console.log(userRequest[userId]["data"]["text"][0]);
-        //     console.log("Выбирает первое сообщение в массиве если нет кеша");
-        //     firstAnswer = userRequest[userId]["data"]["text"][page];
-        //     return firstAnswer;
-        //   }
-        //   console.log("cacheFirstMessage");
-        //   console.log(userRequest);
-        //   console.log("cacheFirstMessage");
-        // }
-        // cacheFirstMessage();
-        bot.sendMessage(
-          // ne nraica
+      await checkUserCache(
+        userId,
+        currDate,
+        userMessageText,
+        dishFromMessage,
+        userCache,
+        userRequest,
+        msg.text
+      );
 
-          msg.chat.id,
-          `You chose ${msg.text}
+      //
+      userMessageText[userId] = { text: msg.text };
+      //
+      // убрал тут было  if (userRequest[userId]["data"]["text"][0][0] == "")
+      if (userRequest[userId]["cacheData"] || userRequest[userId]["data"]) {
+        if (
+          //
+          !userRequest[userId]["data"]["text"] &&
+          userRequest[userId]["cacheData"]["page"] === "downloaded"
+          //
+        ) {
+          bot.sendMessage(
+            msg.chat.id,
+            "No any results pls format your request"
+          );
+        } else {
+          let textMessage;
+
+          textMessage = cacheFirstMessage(userRequest);
+
+          bot.sendMessage(
+            // ne nraica
+
+            msg.chat.id,
+            `You chose ${msg.text}
         ${textMessage.reduce((el, acc, index) => {
           return `${index}. ${acc}\n${el}`;
         }, "")}
         `,
-          createKeyboard(userRequest, userId)
-        );
-        return userRequest, userMessageText;
+            createKeyboard(userRequest, userId)
+          );
+          return userRequest, userMessageText;
+        }
       }
     }
   }
@@ -209,218 +163,61 @@ bot.on("message", async (msg, match) => {
 bot.on("callback_query", async (query) => {
   userId = query.message.chat.id;
 
-  if (query.data) {
-    //
-    let nextDatapage;
+  if (query.data && userMessageText) {
     if (query.data === "Next") {
-      // console.log(`userRequest.length :${userRequest.length}`);
-
-      // console.log("nety");
       if (userRequest[userId]) {
-        // console.log("ВОТ ТУТ ПОРАБОТАЙ С ИФОМ");
-        // console.log("BOT userRequest");
-        // console.log(userRequest);
-        // console.log("BOT userRequest");
-        //
-        //
+        console.log("bot.js NEXT");
         await controlNextPage(userRequest, query);
-        // async function controlNextPage() {
-        //   if (!userRequest[userId]["data"]["text"]) {
-        //     //
-
-        //     //
-        //     let takeAllSighnAfterEquival = /(?<=\=)(.*)/g;
-        //     url = userRequest[userId]["cacheData"]["url"]
-        //       .match(takeAllSighnAfterEquival)
-        //       .toString();
-        //     // nextDatapage = await getProductCalories(url);
-        //     userRequest[userId]["cacheData"]["page"] = "downloaded";
-        //     //
-        //     let data = await getProductCalories(`desc=${url}`);
-        //     // userRequest[userId] = { ...userRequest[userId], ...data };
-        //     userRequest[userId]["data"] = await getProductCalories(
-        //       `desc=${url}`
-        //     );
-        //     // {
-        //     //   data: await getProductCalories(`desc=${url}`),
-        //     // };
-        //   } else {
-        //     if (
-        //       userRequest[userId]["data"]["text"].length >
-        //       userRequest[userId]["data"]["page"] + 1
-        //     ) {
-        //       userRequest[userId]["data"]["page"] =
-        //         userRequest[userId]["data"]["page"] + 1;
-        //     } else if (
-        //       userRequest[userId]["data"]["text"].length ===
-        //       userRequest[userId]["data"]["page"] + 1
-        //     ) {
-        //       //
-        //       nextDatapage = await pagination(
-        //         userRequest[userId],
-        //         query.data,
-        //         userRequest[userId]["data"]["page"]
-        //       );
-        //       //
-        //       userRequest[query.from.id]["data"]["text"] = [
-        //         ...userRequest[query.from.id]["data"]["text"],
-        //         ...nextDatapage["text"],
-        //       ];
-        //       userRequest[query.from.id]["data"]["urlForUnusualDishes"] = [
-        //         ...userRequest[query.from.id]["data"]["urlForUnusualDishes"],
-        //         ...nextDatapage["urlForUnusualDishes"],
-        //       ];
-        //       userRequest[query.from.id]["data"]["url"] = JSON.parse(
-        //         JSON.stringify(nextDatapage["url"])
-        //       );
-        //     }
-        //   }
-        //   // console.log("NEXTNEXTNEXTNEXTNEXT");
-        //   // console.log(userRequest);
-        //   // console.log("=====================");
-        //   // console.log(JSON.stringify(userRequest));
-        //   // console.log("NEXTNEXTNEXTNEXTNEXT");
-        // }
-        //
-        //
-        //
-        //   if (userRequest[userId]["data"]) {
-        //     try {
-        //       if (
-        //         userRequest[userId]["data"]["text"].length >
-        //         userRequest[userId]["data"]["page"] + 1
-        //       ) {
-        //         userRequest[userId]["data"]["page"] =
-        //           userRequest[userId]["data"]["page"] + 1;
-        //       } else if (
-        //         userRequest[userId]["data"]["text"].length ===
-        //         userRequest[userId]["data"]["page"] + 1
-        //       ) {
-        //         nextDatapage = await pagination(
-        //           userRequest[userId],
-        //           query.data,
-        //           userRequest[userId]["data"]["page"]
-        //         );
-        //         userRequest[query.from.id]["data"]["text"] = [
-        //           ...userRequest[query.from.id]["data"]["text"],
-        //           ...nextDatapage["text"],
-        //         ];
-        //         userRequest[query.from.id]["data"]["urlForUnusualDishes"] = [
-        //           ...userRequest[query.from.id]["data"]["urlForUnusualDishes"],
-        //           ...nextDatapage["urlForUnusualDishes"],
-        //         ];
-        //         userRequest[query.from.id]["data"]["url"] = JSON.parse(
-        //           JSON.stringify(nextDatapage["url"])
-        //         );
-        //       }
-        //     } catch (error) {
-        //       console.log(error);
-        //       return;
-        //     }
-        //   }
       }
     }
-    //
-
-    // async function controlPrefiousPage() {
-    //   if (userRequest[userId]) {
-
-    //     if (userRequest[userId]["data"]["page"] > 0) {
-    //       userRequest[userId]["data"]["page"] =
-    //         userRequest[userId]["data"]["page"] - 1;
-    //     } else if (userRequest[userId]["data"]["page"] === 0) {
-    //       //
-
-    //       //
-    //       if (userRequest[userId]["cacheData"]["text"]) {
-    //         userRequest[userId]["cacheData"]["page"] = "cachePage";
-    //         console.log("буду испольщовать кэшь обратно");
-    //       }
-    //     }
-
-    //     console.log(`page ${userRequest[userId]["data"]["page"]}`);
-
-    //     //
-    //   }
-    // }
-    // //
-    // //
     if (query.data === "Previous") {
-      console.log("Настроить пагинацию в КЭШЬ массив (после нулевого)");
+      console.log("bot.js Previous");
       await controlPrefiousPage(userRequest);
-      // if (userRequest[userId]) {
-      //   try {
-
-      //     if (userRequest[userId]["data"]["page"] > 0) {
-      //       userRequest[userId]["data"]["page"] =
-      //         userRequest[userId]["data"]["page"] - 1;
-      //     }
-      //     console.log(`page ${userRequest[userId]["data"]["page"]}`);
-      //     if (userRequest[query.from.id]["data"] === undefined) {
-      //       console.log(`BOTgdeto 205 strochka `);
-      //       return;
-      //     } else {
-      //       userRequest[query.from.id]["data"];
-      //     }
-      //   } catch (error) {
-      //     console.log(error);
-      //   }
-      // }
     }
     //
     //
-    if (userRequest?.[userId]?.["data"]?.text?.length) {
-      // console.log("bot 274");
-      // console.log(userMessageText[userId]);
-      // console.log("bot 274");
+    //
 
-      if (userRequest[userId]["data"]["text"][0].length > 0) {
-        if (query.data.match("action")) {
-          result = await allVariables(
-            query.data,
-            // вот тут хуйня почему то иногда выпадает понять как воспроизвести
-            userMessageText[userId]["text"],
-            //
-            userRequest[userId],
-            //
-            userId
-            // userRequest[userId]["data"]["urlForUnusualDishes"]
-          );
-
-          preparedDataForAccept = {
-            ...preparedDataForAccept,
-            [userId]: result,
-          };
-        }
-
-        let messageText = handlerQueryKeyboard(
-          preparedDataForAccept,
+    // if (userRequest?.[userId]?.["data"]?.text?.length) {
+    if (Object.keys(userRequest) != 0) {
+      if (query.data.match("action")) {
+        result = await allVariables(
           query.data,
+          // вот тут хуйня почему то иногда выпадает понять как воспроизвести
           userMessageText[userId]["text"],
-          userRequest[userId]["data"]["text"][
-            userRequest[userId]["data"]["page"]
-          ],
+          userRequest[userId]
+          // userId
+        );
 
-          userId,
-          userRequest[userId]["data"]["url"],
-          userRequest,
-          userCache,
-          currDate,
-          dishFromMessage,
-          result
-        );
-        bot.sendMessage(query.message.chat.id, messageText["text"], {
-          parse_mode: messageText["keyboardAndParseMode"].parse_mode,
-          reply_markup:
-            messageText["keyboardAndParseMode"]["keyboard"]["reply_markup"],
-        });
-      } else {
-        return bot.sendMessage(
-          query.message.chat.id,
-          "Please write the name of the dish you'd like to calculate calories for."
-        );
+        preparedDataForAccept = {
+          ...preparedDataForAccept,
+          [userId]: result,
+        };
       }
+
+      let messageText = handlerQueryKeyboard(
+        preparedDataForAccept,
+        query.data,
+        userRequest,
+        userCache,
+        currDate,
+        dishFromMessage,
+        result
+      );
+      bot.sendMessage(query.message.chat.id, messageText["text"], {
+        parse_mode: messageText["keyboardAndParseMode"].parse_mode,
+        reply_markup:
+          messageText["keyboardAndParseMode"]["keyboard"]["reply_markup"],
+      });
+      //
+      //
+    } else {
+      return bot.sendMessage(
+        query.message.chat.id,
+        "Please write the name of the dish you'd like to calculate calories for."
+      );
     }
+    // }
 
     return;
   }

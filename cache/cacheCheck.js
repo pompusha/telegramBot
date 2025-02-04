@@ -1,9 +1,6 @@
 const { getProductCalories } = require("../api/getProductCalories");
 
 async function cacheCheck(userCache, dishFromMessage, userRequest) {
-  // console.log("-");
-  // console.log(userCache[userId]);
-  // console.log("-");
   // let b = [];
   let mergeTextForAllCache = [];
   let mergeUrlForUnusualDishesAllCashe = [];
@@ -12,10 +9,6 @@ async function cacheCheck(userCache, dishFromMessage, userRequest) {
   if (userCache[userId]) {
     keysFromCasheWithCurrDate.forEach((el) => {
       if (dishFromMessage in userCache[userId][el]) {
-        // mergeTextForAllCache.push(
-        //   ...userCache[userId][el][dishFromMessage]["data"]["text"]
-        // );
-        //
         let arrayFromSetText = [
           ...userCache[userId][el][dishFromMessage]["data"]["text"],
         ];
@@ -23,8 +16,6 @@ async function cacheCheck(userCache, dishFromMessage, userRequest) {
           mergeTextForAllCache = [
             ...new Set([...mergeTextForAllCache, `${el}`]),
           ];
-          // c = new Set(b);
-          // c = [...c];
         });
 
         let arrayFromSetUrlForUnusualDishes = [
@@ -32,7 +23,7 @@ async function cacheCheck(userCache, dishFromMessage, userRequest) {
             "urlForUnusualDishes"
           ],
         ];
-        console.log(arrayFromSetUrlForUnusualDishes);
+
         arrayFromSetUrlForUnusualDishes.forEach((el) => {
           mergeUrlForUnusualDishesAllCashe = [
             ...new Set([...mergeUrlForUnusualDishesAllCashe, `${el}`]),
@@ -54,14 +45,9 @@ async function cacheCheck(userCache, dishFromMessage, userRequest) {
     userRequest[userId] = {
       data: await getProductCalories(`desc=${dishFromMessage}`),
     };
-    // console.log("cacheCheck userRequest");
-    // console.log(JSON.stringify(userRequest));
-    // console.log("cacheCheck userRequest");
   }
   if (mergeTextForAllCache.length > 0) {
     console.log("i have data in cache");
-
-    // console.log("need to change page 0 to cashePage");
 
     userRequest[userId] = {
       data: { page: 0 },
@@ -77,30 +63,13 @@ async function cacheCheck(userCache, dishFromMessage, userRequest) {
       JSON.stringify([...mergeUrlForUnusualDishesAllCashe])
     );
     //
-    //
-    // userRequest[userId]["data"]["text"] = JSON.parse(
-    //   JSON.stringify([[...mergeTextForAllCache]])
-
-    //
-    // userRequest[userId]["data"]["urlForUnusualDishes"] = JSON.parse(
-    //   JSON.stringify([...mergeUrlForUnusualDishesAllCashe])
-    // );
 
     userRequest[userId]["cacheData"]["url"] = cacheUrl;
     // userRequest[userId]["data"]["url"] = cacheUrl;
 
     //
     //
-    // console.log("!!!!!!!");
-    // console.log(userRequest);
-    // console.log("!!!!!!!");
-    // console.log("000000");
-    // console.log(userRequest[userId]["cacheData"]["text"]);
-    // console.log("000000");
   }
-  // console.log("cacheCheck userRequest");
-  // console.log(JSON.stringify(userRequest));
-  // console.log("cacheCheck userRequest");
 }
 //
 //

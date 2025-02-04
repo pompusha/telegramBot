@@ -10,21 +10,28 @@ const { insertAcceptedData } = require("../database/insert");
 const { postAcceptedDataToDatabase } = require("../database/statistic");
 const { createKeyboard } = require("../keyboard/bot_keyboards");
 const { addDataIntoUserCache } = require("../cache/addDataIntoUserCache");
+const {
+  fillArrayWithTextFromRequest,
+} = require("./fillArrayWithTextFromRequest");
 //
 //
 function handlerQueryKeyboard(
   preparedDataForAccept,
   queryData,
-  userMessageText,
-  userRequestUserIdDataText,
-  userId,
-  currentUrl,
   userRequest,
   userCache,
   currDate,
   dishFromMessage,
   result
 ) {
+  let pageData = userRequest[userId]["data"]["page"];
+  let arrayWithTextFromRequest = fillArrayWithTextFromRequest(
+    userRequest,
+    pageData
+  );
+  //
+
+  //
   let keyboard;
   if (/\w+\d/g.test(queryData)) {
     return createMessageReply(
@@ -58,7 +65,7 @@ function handlerQueryKeyboard(
     } else if (queryData === "Next") {
       keyboard = createKeyboard(userRequest, userId);
 
-      messageReply = userRequestUserIdDataText.reduce((el, acc, index) => {
+      messageReply = arrayWithTextFromRequest.reduce((el, acc, index) => {
         return `${index}. ${acc}\n${el}`;
       }, "");
 
@@ -71,17 +78,17 @@ function handlerQueryKeyboard(
       };
       //
     } else if (queryData === "Previous") {
-      console.log("previus !!!!!");
-
       if (userRequest[userId]["cacheData"]) {
-        if (userRequest[userId]["cacheData"]["page"] === "cachePage") {
+        if (
+          userRequest[userId]["cacheData"]["page"] === "cachePage" &&
+          userRequest[userId]["data"]["page"] === 0
+        ) {
           messageReply = userRequest[userId]["cacheData"]["text"].reduce(
             (el, acc, index) => {
               return `${index}. ${acc}\n${el}`;
             },
             ""
           );
-          console.log(messageReply);
         }
         keyboard = createKeyboard(userRequest, userId);
         return {
@@ -94,13 +101,10 @@ function handlerQueryKeyboard(
       } else if (userRequest[userId]["data"]) {
         //
 
-        messageReply = userRequest[userId]["data"]["text"][
-          userRequest[userId]["data"]["page"]
-        ].reduce((el, acc, index) => {
+        messageReply = arrayWithTextFromRequest.reduce((el, acc, index) => {
           return `${index}. ${acc}\n${el}`;
         }, "");
         keyboard = createKeyboard(userRequest, userId);
-        console.log("!!!!!!!!!!zashelElseif");
         return {
           text: messageReply,
           keyboardAndParseMode: {

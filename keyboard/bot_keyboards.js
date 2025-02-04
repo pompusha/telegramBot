@@ -13,11 +13,7 @@ function createKeyboard(request, userId, previousPage, nextPage) {
   let keys;
   //
   //
-  // console.log(request[userId]["cacheData"]);
   if (!request[userId]["cacheData"]) {
-    // console.log("nocachedata");
-    // console.log(request);
-    // console.log("nocachedata");
     rows = Math.ceil(
       request[userId]["data"]["text"][request[userId]["data"]["page"]].length /
         5
@@ -27,17 +23,14 @@ function createKeyboard(request, userId, previousPage, nextPage) {
     );
     // return;
   } else {
-    //
     if (request[userId]["cacheData"]["page"] === "cachePage") {
-      rows = Math.ceil(request[userId]["cacheData"]["text"][0].length / 5);
+      rows = Math.ceil(request[userId]["cacheData"]["text"].length / 5);
       keys = request[userId]["cacheData"]["text"].map((el, index) =>
         Key.callback(`${index}`, `action${index}`)
       );
-      // console.log(`PAGA ${request[userId]["cacheData"]["page"]}`);
     }
     //
     else if (request[userId]["cacheData"]["page"] === "downloaded") {
-      // console.log(`paga downloaded`);
       rows = Math.ceil(
         request[userId]["data"]["text"][request[userId]["data"]["page"]]
           .length / 5

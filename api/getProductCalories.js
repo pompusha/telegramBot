@@ -4,7 +4,6 @@ const URL = require("url");
 const { text } = require("stream/consumers");
 const { stringify } = require("querystring");
 async function getProductCalories(product) {
-  // console.log("!!!FIX AXIOS URL FOR DISH CONSISNED MORE THEN ONE WORD");
   // https://www.nutracheck.co.uk/CaloriesIn/Product/Search?desc=Chicken+Thigh
   // https://www.nutracheck.co.uk/CaloriesIn/Product/Search?desc=Chicken%20Thigh&page=0
   // https://www.nutracheck.co.uk/CaloriesIn/Product/Search?desc=/cheese%20halloumi&page=1
@@ -34,10 +33,6 @@ async function getProductCalories(product) {
     const nextPage = $(
       "body > div.contentStretch > div.CenterContent > div > div:nth-child(4) > div.vMargin.textMedium > a.pull-right"
     ).text();
-
-    // console.log("findNextOnPagefindNextOnPagefindNextOnPage");
-    // console.log(findNextOnPage);
-    // console.log("findNextOnPagefindNextOnPagefindNextOnPage");
 
     const calorieInfo = {
       page: 0,

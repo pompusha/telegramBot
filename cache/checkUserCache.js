@@ -33,9 +33,6 @@ async function checkUserCache(
     console.log("checkUserCache.preparing to us cacheCheck");
     await cacheCheck(userCache, dishFromMessage, userRequest);
   }
-  // console.log("checkUserCache userRequest");
-  // console.dir(JSON.stringify(userRequest));
-  // console.log("checkUserCache userRequest");
 }
 
 module.exports = { checkUserCache };

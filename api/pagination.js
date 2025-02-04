@@ -5,10 +5,6 @@ const { getProductCalories } = require("./getProductCalories");
 
 // const { Url } = require("url");
 async function pagination(userRequestUserId, command, page) {
-  // console.log("pkdfkspofksfposks");
-  // console.log(command);
-  // console.log("pkdfkspofksfposks");
-  // console.log(`COMMAND IN pagination : ${command}`);
   if (command === "Next") {
     let newUrl;
     let pageNumber;
@@ -23,22 +19,15 @@ async function pagination(userRequestUserId, command, page) {
       //
       if (userRequestUserId["cacheData"]) {
         if (userRequestUserId["cacheData"]["page"] === "cachePage") {
-          console.log(
-            `PAGINATION SHOUDNT WORK userRequestUserId["cacheData"]["page"] === "cachePage" `
-          );
           userRequestUserId["cacheData"]["page"] = "downloaded";
           newUrl = new URL(userRequestUserId["cacheData"]["url"]);
+          console.log("pagination");
           console.log(`newUrl : ${newUrl}  pagination.js`);
+          console.log("pagination");
           userRequestUserId["data"]["page"] = 0;
           return getProductCalories(newUrl.searchParams.toString());
         }
       }
-      //
-      //
-
-      console.log(
-        "!!!!!!!!!!!!!!!!!!!!!!FIX NEXT PAGE do not CHECK NEXT ON PAGE ETERNAL PAGINATION!!!!!!!!!!!!!!!!!!!!"
-      );
       //
       if (
         !userRequestUserId["cacheData"] ||
@@ -50,7 +39,8 @@ async function pagination(userRequestUserId, command, page) {
           userRequestUserId["data"]["page"] =
             userRequestUserId["data"]["page"] + 1;
           newUrl.searchParams.set("page", pageNumber + 1);
-          console.log(`newUrl : ${newUrl}`);
+
+          console.log(`pagination.js newUrl : ${newUrl}`);
 
           return getProductCalories(newUrl.searchParams.toString());
         } else {

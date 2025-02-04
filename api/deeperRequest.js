@@ -8,14 +8,12 @@ async function deeperRequestForUnusualDish(
   queryData
   // userRequest
 ) {
-  // console.log(userRequestUserIdDataResponse.text);
   // const $ = await cheerio.load(userRequestUserIdDataResponse.data);
-  // // console.log($);
+
   //www.nutracheck.co.uk/CaloriesIn/Product/   22/Sainsbury%27s+Santa%27s+Grotto+Cake+670g
   // https://www.nutracheck.co.uk/CaloriesIn/Product/Search?desc=gpotato
   // https://www.nutracheck.co.uk/CaloriesIn/Product/41/Sainsbury%27s+Santa%27s+Grotto+Sweets+Selection+250g+Frosty+Foams
 
-  // console.log("aaaa");
   try {
     let url = `https://www.nutracheck.co.uk/CaloriesIn/Product/${urlForUnusualDishes}`;
     let request = await axios.get(url);
@@ -32,7 +30,8 @@ async function deeperRequestForUnusualDish(
       gramsForPortionFromDeepParse.length === 0
     ) {
       console.log(
-        "Deeper parsing failed because the page does not exist. URL: " + url
+        "deeperRequestForUnusualDish.js Deeper parsing failed because the page does not exist. URL: " +
+          url
       );
       callForGramsFromDeepParse = 0;
       gramsForPortionFromDeepParse = 0;
@@ -44,27 +43,8 @@ async function deeperRequestForUnusualDish(
       callForGramsFromDeepParse = callForGramsFromDeepParse
         .match(/\d+/g)
         .toString();
-      // console.log(`callForGramsFrom: ----- ${callForGramsFromDeepParse}`);
       return { callForGramsFromDeepParse, gramsForPortionFromDeepParse };
     }
-
-    // callForGramsFromDeepParse = callForGramsFromDeepParse
-    //   .match(/\d+/g)
-    //   ?.toString();
-    // console.log(`callForGramsFrom: ----- ${callForGramsFromDeepParse}`);
-
-    // if (
-    //   (callForGramsFromDeepParse === undefined) |
-    //   (gramsForPortionFromDeepParse === undefined)
-    // ) {
-    //   console.log(
-    //     "Deeper parsing failed because the page does not exist. URL: " + url
-    //   );
-    //   callForGramsFromDeepParse = 0;
-    //   gramsForPortionFromDeepParse = 0;
-    //   return { callForGramsFromDeepParse, gramsForPortionFromDeepParse };
-    // } else {
-    //   return { callForGramsFromDeepParse, gramsForPortionFromDeepParse };
   } catch (error) {
     console.log(error);
   }

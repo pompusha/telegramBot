@@ -6,66 +6,43 @@ async function allVariables(
   queryData,
   userMessageText,
   //
-  userRequestUserId,
+  userRequestUserId
   //
-  userId
+  // userId
   //
 ) {
   let dishFromRequest;
   let urlForUnusualChoosenDish;
   dishPortionFromUserMessage = parseInt(userMessageText.match(/\d+/g));
-  // console.log(
-  //   "!!!Error dishFromRequest.match(/d+(?=s\bcalories\b)/g) /Warburtons 7"
-  // );
-  // console.log(userRequestUserId);
-  if (userRequestUserId["data"]) {
+
+  // if (userRequestUserId["cacheData"]["page"] === "cachePage"){}
+  if (userRequestUserId["data"]["text"]) {
     dishFromRequest =
       userRequestUserId["data"]["text"][userRequestUserId["data"]["page"]][
         parseInt(queryData.match(/\d/g))
       ].toString();
   }
   if (userRequestUserId["cacheData"]) {
-    // console.log("!!!!!!!");
-    // console.log(userRequestUserId["cacheData"]["text"][0]);
-    // console.log("!!!!!!!");
     if (userRequestUserId["cacheData"]["page"] === "cachePage") {
-      // console.log("cache page");
-      // console.log(userRequestUserId["cacheData"]["text"][0][0]);
-      // console.log("cache page");
-      // console.log("parseInt(queryData.match(/d/g))");
-      // console.log(parseInt(queryData.match(/\d/g)));
-      // console.log("parseInt(queryData.match(/d/g))");
       dishFromRequest =
         userRequestUserId["cacheData"]["text"][
           parseInt(queryData.match(/\d/g))
         ].toString();
     }
   }
-  // console.log("------------");
-  // console.log(dishFromRequest);
-  // console.log("------------");
+
   // НУжна отладка но не уверен console.log(dishFromRequest);
 
   caloriesFromRequestChosenPortion = parseInt(
     dishFromRequest.match(/\d+(?=\s\bcalories\b)/g)
   );
 
-  console.log("/cake query 2 SERVING ERROR");
+  // console.log("/cake query 2 SERVING ERROR");
   portionFromSource = dishFromRequest
     .match(/((?<=\bPer\s)(.*)(?=\s\-))/g)
     .toString()
     .match(/\d+\.?(\d+)?(g|\bml)/g);
-  console.log("============");
-  // console.log(userRequestUserId["data"]["urlForUnusualDishes"]);
-  // console.log("------------");
-  // console.log(userRequestUserId);
-  // console.log("------------");
-  console.log(
-    userRequestUserId["data"]["urlForUnusualDishes"][
-      userRequestUserId["data"]["page"]
-    ][parseInt(queryData.match(/\d/g))]
-  );
-  console.log("============");
+
   //
   //
   if (
@@ -126,33 +103,34 @@ async function allVariables(
   // userRequestUserId["data"]["urlForUnusualDishes"][
   //   userRequestUserId["data"]["page"]
   // ][parseInt(queryData.match(/\d/g))];
-
-  if (
-    userRequestUserId["data"]["urlForUnusualDishes"][
-      userRequestUserId["data"]["page"]
-    ].length > 1
-  ) {
-    //
-    console.log(
-      `urlForUnusualChoosenDish: ${urlForUnusualChoosenDish} allVariables`
-    );
-    //
-    console.log(
-      "Такое ощущение что тут ошибка и он дробит юрл как то криво allvariables.js"
-    );
-    urlForUnusualChoosenDish =
+  //
+  //
+  //
+  if (userRequestUserId["data"]["urlForUnusualDishes"]) {
+    if (
       userRequestUserId["data"]["urlForUnusualDishes"][
         userRequestUserId["data"]["page"]
-      ][parseInt(queryData.match(/\d/g))];
-    //
-    console.log(
-      `urlForUnusualChoosenDish: ${urlForUnusualChoosenDish} allVariables`
-    );
+      ].length > 1
+    ) {
+      console.log(
+        "Такое ощущение что тут ошибка и он дробит юрл как то криво allvariables.js"
+      );
+      urlForUnusualChoosenDish =
+        userRequestUserId["data"]["urlForUnusualDishes"][
+          userRequestUserId["data"]["page"]
+        ][parseInt(queryData.match(/\d/g))];
+      //
+      console.log(
+        `urlForUnusualChoosenDish: ${urlForUnusualChoosenDish} allVariables`
+      );
+    }
   } else {
     urlForUnusualChoosenDish = ["deep links are not available."];
   }
-  // console.log(parseFloat(queryData.match(/\d+/g)));
-  // console.log(urlForUnusualDishes[parseFloat(queryData.match(/\d+/g))]);
+  //
+  //
+  //
+
   postAcceptedData = [
     userIdFromTelegramm,
     nameDishFromRequest,

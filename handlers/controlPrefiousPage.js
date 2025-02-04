@@ -6,9 +6,6 @@ async function controlPrefiousPage(userRequest) {
       userRequest[userId]["data"]["page"] =
         userRequest[userId]["data"]["page"] - 1;
     } else if (userRequest[userId]["data"]["page"] === 0) {
-      //
-      // console.log(userRequest[userId]["cacheData"]);
-      //
       if (userRequest[userId]["cacheData"]) {
         if (userRequest[userId]["cacheData"]["text"]) {
           userRequest[userId]["cacheData"]["page"] = "cachePage";

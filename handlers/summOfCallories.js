@@ -12,7 +12,6 @@ function summOfCallories(
 
       return summ;
     } else {
-      console.log(portionFromSource);
       console.log("vozvrat NULL tam gde CUP,MUG");
       return null;
     }

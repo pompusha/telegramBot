@@ -12,9 +12,7 @@ function createMessageReply(
   nameDishFromRequest
 ) {
   let strPortionFromSource;
-  // console.log(`portionFromSource : ${portionFromSource}  createmessage`);
-  // console.log(`parseFloat : ${parseFloat(["1/2"])}`);
-  // console.log(parseFloat("1/2"));
+
   if (portionFromSource) {
     strPortionFromSource = portionFromSource.toString();
     if (/[aA-zZ]{3,}/.test(strPortionFromSource)) {

@@ -6,14 +6,39 @@ function addDataIntoUserCache(
   userRequest,
   urlForUnusualChoosenDish
 ) {
-  userCache[userId][currDate][dishFromMessage]["data"]["url"] = JSON.parse(
-    JSON.stringify(userRequest[userId]["data"]["url"])
-  );
+  // console.log("++++");
+  // console.log(userRequest);
+  // console.log("++++");
+  const page = userRequest[userId]["data"]["page"];
+  let url;
+  let urlDeepCheck;
+  let text;
+  console.log(userRequest);
 
-  //
-  // userCache[userId][currDate][dishFromMessage]["data"][
-  //   "urlForUnusualDishes"
-  // ].add([JSON.parse(JSON.stringify(urlForUnusualChoosenDish))]);
+  if (userRequest[userId]["cacheData"]) {
+    if (userRequest[userId]["cacheData"]["page"] === "cachePage") {
+      url = userRequest[userId]["cacheData"]["url"];
+      // urlDeepCheck = userRequest[userId]["cacheData"]["urlForUnusualDishes"];
+      // text = userRequest[userId]["cacheData"]["text"];
+      console.log(url);
+      // console.log(urlDeepCheck);
+      // console.log(text);
+    } else if (userRequest[userId]["cacheData"]["page"] === "downloaded") {
+      url = userRequest[userId]["data"]["url"];
+      // urlDeepCheck = userRequest[userId]["data"]["urlForUnusualDishes"];
+      // text = userRequest[userId]["data"]["text"][page];
+      console.log(url);
+      // console.log(urlDeepCheck);
+      // console.log(text);
+      // console.log(page);
+    }
+  } else {
+    url = userRequest[userId]["data"]["url"];
+  }
+
+  userCache[userId][currDate][dishFromMessage]["data"]["url"] = JSON.parse(
+    JSON.stringify(url)
+  );
 
   userCache[userId][currDate][dishFromMessage]["data"]["urlForUnusualDishes"] =
     [
@@ -30,10 +55,8 @@ function addDataIntoUserCache(
   userCache[userId][currDate][dishFromMessage]["data"]["text"].add([
     JSON.parse(JSON.stringify(dishFromRequest)),
   ]);
+  console.log(userRequest[userId]["cacheData"]);
   //
-  // console.log("addDataIntoUserCacheaddDataIntoUserCache");
-  // console.log(JSON.stringify(userCache));
-  // console.log("addDataIntoUserCacheaddDataIntoUserCache");
 }
 
 module.exports = { addDataIntoUserCache };
