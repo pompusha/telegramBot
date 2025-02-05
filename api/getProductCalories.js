@@ -11,6 +11,7 @@ async function getProductCalories(product) {
   // AD URL WAY FOR COMPLICATED WORDS CONSISTS FROM MORE THEN ONE WORD "https://www.nutracheck.co.uk/CaloriesIn/Product/Search?desc=chiken+thigs"
 
   const url = `https://www.nutracheck.co.uk/CaloriesIn/Product/Search?${product}`;
+  console.log(`getProductCalories.js URL : ${url}`);
   try {
     const response = await axios.get(url);
     const $ = cheerio.load(response.data);
@@ -50,6 +51,7 @@ async function getProductCalories(product) {
           }),
       ],
     };
+
     return calorieInfo;
   } catch (error) {
     console.error(error);

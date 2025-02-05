@@ -73,6 +73,7 @@ async function allVariables(
     //
     //
     //
+    console.log(userRequestUserId["data"]["url"]);
     gramsCalorisFromDeepParse = await deeperRequestForUnusualDish(
       cashOrDownoladed,
       // userRequestUserId["data"]["urlForUnusualDishes"][

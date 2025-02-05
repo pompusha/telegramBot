@@ -143,7 +143,6 @@ bot.on("message", async (msg, match) => {
 
           bot.sendMessage(
             // ne nraica
-
             msg.chat.id,
             `You chose ${msg.text}
         ${textMessage.reduce((el, acc, index) => {
@@ -159,10 +158,8 @@ bot.on("message", async (msg, match) => {
   }
 });
 //
-
 bot.on("callback_query", async (query) => {
   userId = query.message.chat.id;
-
   if (query.data && userMessageText) {
     if (query.data === "Next") {
       if (userRequest[userId]) {
@@ -175,9 +172,6 @@ bot.on("callback_query", async (query) => {
       await controlPrefiousPage(userRequest);
     }
     //
-    //
-    //
-
     // if (userRequest?.[userId]?.["data"]?.text?.length) {
     if (Object.keys(userRequest) != 0) {
       if (query.data.match("action")) {
@@ -210,12 +204,13 @@ bot.on("callback_query", async (query) => {
           messageText["keyboardAndParseMode"]["keyboard"]["reply_markup"],
       });
       //
-      //
     } else {
       return bot.sendMessage(
         query.message.chat.id,
         "Please write the name of the dish you'd like to calculate calories for."
       );
+
+      // console.log(`bot.js url: ${userRequest[userId]["data"]["url"][query.data]}`)
     }
     // }
 

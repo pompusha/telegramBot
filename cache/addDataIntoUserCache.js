@@ -13,6 +13,7 @@ function addDataIntoUserCache(
   let url;
   let urlDeepCheck;
   let text;
+  console.log("addadatUserChache");
   console.log(userRequest);
 
   if (userRequest[userId]["cacheData"]) {
@@ -21,6 +22,7 @@ function addDataIntoUserCache(
       // urlDeepCheck = userRequest[userId]["cacheData"]["urlForUnusualDishes"];
       // text = userRequest[userId]["cacheData"]["text"];
       console.log(url);
+
       // console.log(urlDeepCheck);
       // console.log(text);
     } else if (userRequest[userId]["cacheData"]["page"] === "downloaded") {
@@ -28,6 +30,7 @@ function addDataIntoUserCache(
       // urlDeepCheck = userRequest[userId]["data"]["urlForUnusualDishes"];
       // text = userRequest[userId]["data"]["text"][page];
       console.log(url);
+
       // console.log(urlDeepCheck);
       // console.log(text);
       // console.log(page);
@@ -55,7 +58,9 @@ function addDataIntoUserCache(
   userCache[userId][currDate][dishFromMessage]["data"]["text"].add([
     JSON.parse(JSON.stringify(dishFromRequest)),
   ]);
-  console.log(userRequest[userId]["cacheData"]);
+
+  // console.log(userRequest[userId]["cacheData"]);
+  // console.log("addadatUserChache");
   //
 }
 
