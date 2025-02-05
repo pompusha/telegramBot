@@ -13,10 +13,12 @@ async function allVariables(
 ) {
   let dishFromRequest;
   let urlForUnusualChoosenDish;
-  dishPortionFromUserMessage = parseInt(userMessageText.match(/\d+/g));
-
+  let dishPortionFromUserMessage = parseInt(userMessageText.match(/\d+/g));
+  const numberFromQueruData = parseFloat(queryData.match(/\d+/g).toString());
+  // console.log(numberFromQueruData);
   // if (userRequestUserId["cacheData"]["page"] === "cachePage"){}
   if (userRequestUserId["data"]["text"]) {
+    // console.log("allVariables");
     dishFromRequest =
       userRequestUserId["data"]["text"][userRequestUserId["data"]["page"]][
         parseInt(queryData.match(/\d/g))
@@ -36,26 +38,40 @@ async function allVariables(
   caloriesFromRequestChosenPortion = parseInt(
     dishFromRequest.match(/\d+(?=\s\bcalories\b)/g)
   );
-
+  // console.log("!!!!!!!");
+  // console.log(caloriesFromRequestChosenPortion);
+  // console.log("!!!!!!!");
   // console.log("/cake query 2 SERVING ERROR");
   portionFromSource = dishFromRequest
     .match(/((?<=\bPer\s)(.*)(?=\s\-))/g)
     .toString()
-    .match(/\d+\.?(\d+)?(g|\bml)/g);
+    .match(/\d+\.?(\d+)\s?(g|\bml)/g);
 
-  //
-  //
+  // console.log("++++++++++++++");
+  // console.log(portionFromSource);
+  // console.log("++++++++++++++");
+  // console.log("!!!!!!!");
+  // console.log(
+  //   /\d+/g.test(dishFromRequest.match(/((?<=\bPer\s)(.*)(?=\s\-))/g).toString())
+  // );
+  // console.log("!!!!!!!");
   if (
-    /\d+(\ml|g)/g.test(
-      dishFromRequest.match(/((?<=\bPer\s)(.*)(?=\s\-))/g).toString()
-    )
+    /\d+/g.test(dishFromRequest.match(/((?<=\bPer\s)(.*)(?=\s\-))/g).toString())
   ) {
+    // console.log("allVariables");
   } else {
+    console.log(
+      `allVariables.js something thor into non digts zone ${dishFromRequest}`
+    );
     let cashOrDownoladed;
     if (userRequestUserId["cacheData"]) {
       if (userRequestUserId["cacheData"]["page"] === "cachePage") {
+        cashOrDownoladed =
+          userRequestUserId["cacheData"]["urlForUnusualDishes"][
+            numberFromQueruData
+          ];
         console.log("cache");
-        cashOrDownoladed = userRequestUserId["data"]["urlForUnusualDishes"][0];
+        console.log(`allvariables.js cashOrDownoladed :${cashOrDownoladed}`);
       } else if (userRequestUserId["cacheData"]["page"] === "downloaded") {
         console.log("download");
         cashOrDownoladed =
@@ -70,10 +86,7 @@ async function allVariables(
           userRequestUserId["data"]["page"]
         ][parseInt(queryData.match(/\d/g))];
     }
-    //
-    //
-    //
-    console.log(userRequestUserId["data"]["url"]);
+
     gramsCalorisFromDeepParse = await deeperRequestForUnusualDish(
       cashOrDownoladed,
       // userRequestUserId["data"]["urlForUnusualDishes"][
@@ -94,6 +107,7 @@ async function allVariables(
     portionFromSource,
     dishPortionFromUserMessage
   );
+
   userIdFromTelegramm = userId;
 
   nameDishFromRequest = dishFromRequest
@@ -113,9 +127,9 @@ async function allVariables(
         userRequestUserId["data"]["page"]
       ].length > 1
     ) {
-      console.log(
-        "Такое ощущение что тут ошибка и он дробит юрл как то криво allvariables.js"
-      );
+      // console.log(
+      //   "Такое ощущение что тут ошибка и он дробит юрл как то криво allvariables.js"
+      // );
       urlForUnusualChoosenDish =
         userRequestUserId["data"]["urlForUnusualDishes"][
           userRequestUserId["data"]["page"]

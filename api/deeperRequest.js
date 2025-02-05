@@ -47,7 +47,7 @@ async function deeperRequestForUnusualDish(
       return { callForGramsFromDeepParse, gramsForPortionFromDeepParse };
     }
   } catch (error) {
-    console.log(error);
+    // console.log(error);
   }
 }
 

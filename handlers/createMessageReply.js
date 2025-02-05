@@ -11,10 +11,22 @@ function createMessageReply(
   caloriesPerUserPortion,
   nameDishFromRequest
 ) {
+  console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+  console.log(dishPortionFromUserMessage);
+  console.log(dishFromRequest);
+  console.log(caloriesFromRequestChosenPortion);
+  //
+  console.log(portionFromSource);
+  //
+  console.log(caloriesPerUserPortion);
+  console.log(nameDishFromRequest);
+  console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+
   let strPortionFromSource;
 
   if (portionFromSource) {
-    strPortionFromSource = portionFromSource.toString();
+    strPortionFromSource = portionFromSource.toString().replaceAll(" ", "");
+
     if (/[aA-zZ]{3,}/.test(strPortionFromSource)) {
       messageReply = `The dish <i>${nameDishFromRequest}</i> contains <b>${caloriesFromRequestChosenPortion} calories</b> per <b>${portionFromSource}</b> portion.`;
       keyboard = keyboardAcceptDecline;

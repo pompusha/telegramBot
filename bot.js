@@ -160,60 +160,64 @@ bot.on("message", async (msg, match) => {
 //
 bot.on("callback_query", async (query) => {
   userId = query.message.chat.id;
-  if (query.data && userMessageText) {
-    if (query.data === "Next") {
-      if (userRequest[userId]) {
-        console.log("bot.js NEXT");
-        await controlNextPage(userRequest, query);
+  if (query.data) {
+    if (query.data != "Decline") {
+      if (query.data && userMessageText) {
+        if (query.data === "Next") {
+          if (userRequest[userId]) {
+            console.log("bot.js NEXT");
+            await controlNextPage(userRequest, query);
+          }
+        }
+        if (query.data === "Previous") {
+          console.log("bot.js Previous");
+          await controlPrefiousPage(userRequest);
+        }
+        //
+        // if (userRequest?.[userId]?.["data"]?.text?.length) {
+        if (Object.keys(userRequest) != 0) {
+          if (query.data.match("action")) {
+            result = await allVariables(
+              query.data,
+              // вот тут хуйня почему то иногда выпадает понять как воспроизвести
+              userMessageText[userId]["text"],
+              userRequest[userId]
+              // userId
+            );
+
+            preparedDataForAccept = {
+              ...preparedDataForAccept,
+              [userId]: result,
+            };
+          }
+
+          let messageText = handlerQueryKeyboard(
+            preparedDataForAccept,
+            query.data,
+            userRequest,
+            userCache,
+            currDate,
+            dishFromMessage,
+            result
+          );
+          bot.sendMessage(query.message.chat.id, messageText["text"], {
+            parse_mode: messageText["keyboardAndParseMode"].parse_mode,
+            reply_markup:
+              messageText["keyboardAndParseMode"]["keyboard"]["reply_markup"],
+          });
+          //
+        } else {
+          return bot.sendMessage(
+            query.message.chat.id,
+            "Please write the name of the dish you'd like to calculate calories for."
+          );
+
+          // console.log(`bot.js url: ${userRequest[userId]["data"]["url"][query.data]}`)
+        }
+        // }
+
+        return;
       }
     }
-    if (query.data === "Previous") {
-      console.log("bot.js Previous");
-      await controlPrefiousPage(userRequest);
-    }
-    //
-    // if (userRequest?.[userId]?.["data"]?.text?.length) {
-    if (Object.keys(userRequest) != 0) {
-      if (query.data.match("action")) {
-        result = await allVariables(
-          query.data,
-          // вот тут хуйня почему то иногда выпадает понять как воспроизвести
-          userMessageText[userId]["text"],
-          userRequest[userId]
-          // userId
-        );
-
-        preparedDataForAccept = {
-          ...preparedDataForAccept,
-          [userId]: result,
-        };
-      }
-
-      let messageText = handlerQueryKeyboard(
-        preparedDataForAccept,
-        query.data,
-        userRequest,
-        userCache,
-        currDate,
-        dishFromMessage,
-        result
-      );
-      bot.sendMessage(query.message.chat.id, messageText["text"], {
-        parse_mode: messageText["keyboardAndParseMode"].parse_mode,
-        reply_markup:
-          messageText["keyboardAndParseMode"]["keyboard"]["reply_markup"],
-      });
-      //
-    } else {
-      return bot.sendMessage(
-        query.message.chat.id,
-        "Please write the name of the dish you'd like to calculate calories for."
-      );
-
-      // console.log(`bot.js url: ${userRequest[userId]["data"]["url"][query.data]}`)
-    }
-    // }
-
-    return;
   }
 });

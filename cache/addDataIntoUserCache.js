@@ -6,30 +6,20 @@ function addDataIntoUserCache(
   userRequest,
   urlForUnusualChoosenDish
 ) {
-  // console.log("++++");
-  // console.log(userRequest);
-  // console.log("++++");
   const page = userRequest[userId]["data"]["page"];
   let url;
   let urlDeepCheck;
   let text;
-  console.log("addadatUserChache");
-  console.log(userRequest);
 
   if (userRequest[userId]["cacheData"]) {
     if (userRequest[userId]["cacheData"]["page"] === "cachePage") {
       url = userRequest[userId]["cacheData"]["url"];
       // urlDeepCheck = userRequest[userId]["cacheData"]["urlForUnusualDishes"];
-      // text = userRequest[userId]["cacheData"]["text"];
-      console.log(url);
-
-      // console.log(urlDeepCheck);
-      // console.log(text);
     } else if (userRequest[userId]["cacheData"]["page"] === "downloaded") {
       url = userRequest[userId]["data"]["url"];
       // urlDeepCheck = userRequest[userId]["data"]["urlForUnusualDishes"];
       // text = userRequest[userId]["data"]["text"][page];
-      console.log(url);
+      // console.log(url);
 
       // console.log(urlDeepCheck);
       // console.log(text);

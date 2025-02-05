@@ -32,6 +32,8 @@ function handlerQueryKeyboard(
   let messageReply;
   let keyboard;
   //
+  // console.log(queryData);
+  //
   if (/\w+\d/g.test(queryData)) {
     return createMessageReply(
       preparedDataForAccept[userId]["dishPortionFromUserMessage"],
@@ -44,7 +46,9 @@ function handlerQueryKeyboard(
   } else if (/\w+/g.test(queryData)) {
     if (queryData === "Accept") {
       messageReply = "That data is Accepted and saved into your Statistik";
-
+      // console.log("handlerQueryKeyboard");
+      // console.log(preparedDataForAccept);
+      // console.log("handlerQueryKeyboard");
       addDataIntoUserCache(
         userCache,
         preparedDataForAccept[userId]["dishFromRequest"],
@@ -54,6 +58,7 @@ function handlerQueryKeyboard(
         result["urlForUnusualChoosenDish"]
       );
       keyboard = {};
+
       // return {
       //   text: messageReply,
       //   keyboardAndParseMode: {
@@ -61,7 +66,12 @@ function handlerQueryKeyboard(
       //     keyboard,
       //   },
       // };
-    } else if (queryData === "Next") {
+    }
+    // else if (queryData === "Decline") {
+    //   console.log("hey i am going in Decline");
+    //   return;
+    // }
+    else if (queryData === "Next") {
       keyboard = createKeyboard(userRequest, userId);
       messageReply = arrayWithTextFromRequest.reduce((el, acc, index) => {
         return `${index}. ${acc}\n${el}`;
@@ -131,6 +141,7 @@ function handlerQueryKeyboard(
         // };
       }
     }
+
     return {
       text: messageReply,
       keyboardAndParseMode: {
@@ -141,8 +152,9 @@ function handlerQueryKeyboard(
   } else {
     return;
   }
+
   // console.log(`bot.js url: ${userRequest[userId]["data"]["url"]}`);
-  console.log(userRequest);
+  // console.log(userRequest);
 }
 
 module.exports = { handlerQueryKeyboard };
