@@ -44,11 +44,12 @@ function handlerQueryKeyboard(
       preparedDataForAccept[userId]["nameDishFromRequest"]
     );
   } else if (/\w+/g.test(queryData)) {
+    console.log("handlerQueryKeyboardhandlerQueryKeyboardhandlerQueryKeyboard");
+    console.log(userRequest[userId]["data"]["text"]);
+    console.log("handlerQueryKeyboardhandlerQueryKeyboardhandlerQueryKeyboard");
     if (queryData === "Accept") {
       messageReply = "That data is Accepted and saved into your Statistik";
-      // console.log("handlerQueryKeyboard");
-      // console.log(preparedDataForAccept);
-      // console.log("handlerQueryKeyboard");
+
       addDataIntoUserCache(
         userCache,
         preparedDataForAccept[userId]["dishFromRequest"],
@@ -58,31 +59,11 @@ function handlerQueryKeyboard(
         result["urlForUnusualChoosenDish"]
       );
       keyboard = {};
-
-      // return {
-      //   text: messageReply,
-      //   keyboardAndParseMode: {
-      //     parse_mode: "HTML",
-      //     keyboard,
-      //   },
-      // };
-    }
-    // else if (queryData === "Decline") {
-    //   console.log("hey i am going in Decline");
-    //   return;
-    // }
-    else if (queryData === "Next") {
+    } else if (queryData === "Next") {
       keyboard = createKeyboard(userRequest, userId);
       messageReply = arrayWithTextFromRequest.reduce((el, acc, index) => {
         return `${index}. ${acc}\n${el}`;
       }, "");
-      // return {
-      //   text: messageReply,
-      //   keyboardAndParseMode: {
-      //     parse_mode: "HTML",
-      //     keyboard,
-      //   },
-      // };
     } else if (queryData === "Previous") {
       if (userRequest[userId]["cacheData"]) {
         // console.log("deep");
@@ -107,38 +88,17 @@ function handlerQueryKeyboard(
         }
         // console.log(messageReply);
         keyboard = createKeyboard(userRequest, userId);
-        // return {
-        //   text: messageReply,
-        //   keyboardAndParseMode: {
-        //     parse_mode: "HTML",
-        //     keyboard,
-        //   },
-        // };
       } else if (userRequest[userId]["data"]) {
         messageReply = arrayWithTextFromRequest.reduce((el, acc, index) => {
           return `${index}. ${acc}\n${el}`;
         }, "");
         keyboard = createKeyboard(userRequest, userId);
-        // return {
-        //   text: messageReply,
-        //   keyboardAndParseMode: {
-        //     parse_mode: "HTML",
-        //     keyboard,
-        //   },
-        // };
       } else {
         console.log(
           "previus else doesnt wor because here we should change keyboard not in BOT"
         );
         messageReply =
           "Choose something different from the list or write something new.";
-        // return {
-        //   text: messageReply,
-        //   keyboardAndParseMode: {
-        //     parse_mode: "HTML",
-        //     keyboard,
-        //   },
-        // };
       }
     }
 
@@ -152,9 +112,6 @@ function handlerQueryKeyboard(
   } else {
     return;
   }
-
-  // console.log(`bot.js url: ${userRequest[userId]["data"]["url"]}`);
-  // console.log(userRequest);
 }
 
 module.exports = { handlerQueryKeyboard };

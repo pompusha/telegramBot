@@ -11,7 +11,9 @@ const { allVariables } = require("./handlers/allVariables");
 const { handlerQueryKeyboard } = require("./handlers/handlerQueryKeyboard");
 const { handlerText } = require("./handlers/handlerText");
 const { checkUserCache } = require("./cache/checkUserCache");
-// const { testHandlerText } = require("./handlers/testHandlerText");
+const {
+  idealConsumptionUserCalories,
+} = require("./handlers/idealConsumptionUserCalories");
 const { cacheFirstMessage } = require("./handlers/cacheFirstMessage");
 const { controlPrefiousPage } = require("./handlers/controlPrefiousPage");
 const { controlNextPage } = require("./handlers/controlNextPage");
@@ -26,7 +28,12 @@ const { cacheCheck } = require("./cache/cacheCheck");
 let preparedDataForAccept = {};
 const userRequest = {};
 const userMessageText = {};
-
+//
+let userParamiters = {};
+// let userParamiters = {
+//   userId: { h: null, w: null, gender: null, activity: null },
+// };
+//
 let userCache = {
   339084941: {
     "22-01-2020": {
@@ -90,13 +97,20 @@ bot.on("message", async (msg, match) => {
     dishFromMessage = msg.text
       .toLowerCase()
       .match(/((?!(\s?\d))(?!g\s))[a-z]+/g);
-
     if (msg.text === "Calories Consumed Per Day") {
       bot.sendMessage(msg.chat.id, await handlerText(msg));
     }
+    idealConsumptionUserCalories(userParamiters, msg);
+    //
 
+    console.log(userParamiters);
+    //
     if (/^\//g.test(msg.text) && !/\/\b[Ss]tart/g.test(msg.text)) {
       userId = msg.from.id;
+      // userCaloriesNormaPerDay();
+      // function userCaloriesNormaPerDay() {
+      //   console.log(userParamiters);
+      // }
 
       let date = new Date();
       let yy = date.getFullYear();

@@ -17,11 +17,15 @@ async function controlNextPage(userRequest, query) {
       userRequest[userId]["data"]["text"].length >
       userRequest[userId]["data"]["page"] + 1
     ) {
-      console.log("if controlNextPage");
+      // console.log("if controlNextPage");
       userRequest[userId]["data"]["page"] =
         userRequest[userId]["data"]["page"] + 1;
-      if (userRequest[userId]["cacheData"]["page"]) {
-        userRequest[userId]["cacheData"]["page"] = "downloaded";
+      if (userRequest[userId]["cacheData"]) {
+        // console.log("sec");
+        if (userRequest[userId]["cacheData"]["page"]) {
+          // console.log("third");
+          userRequest[userId]["cacheData"]["page"] = "downloaded";
+        }
       }
     }
     // !!!
@@ -29,6 +33,10 @@ async function controlNextPage(userRequest, query) {
       userRequest[userId]["data"]["text"].length ===
       userRequest[userId]["data"]["page"] + 1
     ) {
+      console.log("else if pagination");
+      console.log(
+        `length : ${userRequest[userId]["data"]["text"].length} === page ${userRequest[userId]["data"]["page"]}+1`
+      );
       nextDatapage = await pagination(
         userRequest[userId],
         query.data,

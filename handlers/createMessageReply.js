@@ -11,16 +11,16 @@ function createMessageReply(
   caloriesPerUserPortion,
   nameDishFromRequest
 ) {
-  console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-  console.log(dishPortionFromUserMessage);
-  console.log(dishFromRequest);
-  console.log(caloriesFromRequestChosenPortion);
-  //
-  console.log(portionFromSource);
-  //
-  console.log(caloriesPerUserPortion);
-  console.log(nameDishFromRequest);
-  console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+  // console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+  // console.log(dishPortionFromUserMessage);
+  // console.log(dishFromRequest);
+  // console.log(caloriesFromRequestChosenPortion);
+  // //
+  // console.log(portionFromSource);
+  // //
+  // console.log(caloriesPerUserPortion);
+  // console.log(nameDishFromRequest);
+  // console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
   let strPortionFromSource;
 
