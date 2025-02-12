@@ -29,7 +29,8 @@ let preparedDataForAccept = {};
 const userRequest = {};
 const userMessageText = {};
 //
-let userParamiters = {};
+let userParamiters = { 888881: 1758 };
+
 // let userParamiters = {
 //   userId: { h: null, w: null, gender: null, activity: null },
 // };
@@ -92,6 +93,34 @@ bot.onText(regExpSlashStart, (msg) => {
   );
 });
 
+function iformUserParamiters(msg) {
+  const message = `
+Hi! If you provide your parameters as:
+
+- **Weight**: \`.w\`  
+- **Height**: \`.h\`  
+- **Age**: \`.a\`  
+- **Gender**: \`.g\`  
+- **Physical activity coefficient"**: \`.p\` 
+Sedentary (Little or No Exercise) → 1.2 : \`.p1\`
+Lightly Active (Light Exercise/Sports 1-3 Days a Week) → 1.375: \`.p2\`
+Moderately Active (Moderate Exercise/Sports 3-5 Days a Week) → 1.55: \`.p3\`
+Very Active (Hard Exercise/Sports 6-7 Days a Week) → 1.725: \`.p4\`
+Super Active (Very Hard Exercise, Physical Job, or Training Twice a Day) → 1.9: \`.p5\`
+
+
+It will help us calculate your daily calorie needs and guide you to stay fit!  
+
+For example, you can type:  
+\.w 106 .h192 .a33 .g male .p4\  
+
+Let’s get started! 🚀
+  `;
+  if (msg.text === ".param") {
+    bot.sendMessage(msg.chat.id, message);
+  }
+}
+
 bot.on("message", async (msg, match) => {
   if (msg.text) {
     dishFromMessage = msg.text
@@ -100,10 +129,28 @@ bot.on("message", async (msg, match) => {
     if (msg.text === "Calories Consumed Per Day") {
       bot.sendMessage(msg.chat.id, await handlerText(msg));
     }
-    idealConsumptionUserCalories(userParamiters, msg);
-    //
 
-    console.log(userParamiters);
+    // userParamiters = {
+    //   ...userParamiters,
+    //   ...idealConsumptionUserCalories(userParamiters, msg),
+    // };
+    // idealConsumptionUserCalories(userParamiters, msg);
+    iformUserParamiters(msg);
+    //
+    if (/^\./g.test(msg.text) && msg.text != ".param") {
+      userParamiters = {
+        ...userParamiters,
+        ...idealConsumptionUserCalories(userParamiters, msg),
+      };
+      if (userParamiters[msg.from.id]) {
+        // console.log("AEEEEEEEE");
+        message = `You day caries eqvival ${
+          userParamiters[msg.from.id]
+        } if you want to change your paramiters you can do this again`;
+        return bot.sendMessage(msg.chat.id, message);
+      }
+    }
+    // console.log(userParamiters);
     //
     if (/^\//g.test(msg.text) && !/\/\b[Ss]tart/g.test(msg.text)) {
       userId = msg.from.id;
@@ -170,8 +217,12 @@ bot.on("message", async (msg, match) => {
       }
     }
   }
+  console.log("======");
+  console.log(userParamiters);
+  console.log("======");
 });
 //
+
 bot.on("callback_query", async (query) => {
   userId = query.message.chat.id;
   if (query.data) {

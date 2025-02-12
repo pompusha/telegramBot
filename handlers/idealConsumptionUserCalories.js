@@ -1,80 +1,113 @@
 function idealConsumptionUserCalories(userParamiters, msg) {
   let userId = msg.from.id;
-  let regexpW = /^(\.[wW])/g;
-  let regexpH = /^(\.[hH])/g;
-  let regexpA = /^(\.[aA])/g;
-  let regexpG = /^(\.[gG])/g;
-  let regfindDigits = /\d+/;
-  let regfindLetters = /(?<=\.g)\s?[aA-zZ]*/g;
-  let objKey;
+  let fullBoduParam;
+  let result;
+  let arrForCheckUndefineKeys;
   let value;
-  if (/^\.[wWhHaAgG]/g.test(msg.text)) {
-    // console.log(/^./g.test(msg.text));
+  let idAndPac;
+  let coefActiv = [1.2, 1.375, 1.55, 1.7, 1.9];
+  // if (/^\./g.test(msg.text) && msg.text != ".param") {
+  let regExpFindEverything =
+    // /(w\s?\d+|h\s?\d+|a\s?\d+|(?<=g)\s?(male|female)|p\s?\d+)/g;
+    /(w\s?\d+|h\s?\d+|a\s?\d+|g\s?(male|female)|p\s?\d+)/g;
+  // let firstLetter = /^\w/g;
+  const param = ["weigth", "heigth", "age", "gender", "pac"];
 
-    if (regexpW.test(msg.text)) {
-      objKey = "weigth";
-    } else if (regexpH.test(msg.text)) {
-      objKey = "heigth";
-    } else if (regexpA.test(msg.text)) {
-      objKey = "age";
-    } else if (regexpG.test(msg.text)) {
-      objKey = "gender";
-    }
-    if (objKey === "weigth" || objKey === "heigth" || objKey === "age") {
-      if (msg.text.match(regfindDigits) === null) {
-        return;
-      } else {
-        value = parseInt(msg.text.match(regfindDigits).toString());
+  userMessage = msg.text;
+  arrayFromUserMessage = userMessage.match(regExpFindEverything);
+  // console.log("++++");
+  // console.log(arrayFromUserMessage);
+  // console.log("++++");
+  if (arrayFromUserMessage != null) {
+    fullBoduParam = param.reduce((acc, ell) => {
+      let regexpDigits = /\d+/g;
+      let regexpGender = /\bmale|female/g;
+      // console.log(arrayFromUserMessage);
+      if (arrayFromUserMessage != null) {
+        result = arrayFromUserMessage.find((elem) => {
+          return (
+            elem.match(/^[aA-zZ]/g).toString() ===
+            ell.match(/^[aA-zZ]/g).toString()
+          );
+          // } else {
+        });
       }
-    } else if (objKey === "gender") {
-      value = msg.text
-        .match(regfindLetters)
-        .toString()
-        .replaceAll(",", "")
-        .trim();
 
-      console.log(value);
-    }
-    userParamiters[userId] = {
-      ...userParamiters[userId],
-      ...{ [objKey]: value },
-    };
-  }
-  //
+      if (result) {
+        if (regexpDigits.test(result)) {
+          if (result.match(regexpDigits) != null) {
+            result = parseFloat(result.match(regexpDigits).toString());
+          } else {
+            console.log("nullchik");
 
-  //
-  if (userParamiters[userId]) {
-    if (Object.keys(userParamiters[userId]).length >= 4) {
-      if (userParamiters[userId]["gender"] === "f") {
-        // console.log("summcull");
-        objKey = "totalDailyEnergyExpenditure";
-        value = Math.round(
-          655.1 +
-            9.563 * userParamiters[userId]["weigth"] +
-            1.85 * userParamiters[userId]["heigth"] -
-            4.676 * userParamiters[userId]["age"]
-        );
-        userParamiters = {
-          ...userParamiters[userId],
-          ...{ [objKey]: value },
-        };
-      } else if (userParamiters[userId]["gender"] === "m") {
-        objKey = "totalDailyEnergyExpenditure";
+            result = result.match(regexpGender).toString();
+            // console.log(` else result: ${result}`);
+          }
+        }
+      }
+
+      // console.log(result);
+      acc = { ...acc, ...{ [ell]: result } };
+      // acc.push({ [ell]: result });
+
+      return acc;
+    }, {});
+
+    arrForCheckUndefineKeys = Object.values(fullBoduParam);
+    // console.log(arrForCheckUndefineKeys);
+
+    if (
+      arrForCheckUndefineKeys.some(
+        (el) => el === undefined && userParamiters[userId]
+      )
+    ) {
+      console.log("Fill all information ");
+    } else {
+      console.log("No undefined");
+      // console.log(fullBoduParam);
+      // console.log("No undefined");
+      if (
+        fullBoduParam["gender"]?.match(/\b(male)|(female)/g).toString() ===
+        "male"
+      ) {
+        // console.log(coefActiv);
+
         value = Math.round(
           66.5 +
-            13.75 * userParamiters[userId]["weigth"] +
-            5.003 * userParamiters[userId]["heigth"] -
-            6.775 * userParamiters[userId]["age"]
+            13.75 * fullBoduParam["weigth"] +
+            5.003 * fullBoduParam["heigth"] -
+            6.775 * fullBoduParam["age"] * coefActiv[fullBoduParam["pac"] - 1]
         );
-        userParamiters = {
-          ...userParamiters[userId],
-          ...{ [objKey]: value },
-        };
+      } else {
+        console.log("else");
+
+        value = Math.round(
+          655.1 +
+            9.563 * fullBoduParam["weigth"] +
+            1.85 * fullBoduParam["heigth"] -
+            4.676 * fullBoduParam["age"] * coefActiv[fullBoduParam["pac"] - 1]
+        );
+      }
+      // console.log("!!!!!!!");
+      console.log(`value: ${value}`);
+      idAndPac = { [userId]: value };
+      console.log("++++");
+      console.log(idAndPac);
+      console.log("++++");
+      // userParamiters = { ...userParamiters, ...idAndPac };
+    }
+    if (idAndPac[userId]) {
+      if (isNaN(idAndPac[userId])) {
+        console.log("NaN");
+        console.log(idAndPac[userId]);
+      } else {
+        console.log("!=NaN");
+        return idAndPac;
       }
     }
-    console.log(Object.values(userParamiters[userId]));
-  } else {
-    return;
   }
+  console.log(arrForCheckUndefineKeys);
 }
+// }
+
 module.exports = { idealConsumptionUserCalories };
