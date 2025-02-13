@@ -24,7 +24,7 @@ const {
 } = require("./keyboard/bot_keyboards");
 const { cacheCheck } = require("./cache/cacheCheck");
 // const { pagination } = require("./api/pagination");
-
+const { insertTdee } = require("./database/inserTdee");
 let preparedDataForAccept = {};
 const userRequest = {};
 const userMessageText = {};
@@ -130,34 +130,29 @@ bot.on("message", async (msg, match) => {
       bot.sendMessage(msg.chat.id, await handlerText(msg));
     }
 
-    // userParamiters = {
-    //   ...userParamiters,
-    //   ...idealConsumptionUserCalories(userParamiters, msg),
-    // };
-    // idealConsumptionUserCalories(userParamiters, msg);
     iformUserParamiters(msg);
-    //
     if (/^\./g.test(msg.text) && msg.text != ".param") {
       userParamiters = {
         ...userParamiters,
         ...idealConsumptionUserCalories(userParamiters, msg),
       };
       if (userParamiters[msg.from.id]) {
+        insertTdee(userParamiters[msg.from.id], msg.from.id);
         // console.log("AEEEEEEEE");
         message = `You day caries eqvival ${
           userParamiters[msg.from.id]
         } if you want to change your paramiters you can do this again`;
-        return bot.sendMessage(msg.chat.id, message);
+        bot.sendMessage(msg.chat.id, message);
       }
+      delete userParamiters[msg.from.id];
+      console.log("userParamiters[userId] after delete");
+      console.log(userParamiters);
+      console.log("userParamiters[userId] after delete");
     }
     // console.log(userParamiters);
     //
     if (/^\//g.test(msg.text) && !/\/\b[Ss]tart/g.test(msg.text)) {
       userId = msg.from.id;
-      // userCaloriesNormaPerDay();
-      // function userCaloriesNormaPerDay() {
-      //   console.log(userParamiters);
-      // }
 
       let date = new Date();
       let yy = date.getFullYear();

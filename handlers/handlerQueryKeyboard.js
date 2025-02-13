@@ -44,11 +44,16 @@ function handlerQueryKeyboard(
       preparedDataForAccept[userId]["nameDishFromRequest"]
     );
   } else if (/\w+/g.test(queryData)) {
-    console.log("handlerQueryKeyboardhandlerQueryKeyboardhandlerQueryKeyboard");
-    console.log(userRequest[userId]["data"]["text"]);
-    console.log("handlerQueryKeyboardhandlerQueryKeyboardhandlerQueryKeyboard");
+    // console.log("handlerQueryKeyboardhandlerQueryKeyboardhandlerQueryKeyboard");
+    // console.log(userRequest[userId]["data"]["text"]);
+    // console.log("handlerQueryKeyboardhandlerQueryKeyboardhandlerQueryKeyboard");
     if (queryData === "Accept") {
       messageReply = "That data is Accepted and saved into your Statistik";
+      console.log("-----");
+      console.log(preparedDataForAccept[userId]["postAcceptedData"]);
+      console.log("-----");
+
+      insert(preparedDataForAccept[userId]["postAcceptedData"]);
 
       addDataIntoUserCache(
         userCache,
