@@ -4,6 +4,7 @@ const { Keyboard, Key } = require("telegram-keyboard");
 
 const keyboardAcceptDecline = Keyboard.make([
   [Key.callback("Accept", "Accept"), Key.callback("Decline", "Decline")],
+  // [Key.callback("Decline", "Decline")],
 ]).inline();
 //
 //
@@ -42,12 +43,6 @@ function createKeyboard(request, userId, previousPage, nextPage) {
   }
   //
   //
-  // rows = Math.ceil(request[userId]["data"]["text"][0].length / 5);
-  // keys = request[userId]["data"]["text"][0].map((el, index) =>
-  //   Key.callback(`${index}`, `action${index}`)
-  // );
-  //
-  //
   for (i = 0; i < rows; i++) {
     finalArrayForKeyBoard = [...finalArrayForKeyBoard, ...[keys.splice(0, 5)]];
   }
@@ -62,8 +57,13 @@ function createKeyboard(request, userId, previousPage, nextPage) {
 }
 
 const keyboardForSevenDaysStatistic = Keyboard.reply([
-  "Calories Consumed Per Day",
+  ["Calories Consumed Per Day"],
+  ["All dishes for the current day."],
 ]);
+
+// const keyboardAllDishesWhatYouHavePerDay = Keyboard.reply([
+//   "AllDishes in current day",
+// ]);
 
 module.exports = {
   keyboardAcceptDecline,

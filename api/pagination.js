@@ -9,21 +9,10 @@ async function pagination(userRequestUserId, command, page) {
     let newUrl;
     let pageNumber;
     try {
-      //
-      //
-      // https://www.nutracheck.co.uk/CaloriesIn/Product/Search?desc=Chicken+Thigh
-      // https://www.nutracheck.co.uk/CaloriesIn/Product/Search?desc=Chicken%20Thigh&page=0
-      // https://www.nutracheck.co.uk/CaloriesIn/Product/Search?desc=/cheese%20halloumi&page=1
-      // https://www.nutracheck.co.uk/CaloriesIn/Product/Search?desc=null&page=2
-      //
-      //
       if (userRequestUserId["cacheData"]) {
         if (userRequestUserId["cacheData"]["page"] === "cachePage") {
           userRequestUserId["cacheData"]["page"] = "downloaded";
           newUrl = new URL(userRequestUserId["cacheData"]["url"]);
-          console.log("pagination");
-          console.log(`newUrl : ${newUrl}  pagination.js`);
-          console.log("pagination");
           userRequestUserId["data"]["page"] = 0;
           return getProductCalories(newUrl.searchParams.toString());
         }
@@ -39,8 +28,6 @@ async function pagination(userRequestUserId, command, page) {
           userRequestUserId["data"]["page"] =
             userRequestUserId["data"]["page"] + 1;
           newUrl.searchParams.set("page", pageNumber + 1);
-
-          console.log(`pagination.js newUrl : ${newUrl}`);
 
           return getProductCalories(newUrl.searchParams.toString());
         } else {

@@ -30,7 +30,6 @@ async function checkUserCache(
     userCache[userId][currDate][dishFromMessage]["data"]["text"].size === 0 ||
     userCache[userId][currDate][dishFromMessage]["data"]["text"].size > 0
   ) {
-    console.log("checkUserCache.preparing to us cacheCheck");
     await cacheCheck(userCache, dishFromMessage, userRequest);
   }
 }

@@ -4,13 +4,8 @@ const URL = require("url");
 const { text } = require("stream/consumers");
 const { stringify } = require("querystring");
 async function getProductCalories(product) {
-  // https://www.nutracheck.co.uk/CaloriesIn/Product/Search?desc=Chicken+Thigh
-  // https://www.nutracheck.co.uk/CaloriesIn/Product/Search?desc=Chicken%20Thigh&page=0
-  // https://www.nutracheck.co.uk/CaloriesIn/Product/Search?desc=/cheese%20halloumi&page=1
-  // https://www.nutracheck.co.uk/CaloriesIn/Product/Search?desc=null&page=2
-  // AD URL WAY FOR COMPLICATED WORDS CONSISTS FROM MORE THEN ONE WORD "https://www.nutracheck.co.uk/CaloriesIn/Product/Search?desc=chiken+thigs"
-
   const url = `https://www.nutracheck.co.uk/CaloriesIn/Product/Search?${product}`;
+  console.log(`getProductCalories.js URL : ${url}`);
   try {
     const response = await axios.get(url);
     const $ = cheerio.load(response.data);
@@ -50,6 +45,7 @@ async function getProductCalories(product) {
           }),
       ],
     };
+
     return calorieInfo;
   } catch (error) {
     console.error(error);
