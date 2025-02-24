@@ -4,12 +4,14 @@ function summOfCallories(
   dishPortionFromUserMessage
 ) {
   if (portionFromSource) {
-    // console.log("111111111111111111");
     if (/\d+/.test(portionFromSource)) {
-      // console.log("22222222222222222");
-      // console.log(caloriesForChosenPortion);
-      // console.log(parseFloat(portionFromSource));
-      // console.log(dishPortionFromUserMessage);
+    } else {
+      portionFromSource = "1g";
+      dishPortionFromUserMessage > 5
+        ? (dishPortionFromUserMessage = 1)
+        : dishPortionFromUserMessage;
+    }
+    if (/\d+/.test(portionFromSource)) {
       const summ = (
         (caloriesForChosenPortion / parseFloat(portionFromSource)) *
         dishPortionFromUserMessage
@@ -17,7 +19,6 @@ function summOfCallories(
 
       return summ;
     } else {
-      console.log("vozvrat NULL tam gde CUP,MUG");
       return 0;
     }
   }

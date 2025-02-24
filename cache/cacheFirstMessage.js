@@ -10,9 +10,7 @@ function cacheFirstMessage(userRequest) {
     }
   } else {
     page = userRequest[userId]["data"]["page"];
-    // console.log("Выбирает первое сообщение в массиве если нет кеша");
-    // console.log(userRequest[userId]["data"]["text"][userRequest[userId]["data"]["text"]]);
-    // console.log("Выбирает первое сообщение в массиве если нет кеша");
+
     firstAnswer = userRequest[userId]["data"]["text"][page];
 
     return firstAnswer;

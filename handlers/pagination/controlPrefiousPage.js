@@ -9,14 +9,11 @@ async function controlPrefiousPage(userRequest) {
       if (userRequest[userId]["cacheData"]) {
         if (userRequest[userId]["cacheData"]["text"]) {
           userRequest[userId]["cacheData"]["page"] = "cachePage";
-          console.log("буду испольщовать кэшь обратно");
         }
       } else {
         return;
       }
     }
-
-    console.log(`page ${userRequest[userId]["data"]["page"]}`);
 
     //
   }

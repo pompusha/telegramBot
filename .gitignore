@@ -1,2 +1,7 @@
 # Ignore environment files
 .env
+node_modules
+error.log
+app.log
+
+!node_modules/.package-lock.json

@@ -1,7 +1,7 @@
 const {
   keyboardAcceptDecline,
   keyboardForSevenDaysStatistic,
-} = require("../keyboard/bot_keyboards");
+} = require("../../keyboard/bot_keyboards");
 
 function createMessageReply(
   dishPortionFromUserMessage,
@@ -9,26 +9,22 @@ function createMessageReply(
   caloriesFromRequestChosenPortion,
   portionFromSource,
   caloriesPerUserPortion,
-  nameDishFromRequest
+  nameDishFromRequest,
+  queryData
 ) {
-  // console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-  // console.log(dishPortionFromUserMessage);
-  // console.log(dishFromRequest);
-  // console.log(caloriesFromRequestChosenPortion);
-  // //
-  // console.log(portionFromSource);
-  // //
-  // console.log(caloriesPerUserPortion);
-  // console.log(nameDishFromRequest);
-  // console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-
   let strPortionFromSource;
 
   if (portionFromSource) {
     strPortionFromSource = portionFromSource.toString().replaceAll(" ", "");
 
     if (/[aA-zZ]{3,}/.test(strPortionFromSource)) {
-      messageReply = `The dish <i>${nameDishFromRequest}</i> contains <b>${caloriesFromRequestChosenPortion} calories</b> per <b>${portionFromSource}</b> portion.`;
+      //
+
+      messageReply = `${queryData
+        .match(/\d+/g)
+        .toString()}. The dish <i>${nameDishFromRequest}</i> contains <b>${caloriesFromRequestChosenPortion} calories</b> per <b>${dishPortionFromUserMessage} ${portionFromSource}</b>. Total calories: <b>${Math.floor(
+        caloriesPerUserPortion
+      )}</b>`;
       keyboard = keyboardAcceptDecline;
       return {
         text: messageReply,
@@ -38,7 +34,9 @@ function createMessageReply(
         },
       };
     } else if (/\d+(g|ml)/.test(strPortionFromSource)) {
-      messageReply = `The dish <i>${nameDishFromRequest}</i> contains <b>${caloriesFromRequestChosenPortion} calories</b>
+      messageReply = `${queryData
+        .match(/\d+/g)
+        .toString()}. The dish <i>${nameDishFromRequest}</i> contains <b>${caloriesFromRequestChosenPortion} calories</b>
 per portion of <b>${portionFromSource}</b>.
 If you consume a portion of <b>${~~dishPortionFromUserMessage}g</b>, it will amount to approximately <b>${~~caloriesPerUserPortion} calories</b>.`;
 
@@ -52,9 +50,6 @@ If you consume a portion of <b>${~~dishPortionFromUserMessage}g</b>, it will amo
       };
     }
   } else {
-    console.log(
-      "Change message and keyboard here for unusual type of dishes to see what i mean create simple request /white vine tesko 234"
-    );
     messageReply = dishFromRequest;
     keyboard = keyboardAcceptDecline;
     return {

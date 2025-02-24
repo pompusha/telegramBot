@@ -8,24 +8,31 @@ async function deeperRequestForUnusualDish(
   queryData
   // userRequest
 ) {
-  // const $ = await cheerio.load(userRequestUserIdDataResponse.data);
-
-  //www.nutracheck.co.uk/CaloriesIn/Product/   22/Sainsbury%27s+Santa%27s+Grotto+Cake+670g
-  // https://www.nutracheck.co.uk/CaloriesIn/Product/Search?desc=gpotato
-  // https://www.nutracheck.co.uk/CaloriesIn/Product/41/Sainsbury%27s+Santa%27s+Grotto+Sweets+Selection+250g+Frosty+Foams
+  regExpQuantityportionMLGandDigits = /\d+\.?\s?(ml|g)/g;
+  regExpAllBetweenPerandDash = /((?<=\bPer\s)(.*)(?=\s\-))/g;
 
   try {
     let url = `https://www.nutracheck.co.uk/CaloriesIn/Product/${urlForUnusualDishes}`;
-    console.log(`deeperRequestForUnusualDish.js deep parse url URL: ${url}`);
+    console.log(`deeperRequestForUnusualDish.js URL: ${url}`);
     let request = await axios.get(url);
 
     const $ = cheerio.load(request.data);
-    let callForGramsFromDeepParse = $("#prodDetails2 > h2 > span").text();
+    let callForGramsFromDeepParse = $(
+      "#prodDetails1 > h2 > span"
+      // "#prodDetails2 > h2 > span"
+    ).text();
 
     let gramsForPortionFromDeepParse = $(
-      "#prodbreakdown > select > option:nth-child(2)"
+      "#prodbreakdown > select > option"
     )?.text();
 
+    if (regExpQuantityportionMLGandDigits.test(gramsForPortionFromDeepParse)) {
+      console.log(
+        `deeperRequestForUnusualDish.js :${gramsForPortionFromDeepParse
+          .match(regExpQuantityportionMLGandDigits)[0]
+          .toString()}`
+      );
+    }
     if (
       callForGramsFromDeepParse.length === 0 ||
       gramsForPortionFromDeepParse.length === 0
@@ -46,9 +53,7 @@ async function deeperRequestForUnusualDish(
         .toString();
       return { callForGramsFromDeepParse, gramsForPortionFromDeepParse };
     }
-  } catch (error) {
-    // console.log(error);
-  }
+  } catch (error) {}
 }
 
 module.exports = {

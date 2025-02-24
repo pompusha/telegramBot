@@ -41,20 +41,18 @@ async function cacheCheck(userCache, dishFromMessage, userRequest) {
     (mergeTextForAllCache.length === 0) &
     (mergeUrlForUnusualDishesAllCashe.length === 0)
   ) {
-    console.log("Have no data in cache began download");
     userRequest[userId] = {
       data: await getProductCalories(`desc=${dishFromMessage}`),
     };
   }
   if (mergeTextForAllCache.length > 0) {
-    console.log("i have data in cache");
+    console.log(`Data in cache`);
 
     userRequest[userId] = {
       data: { page: 0 },
     };
-    //
+
     userRequest[userId]["cacheData"] = { page: "cachePage" };
-    // userRequest[userId]["cacheData"]["text"] = new Set();
     userRequest[userId]["cacheData"]["text"] = JSON.parse(
       JSON.stringify([...mergeTextForAllCache])
     );

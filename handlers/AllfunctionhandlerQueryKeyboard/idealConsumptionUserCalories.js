@@ -15,14 +15,12 @@ function idealConsumptionUserCalories(userParamiters, msg) {
 
   userMessage = msg.text;
   arrayFromUserMessage = userMessage.match(regExpFindEverything);
-  // console.log("++++");
-  // console.log(arrayFromUserMessage);
-  // console.log("++++");
+
   if (arrayFromUserMessage != null) {
     fullBoduParam = param.reduce((acc, ell) => {
       let regexpDigits = /\d+/g;
       let regexpGender = /\bmale|female/g;
-      // console.log(arrayFromUserMessage);
+
       if (arrayFromUserMessage != null) {
         result = arrayFromUserMessage.find((elem) => {
           return (
@@ -38,75 +36,52 @@ function idealConsumptionUserCalories(userParamiters, msg) {
           if (result.match(regexpDigits) != null) {
             result = parseFloat(result.match(regexpDigits).toString());
           } else {
-            console.log("nullchik");
-
             result = result.match(regexpGender).toString();
-            // console.log(` else result: ${result}`);
           }
         }
       }
-
-      // console.log(result);
       acc = { ...acc, ...{ [ell]: result } };
-      // acc.push({ [ell]: result });
-
       return acc;
     }, {});
 
     arrForCheckUndefineKeys = Object.values(fullBoduParam);
-    // console.log(arrForCheckUndefineKeys);
-
     if (
       arrForCheckUndefineKeys.some(
         (el) => el === undefined && userParamiters[userId]
       )
     ) {
-      console.log("Fill all information ");
     } else {
-      console.log("No undefined");
-      // console.log(fullBoduParam);
-      // console.log("No undefined");
       if (
         fullBoduParam["gender"]?.match(/\b(male)|(female)/g).toString() ===
         "male"
       ) {
-        // console.log(coefActiv);
-
         value = Math.round(
-          66.5 +
+          (66.5 +
             13.75 * fullBoduParam["weigth"] +
             5.003 * fullBoduParam["heigth"] -
-            6.775 * fullBoduParam["age"] * coefActiv[fullBoduParam["pac"] - 1]
+            6.775 * fullBoduParam["age"]) *
+            coefActiv[fullBoduParam["pac"] - 1]
         );
       } else {
-        console.log("else");
-
         value = Math.round(
-          655.1 +
+          (655.1 +
             9.563 * fullBoduParam["weigth"] +
             1.85 * fullBoduParam["heigth"] -
-            4.676 * fullBoduParam["age"] * coefActiv[fullBoduParam["pac"] - 1]
+            4.676 * fullBoduParam["age"]) *
+            coefActiv[fullBoduParam["pac"] - 1]
         );
       }
-      // console.log("!!!!!!!");
-      console.log(`value: ${value}`);
+
       idAndPac = { [userId]: value };
-      console.log("++++");
-      console.log(idAndPac);
-      console.log("++++");
-      // userParamiters = { ...userParamiters, ...idAndPac };
     }
     if (idAndPac[userId]) {
       if (isNaN(idAndPac[userId])) {
-        console.log("NaN");
-        console.log(idAndPac[userId]);
       } else {
-        console.log("!=NaN");
         return idAndPac;
       }
     }
   }
-  console.log(arrForCheckUndefineKeys);
+  console.log(`idealConsumptionUserCalories.js`);
 }
 // }
 
