@@ -18,17 +18,14 @@ async function deeperRequestForUnusualDish(
     let request = await axios.get(url);
 
     const $ = cheerio.load(request.data);
-    let callForGramsFromDeepParse = $(
-      "#prodDetails1 > h2 > span"
-      // "#prodDetails2 > h2 > span"
-    ).text();
+    let callForGramsFromDeepParse = $("#prodDetails1 > h2 > span").text();
 
     let gramsForPortionFromDeepParse = $(
       "#prodbreakdown > select > option"
     )?.text();
 
     console.log(
-      `\ngramsForPortionFromDeepParse :${gramsForPortionFromDeepParse}\n`
+      `\n!!!!!!!!!gramsForPortionFromDeepParse :${gramsForPortionFromDeepParse}\n`
     );
     if (regExpQuantityportionMLGandDigits.test(gramsForPortionFromDeepParse)) {
       console.log(

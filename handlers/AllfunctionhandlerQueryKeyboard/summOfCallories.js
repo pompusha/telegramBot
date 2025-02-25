@@ -3,15 +3,17 @@ function summOfCallories(
   portionFromSource,
   dishPortionFromUserMessage
 ) {
+  regExpGMLper = /\d+(g|ml)/g;
   if (portionFromSource) {
-    if (/\d+/.test(portionFromSource)) {
+    if (regExpGMLper.test(portionFromSource)) {
+      //
     } else {
       portionFromSource = "1g";
       dishPortionFromUserMessage > 5
         ? (dishPortionFromUserMessage = 1)
         : dishPortionFromUserMessage;
     }
-    if (/\d+/.test(portionFromSource)) {
+    if (regExpGMLper.test(portionFromSource)) {
       console.log(
         `\n summcall caloriesForChosenPortion ${caloriesForChosenPortion}\n parseFloat(portionFromSource) :${parseFloat(
           portionFromSource

@@ -30,12 +30,16 @@ async function allVariables(queryData, userMessageText, userRequestUserId) {
   caloriesFromRequestChosenPortion = parseInt(
     dishFromRequest.match(regExpDigitCalories)
   );
-
+  //
+  //
+  //
   portionFromSource = dishFromRequest
     .match(regExpAllBetweenPerandDash)
     .toString()
     .match(regExpQuantityportionMLGandDigits);
-
+  //
+  //
+  //
   if (
     regExpQuantityportionMLGandDigits.test(
       dishFromRequest.match(regExpAllBetweenPerandDash)
@@ -66,22 +70,31 @@ async function allVariables(queryData, userMessageText, userRequestUserId) {
     console.log(
       `allVariables.js something wrong into non digts zone ${dishFromRequest}`
     );
+    //
+    //
+    //
     portionFromSource = dishFromRequest
       .match(regExpAllBetweenPerandDash)
       .toString();
-
+    //
+    //
+    //
     gramsCalorisFromDeepParse = await deeperRequestForUnusualDish(
       cashOrDownoladed,
       queryData
     );
-
+    //
+    //
+    //
     console.log(`allVariables.js portionFromSource : ${portionFromSource}`);
     //
     if (!portionFromSource) {
       if (gramsCalorisFromDeepParse) {
         portionFromSource =
           gramsCalorisFromDeepParse["gramsForPortionFromDeepParse"];
-        console.log(`\nall variables portionFromSource ${portionFromSource}\n`);
+        console.log(
+          `\nall variables IF portionFromSource ${portionFromSource}\n`
+        );
         caloriesFromRequestChosenPortion =
           gramsCalorisFromDeepParse["callForGramsFromDeepParse"];
         //
