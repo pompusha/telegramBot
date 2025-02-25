@@ -12,6 +12,11 @@ function summOfCallories(
         : dishPortionFromUserMessage;
     }
     if (/\d+/.test(portionFromSource)) {
+      console.log(
+        `\n summcall caloriesForChosenPortion ${caloriesForChosenPortion}\n parseFloat(portionFromSource) :${parseFloat(
+          portionFromSource
+        )} \n dishPortionFromUserMessage ${dishPortionFromUserMessage}\n`
+      );
       const summ = (
         (caloriesForChosenPortion / parseFloat(portionFromSource)) *
         dishPortionFromUserMessage

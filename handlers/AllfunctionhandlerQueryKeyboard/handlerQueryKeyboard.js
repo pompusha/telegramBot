@@ -13,8 +13,7 @@ const { addDataIntoUserCache } = require("../../cache/addDataIntoUserCache");
 const {
   fillArrayWithTextFromRequest,
 } = require("../../cache/fillArrayWithTextFromRequest");
-//
-//
+
 function handlerQueryKeyboard(
   preparedDataForAccept,
   queryData,
@@ -33,7 +32,7 @@ function handlerQueryKeyboard(
   let messageReply;
   let keyboard;
 
-  if (/\w+\d/g.test(queryData)) {
+  if (/\baction\d+/.test(queryData)) {
     return createMessageReply(
       preparedDataForAccept[userId]["dishPortionFromUserMessage"],
       preparedDataForAccept[userId]["dishFromRequest"],

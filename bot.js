@@ -9,7 +9,7 @@ const token = process.env.BOT_TOKEN;
 const bot = new TelegramBot(token, { polling: true });
 const {
   allVariables,
-} = require("./handlers/AllfunctionhandlerQueryKeyboard/allVariables");
+} = require("./handlers/AllfunctionhandlerQueryKeyboard/allVariablesmodules/allVariables");
 const {
   handlerQueryKeyboard,
 } = require("./handlers/AllfunctionhandlerQueryKeyboard/handlerQueryKeyboard");
@@ -38,13 +38,14 @@ const { logger } = require("./logger_winston");
 const { deletefromDB } = require("./database/delete");
 let preparedDataForAccept = {};
 userRequest = {};
+userId = null;
 const userMessageText = {};
 const regExpDel = /^\/[Dd]el/;
 let fullDishlist = [];
 let dishlistRemovePagination;
 //
 let userParamiters = { 888881: 1758 };
-
+let regExpDigit = /\d+/g;
 let userCache = {
   339084941: {
     "22-01-2020": {
@@ -69,13 +70,13 @@ let userCache = {
 };
 
 let result;
-let dishFromRequest;
-let caloriesFromRequestChosenPortion;
-let postAcceptedData;
-let portionFromSource;
-let caloriesPerUserPortion;
-let dishPortionFromUserMessage;
-let nameDishFromRequest;
+// let dishFromRequest;
+// let caloriesFromRequestChosenPortion;
+// let postAcceptedData;
+// let portionFromSource;
+// let caloriesPerUserPortion;
+// let dishPortionFromUserMessage;
+// let nameDishFromRequest;
 let safetedMessageForChancge;
 let currDate;
 let dishFromMessage;
@@ -239,16 +240,13 @@ bot.on("callback_query", async (query) => {
 
         await controlPrefiousPage(userRequest);
       }
-
       if (Object.keys(userRequest) != 0) {
         if (query.data.match("action")) {
           result = await allVariables(
             query.data,
-            // вот тут хуйня почему то иногда выпадает понять как воспроизвести
             userMessageText[userId]["text"],
             userRequest[userId]
           );
-
           preparedDataForAccept = {
             ...preparedDataForAccept,
             [userId]: result,
