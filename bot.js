@@ -262,6 +262,7 @@ bot.on("callback_query", async (query) => {
           dishFromMessage,
           result
         );
+        // console.log(userRequest);
         bot.editMessageText(`${messageText["text"]}`, {
           chat_id: query.message.chat.id,
           message_id: dishlistRemovePagination[userId],

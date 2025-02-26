@@ -7,7 +7,6 @@ function summOfCallories(
   if (portionFromSource) {
     if (regExpGMLper.test(portionFromSource)) {
       //
-
       console.log(`\nportionFromSource :${portionFromSource}\n`);
     } else {
       portionFromSource = "1g";

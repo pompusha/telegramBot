@@ -1,6 +1,7 @@
 const { summOfCallories } = require("../summOfCallories");
 const { createDishFromRequest } = require("./createDishFromRequest");
 const { deeperRequestForUnusualDish } = require("../../../api/deeperRequest");
+const { createPortionFromSource } = require("./createPortionFromSource");
 async function allVariables(queryData, userMessageText, userRequestUserId) {
   let dishFromRequest;
   let urlForUnusualChoosenDish;
@@ -11,7 +12,10 @@ async function allVariables(queryData, userMessageText, userRequestUserId) {
   const regExpDigitCalories = /\d+(?=\s\bcalories\b)/g;
   const regExpQuantityportionMLGandDigits = /\d+\.?\s?(ml|g)/g;
   const regExpAllBetweenPerandDash = /((?<=\bPer\s)(.*)(?=\s\-))/g;
-
+  const regExpDigitSlashDigit = /\d+\/\d+/;
+  let cashOrDownoladed;
+  //
+  //
   if (userRequestUserId["data"]["text"]) {
     dishFromRequest = createDishFromRequest(
       userRequestUserId["data"]["text"][userRequestUserId["data"]["page"]],
@@ -33,20 +37,24 @@ async function allVariables(queryData, userMessageText, userRequestUserId) {
   //
   //
   //
-  portionFromSource = dishFromRequest
-    .match(regExpAllBetweenPerandDash)
-    .toString()
-    .match(regExpQuantityportionMLGandDigits);
+  // portionFromSource =await createPortionFromSource(dishFromRequest,queryData, cashOrDownoladed);
+  // dishFromRequest
+  //   .match(regExpAllBetweenPerandDash)
+  //   .toString()
+  //   .match(regExpQuantityportionMLGandDigits);
+
   //
+  // createPortionFromSource(dishFromRequest);
+  // console.log(`portionFromSource FIRST !!! ${portionFromSource}`);
   //
-  //
+
   if (
     regExpQuantityportionMLGandDigits.test(
       dishFromRequest.match(regExpAllBetweenPerandDash)
     )
   ) {
   } else {
-    let cashOrDownoladed;
+    // let cashOrDownoladed;
 
     if (userRequestUserId["cacheData"]) {
       if (userRequestUserId["cacheData"]["page"] === "cachePage") {
@@ -70,42 +78,59 @@ async function allVariables(queryData, userMessageText, userRequestUserId) {
     console.log(
       `allVariables.js something wrong into non digts zone ${dishFromRequest}`
     );
+
     //
     //
     //
-    portionFromSource = dishFromRequest
-      .match(regExpAllBetweenPerandDash)
-      .toString();
+    // portionFromSource = dishFromRequest
+    //   .match(regExpAllBetweenPerandDash)
+    //   .toString();
+    //
+    // console.log(`portionFromSource before deep Parse ${portionFromSource}`);
+    //
+
+    // checkPortionFromSource(portionFromSource, dishFromRequest);
+    //
+    // gramsCalorisFromDeepParse = await deeperRequestForUnusualDish(
+    //   cashOrDownoladed,
+    //   queryData
+    // );
+    //
+    //
+    // console.log(`allVariables.js portionFromSource : ${portionFromSource}`);
+    //
+    // checkPortionFromSource(portionFromSource, dishFromRequest);
     //
     //
     //
-    gramsCalorisFromDeepParse = await deeperRequestForUnusualDish(
-      cashOrDownoladed,
-      queryData
-    );
-    //
-    //
-    //
-    console.log(`allVariables.js portionFromSource : ${portionFromSource}`);
-    //
-    if (!portionFromSource) {
-      if (gramsCalorisFromDeepParse) {
-        portionFromSource =
-          gramsCalorisFromDeepParse["gramsForPortionFromDeepParse"];
-        console.log(
-          `\nall variables IF portionFromSource ${portionFromSource}\n`
-        );
-        caloriesFromRequestChosenPortion =
-          gramsCalorisFromDeepParse["callForGramsFromDeepParse"];
-        //
-      } else {
-        portionFromSource = dishFromRequest
-          .match(regExpAllBetweenPerandDash)
-          .toString();
-      }
-    }
+    // if (!portionFromSource) {
+    //   if (gramsCalorisFromDeepParse) {
+    //     portionFromSource =
+    //       gramsCalorisFromDeepParse["gramsForPortionFromDeepParse"];
+    //     console.log(
+    //       `\nall variables IF portionFromSource ${portionFromSource}\n`
+    //     );
+    //     caloriesFromRequestChosenPortion =
+    //       gramsCalorisFromDeepParse["callForGramsFromDeepParse"];
+    //     //
+    //   } else {
+    //     portionFromSource = dishFromRequest
+    //       .match(regExpAllBetweenPerandDash)
+    //       .toString();
+    //     console.log("!!!!!!");
+    //   }
+    // }
   }
   //
+  portionFromSource = await createPortionFromSource(
+    dishFromRequest,
+    queryData,
+    cashOrDownoladed
+  );
+  //
+  console.log(
+    `\nallVariab  caloriesFromRequestChosenPortion:${caloriesFromRequestChosenPortion}\nportionFromSource:${portionFromSource}\ndishPortionFromUserMessage:${dishPortionFromUserMessage}`
+  );
 
   caloriesPerUserPortion = summOfCallories(
     caloriesFromRequestChosenPortion,

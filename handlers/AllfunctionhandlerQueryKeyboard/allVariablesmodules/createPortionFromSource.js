@@ -1,0 +1,59 @@
+const { deeperRequestForUnusualDish } = require("../../../api/deeperRequest");
+
+async function createPortionFromSource(
+  dishFromRequest,
+  queryData,
+  cashOrDownoladed
+) {
+  const everithingBetweenPerDash = /(?<=Per)(.*)(?=\-)/g;
+  const regExpDigitSlashDigit = /\d+\/\d+/;
+  const regExpFractionDigits = /(\d+(?=\/))/g;
+  const regExpFractionDigitsSec = /((?<=\/)\d+)/g;
+  const regExpGramsForFracture = /\d+(?=g|ml\s?\bPer)/g;
+  const regExpGMLper = /\d+(g|ml)/g;
+  let portion;
+  // const regExpOnlyLetters =/[aA-zZ]+/g
+
+  // /\d+(?=g|ml)/g;
+
+  let firstMatchPortionFromSource = dishFromRequest
+    .match(everithingBetweenPerDash)[0]
+    .trim();
+
+  if (regExpDigitSlashDigit.test(firstMatchPortionFromSource)) {
+    let matchGramsForFraction = dishFromRequest.match(regExpGramsForFracture);
+    let gramsForFraction = matchGramsForFraction
+      ? parseFloat(matchGramsForFraction[0])
+      : 1;
+
+    let portionMathFraction1st =
+      firstMatchPortionFromSource.match(regExpFractionDigits);
+    let portionMathFraction2st = firstMatchPortionFromSource.match(
+      regExpFractionDigitsSec
+    );
+
+    portion =
+      (gramsForFraction / portionMathFraction2st[0]) *
+      portionMathFraction1st[0];
+
+    portion = portion + "g";
+    console.log(`portion newFunctional :${portion}`);
+    // return portion;
+    return portion;
+  } else if (regExpGMLper.test(firstMatchPortionFromSource)) {
+    portion =
+      parseFloat(firstMatchPortionFromSource.match(regExpGMLper)[0]) + "g";
+    console.log(`checkPortionFromSource elseif d+g|ml: ${portion}`);
+    return portion;
+  } else {
+    portion = "1g";
+    console.log(`checkPortionFromSource false: ${portion}`);
+    // gramsCalorisFromDeepParse = await deeperRequestForUnusualDish(
+    //   cashOrDownoladed,
+    //   queryData
+    // );
+    return portion;
+  }
+}
+
+module.exports = { createPortionFromSource };

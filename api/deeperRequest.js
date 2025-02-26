@@ -9,8 +9,8 @@ async function deeperRequestForUnusualDish(
   // userRequest
 ) {
   let regExpQuantityportionMLGandDigits = /\d+\.?\s?(ml|g)/g;
-  let regExpAllBetweenPerandDash = /((?<=\bPer\s)(.*)(?=\s\-))/g;
-  let regExpGMLper = /\d+(g|ml)/g;
+  // let regExpAllBetweenPerandDash = /((?<=\bPer\s)(.*)(?=\s\-))/g;
+  // let regExpGMLper = /\d+(g|ml)/g;
 
   try {
     let url = `https://www.nutracheck.co.uk/CaloriesIn/Product/${urlForUnusualDishes}`;
@@ -25,14 +25,18 @@ async function deeperRequestForUnusualDish(
     )?.text();
 
     console.log(
-      `\n!!!!!!!!!gramsForPortionFromDeepParse :${gramsForPortionFromDeepParse}\n`
+      `\ndeeperRequestForUnusualDish callForGramsFromDeepParse:${callForGramsFromDeepParse}`
     );
+    console.log(
+      `deeperRequestForUnusualDish gramsForPortionFromDeepParse:${gramsForPortionFromDeepParse}\n`
+    );
+    //
+    //
+
+    //
+    //
+
     if (regExpQuantityportionMLGandDigits.test(gramsForPortionFromDeepParse)) {
-      console.log(
-        `deeperRequestForUnusualDish.js :${gramsForPortionFromDeepParse
-          .match(regExpQuantityportionMLGandDigits)[0]
-          .toString()}`
-      );
     }
     if (
       callForGramsFromDeepParse.length === 0 ||
