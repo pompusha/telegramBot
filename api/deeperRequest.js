@@ -8,8 +8,9 @@ async function deeperRequestForUnusualDish(
   queryData
   // userRequest
 ) {
-  regExpQuantityportionMLGandDigits = /\d+\.?\s?(ml|g)/g;
-  regExpAllBetweenPerandDash = /((?<=\bPer\s)(.*)(?=\s\-))/g;
+  let regExpQuantityportionMLGandDigits = /\d+\.?\s?(ml|g)/g;
+  let regExpAllBetweenPerandDash = /((?<=\bPer\s)(.*)(?=\s\-))/g;
+  let regExpGMLper = /\d+(g|ml)/g;
 
   try {
     let url = `https://www.nutracheck.co.uk/CaloriesIn/Product/${urlForUnusualDishes}`;
@@ -17,15 +18,15 @@ async function deeperRequestForUnusualDish(
     let request = await axios.get(url);
 
     const $ = cheerio.load(request.data);
-    let callForGramsFromDeepParse = $(
-      "#prodDetails1 > h2 > span"
-      // "#prodDetails2 > h2 > span"
-    ).text();
+    let callForGramsFromDeepParse = $("#prodDetails1 > h2 > span").text();
 
     let gramsForPortionFromDeepParse = $(
       "#prodbreakdown > select > option"
     )?.text();
 
+    console.log(
+      `\n!!!!!!!!!gramsForPortionFromDeepParse :${gramsForPortionFromDeepParse}\n`
+    );
     if (regExpQuantityportionMLGandDigits.test(gramsForPortionFromDeepParse)) {
       console.log(
         `deeperRequestForUnusualDish.js :${gramsForPortionFromDeepParse
@@ -51,6 +52,7 @@ async function deeperRequestForUnusualDish(
       callForGramsFromDeepParse = callForGramsFromDeepParse
         .match(/\d+/g)
         .toString();
+
       return { callForGramsFromDeepParse, gramsForPortionFromDeepParse };
     }
   } catch (error) {}
