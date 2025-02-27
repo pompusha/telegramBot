@@ -38,7 +38,7 @@ const { logger } = require("./logger_winston");
 const { deletefromDB } = require("./database/delete");
 let preparedDataForAccept = {};
 userRequest = {};
-userId = null;
+userId;
 const userMessageText = {};
 const regExpDel = /^\/[Dd]el/;
 let fullDishlist = [];
@@ -70,13 +70,6 @@ let userCache = {
 };
 
 let result;
-// let dishFromRequest;
-// let caloriesFromRequestChosenPortion;
-// let postAcceptedData;
-// let portionFromSource;
-// let caloriesPerUserPortion;
-// let dishPortionFromUserMessage;
-// let nameDishFromRequest;
 let safetedMessageForChancge;
 let currDate;
 let dishFromMessage;

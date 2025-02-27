@@ -11,10 +11,8 @@ async function createPortionFromSource(
   const regExpFractionDigitsSec = /((?<=\/)\d+)/g;
   const regExpGramsForFracture = /\d+(?=g|ml\s?\bPer)/g;
   const regExpGMLper = /\d+(g|ml)/g;
+  const regExpOnlyWords = /[aA-zZ]+/g;
   let portion;
-  // const regExpOnlyLetters =/[aA-zZ]+/g
-
-  // /\d+(?=g|ml)/g;
 
   let firstMatchPortionFromSource = dishFromRequest
     .match(everithingBetweenPerDash)[0]
@@ -38,21 +36,24 @@ async function createPortionFromSource(
 
     portion = portion + "g";
     console.log(`portion newFunctional :${portion}`);
-    // return portion;
+
     return portion;
   } else if (regExpGMLper.test(firstMatchPortionFromSource)) {
     portion =
       parseFloat(firstMatchPortionFromSource.match(regExpGMLper)[0]) + "g";
     console.log(`checkPortionFromSource elseif d+g|ml: ${portion}`);
     return portion;
-  } else {
-    portion = "1g";
+  } else if (regExpOnlyWords.test(firstMatchPortionFromSource)) {
+    portion = firstMatchPortionFromSource;
     console.log(`checkPortionFromSource false: ${portion}`);
-    // gramsCalorisFromDeepParse = await deeperRequestForUnusualDish(
-    //   cashOrDownoladed,
-    //   queryData
-    // );
+    console.log(firstMatchPortionFromSource);
+
     return portion;
+  } else {
+    gramsCalorisFromDeepParse = await deeperRequestForUnusualDish(
+      cashOrDownoladed,
+      queryData
+    );
   }
 }
 
