@@ -21,7 +21,7 @@ function createMessageReply(
     if (regExpOnlyWords.test(portionFromSource)) {
       messageReply = `${queryData
         .match(/\d+/g)
-        .toString()}. The dish <i>${nameDishFromRequest}</i> contains <b>${caloriesFromRequestChosenPortion} calories</b> per <b>${dishPortionFromUserMessage} ${portionFromSource}</b>. Total calories: <b>${Math.floor(
+        .toString()}. The dish <i>${nameDishFromRequest}</i> contains <b>${caloriesFromRequestChosenPortion} calories</b> per <b> ${portionFromSource}</b>. Total calories: <b>${Math.floor(
         caloriesPerUserPortion
       )}</b>`;
       keyboard = keyboardAcceptDecline;

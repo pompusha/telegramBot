@@ -41,12 +41,11 @@ async function createPortionFromSource(
   } else if (regExpGMLper.test(firstMatchPortionFromSource)) {
     portion =
       parseFloat(firstMatchPortionFromSource.match(regExpGMLper)[0]) + "g";
-    console.log(`checkPortionFromSource elseif d+g|ml: ${portion}`);
+
     return portion;
   } else if (regExpOnlyWords.test(firstMatchPortionFromSource)) {
     portion = firstMatchPortionFromSource;
     console.log(`checkPortionFromSource false: ${portion}`);
-    console.log(firstMatchPortionFromSource);
 
     return portion;
   } else {
