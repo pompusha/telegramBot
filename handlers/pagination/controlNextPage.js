@@ -1,4 +1,3 @@
-// controlNextPage
 const { getProductCalories } = require("../../api/getProductCalories");
 const { pagination } = require("../../api/pagination");
 async function controlNextPage(userRequest, query) {

@@ -1,5 +1,4 @@
 const { createMessageReply } = require("../createrMessages/createMessageReply");
-// const { summOfCallories } = require("./summOfCallories");
 const {
   keyboardForSevenDaysStatistic,
   keyboardAcceptDecline,
@@ -13,8 +12,7 @@ const { addDataIntoUserCache } = require("../../cache/addDataIntoUserCache");
 const {
   fillArrayWithTextFromRequest,
 } = require("../../cache/fillArrayWithTextFromRequest");
-//
-//
+
 function handlerQueryKeyboard(
   preparedDataForAccept,
   queryData,
@@ -33,7 +31,7 @@ function handlerQueryKeyboard(
   let messageReply;
   let keyboard;
 
-  if (/\w+\d/g.test(queryData)) {
+  if (/\baction\d+/.test(queryData)) {
     return createMessageReply(
       preparedDataForAccept[userId]["dishPortionFromUserMessage"],
       preparedDataForAccept[userId]["dishFromRequest"],
@@ -46,10 +44,6 @@ function handlerQueryKeyboard(
   } else if (/\w+/g.test(queryData)) {
     if (queryData === "Accept") {
       messageReply = `${preparedDataForAccept[userId]["postAcceptedData"][1]} \n Total Calories: ${preparedDataForAccept[userId]["postAcceptedData"][3]}.\nThis data has been accepted and saved into your statistics.`;
-
-      console.log(
-        `preparedDataForAccept :${preparedDataForAccept[userId]["postAcceptedData"]}`
-      );
 
       insert(preparedDataForAccept[userId]["postAcceptedData"]);
 

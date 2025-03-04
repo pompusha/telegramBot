@@ -1,7 +1,6 @@
-// const { createMessageReply } = require("./createMessageReply");
-const { summOfCallories } = require("./summOfCallories");
-
-const { deeperRequestForUnusualDish } = require("../../api/deeperRequest");
+const { summOfCallories } = require("../summOfCallories");
+const { createDishFromRequest } = require("./createDishFromRequest");
+const { createPortionFromSource } = require("./createPortionFromSource");
 async function allVariables(queryData, userMessageText, userRequestUserId) {
   let dishFromRequest;
   let urlForUnusualChoosenDish;
@@ -12,38 +11,34 @@ async function allVariables(queryData, userMessageText, userRequestUserId) {
   const regExpDigitCalories = /\d+(?=\s\bcalories\b)/g;
   const regExpQuantityportionMLGandDigits = /\d+\.?\s?(ml|g)/g;
   const regExpAllBetweenPerandDash = /((?<=\bPer\s)(.*)(?=\s\-))/g;
-  //
+  const regExpDigitSlashDigit = /\d+\/\d+/;
+  let cashOrDownoladed;
 
   if (userRequestUserId["data"]["text"]) {
-    dishFromRequest =
-      userRequestUserId["data"]["text"][userRequestUserId["data"]["page"]][
-        numberFromQueruData
-      ].toString();
+    dishFromRequest = createDishFromRequest(
+      userRequestUserId["data"]["text"][userRequestUserId["data"]["page"]],
+      numberFromQueruData
+    );
   }
+
   if (userRequestUserId["cacheData"]) {
     if (userRequestUserId["cacheData"]["page"] === "cachePage") {
-      dishFromRequest =
-        userRequestUserId["cacheData"]["text"][numberFromQueruData].toString();
+      dishFromRequest = createDishFromRequest(
+        userRequestUserId["cacheData"]["text"],
+        numberFromQueruData
+      );
     }
   }
   caloriesFromRequestChosenPortion = parseInt(
     dishFromRequest.match(regExpDigitCalories)
   );
-  //
-  portionFromSource = dishFromRequest
-    .match(regExpAllBetweenPerandDash)
-    .toString()
-    .match(regExpQuantityportionMLGandDigits);
 
-  //
   if (
     regExpQuantityportionMLGandDigits.test(
       dishFromRequest.match(regExpAllBetweenPerandDash)
     )
   ) {
   } else {
-    let cashOrDownoladed;
-
     if (userRequestUserId["cacheData"]) {
       if (userRequestUserId["cacheData"]["page"] === "cachePage") {
         cashOrDownoladed =
@@ -62,32 +57,13 @@ async function allVariables(queryData, userMessageText, userRequestUserId) {
           userRequestUserId["data"]["page"]
         ][numberFromQueruData];
     }
-    //
-    console.log(
-      `allVariables.js something wrong into non digts zone ${dishFromRequest}`
-    );
-    portionFromSource = dishFromRequest
-      .match(regExpAllBetweenPerandDash)
-      .toString();
-
-    gramsCalorisFromDeepParse = await deeperRequestForUnusualDish(
-      cashOrDownoladed,
-      queryData
-    );
-
-    console.log(`allVariables.js portionFromSource : ${portionFromSource}`);
-    if (gramsCalorisFromDeepParse) {
-      portionFromSource =
-        gramsCalorisFromDeepParse["gramsForPortionFromDeepParse"];
-      caloriesFromRequestChosenPortion =
-        gramsCalorisFromDeepParse["callForGramsFromDeepParse"];
-    } else {
-      portionFromSource = dishFromRequest
-        .match(regExpAllBetweenPerandDash)
-        .toString();
-    }
   }
-  //
+
+  portionFromSource = await createPortionFromSource(
+    dishFromRequest,
+    queryData,
+    cashOrDownoladed
+  );
 
   caloriesPerUserPortion = summOfCallories(
     caloriesFromRequestChosenPortion,
@@ -112,7 +88,6 @@ async function allVariables(queryData, userMessageText, userRequestUserId) {
         userRequestUserId["data"]["urlForUnusualDishes"][
           userRequestUserId["data"]["page"]
         ][numberFromQueruData];
-      //
     }
   } else {
     urlForUnusualChoosenDish = ["deep links are not available."];

@@ -6,11 +6,10 @@ function idealConsumptionUserCalories(userParamiters, msg) {
   let value;
   let idAndPac;
   let coefActiv = [1.2, 1.375, 1.55, 1.7, 1.9];
-  // if (/^\./g.test(msg.text) && msg.text != ".param") {
+
   let regExpFindEverything =
-    // /(w\s?\d+|h\s?\d+|a\s?\d+|(?<=g)\s?(male|female)|p\s?\d+)/g;
     /(w\s?\d+|h\s?\d+|a\s?\d+|g\s?(male|female)|p\s?\d+)/g;
-  // let firstLetter = /^\w/g;
+
   const param = ["weigth", "heigth", "age", "gender", "pac"];
 
   userMessage = msg.text;
@@ -27,7 +26,6 @@ function idealConsumptionUserCalories(userParamiters, msg) {
             elem.match(/^[aA-zZ]/g).toString() ===
             ell.match(/^[aA-zZ]/g).toString()
           );
-          // } else {
         });
       }
 
@@ -81,8 +79,6 @@ function idealConsumptionUserCalories(userParamiters, msg) {
       }
     }
   }
-  console.log(`idealConsumptionUserCalories.js`);
 }
-// }
 
 module.exports = { idealConsumptionUserCalories };

@@ -1,7 +1,6 @@
 const { getProductCalories } = require("../api/getProductCalories");
 
 async function cacheCheck(userCache, dishFromMessage, userRequest) {
-  // let b = [];
   let mergeTextForAllCache = [];
   let mergeUrlForUnusualDishesAllCashe = [];
   let cacheUrl;
@@ -46,8 +45,6 @@ async function cacheCheck(userCache, dishFromMessage, userRequest) {
     };
   }
   if (mergeTextForAllCache.length > 0) {
-    console.log(`Data in cache`);
-
     userRequest[userId] = {
       data: { page: 0 },
     };
@@ -56,19 +53,13 @@ async function cacheCheck(userCache, dishFromMessage, userRequest) {
     userRequest[userId]["cacheData"]["text"] = JSON.parse(
       JSON.stringify([...mergeTextForAllCache])
     );
-    //
+
     userRequest[userId]["cacheData"]["urlForUnusualDishes"] = JSON.parse(
       JSON.stringify([...mergeUrlForUnusualDishesAllCashe])
     );
-    //
 
     userRequest[userId]["cacheData"]["url"] = cacheUrl;
-    // userRequest[userId]["data"]["url"] = cacheUrl;
-
-    //
-    //
   }
 }
-//
-//
+
 module.exports = { cacheCheck };

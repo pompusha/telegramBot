@@ -1,6 +1,4 @@
-// controlPrefiousPage
-
-async function controlPrefiousPage(userRequest) {
+async function controlPreviousPage(userRequest) {
   if (userRequest[userId]) {
     if (userRequest[userId]["data"]["page"] > 0) {
       userRequest[userId]["data"]["page"] =
@@ -14,10 +12,7 @@ async function controlPrefiousPage(userRequest) {
         return;
       }
     }
-
-    //
   }
 }
-//
-//
-module.exports = { controlPrefiousPage };
+
+module.exports = { controlPreviousPage };

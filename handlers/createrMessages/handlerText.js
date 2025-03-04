@@ -1,9 +1,7 @@
 const { getStatistic } = require("../../database/statistic");
-
+const { logger } = require("../logger/logger_winston");
 async function handlerText(msg, fullDishlist, command) {
   try {
-    // let command;
-
     if (command === "sumGet") {
       let avgPerPeriod = await getStatistic(msg.from.id, command);
 
@@ -32,7 +30,7 @@ async function handlerText(msg, fullDishlist, command) {
     } else if (command === "listget") {
       let avgPerPeriod = await getStatistic(msg.from.id, command);
       let arrTextForMEss = avgPerPeriod.map((el, index) => {
-        return `${index}. ${el["dish"]}  ${el["dish_portion"]} ${el["calories_per_portion"]}`;
+        return `${index}. ${el["dish"]}  ${el["dish_portion"]}  ${el["calories_per_portion"]}`;
       });
 
       let idfordelLIst = [];
@@ -49,8 +47,8 @@ async function handlerText(msg, fullDishlist, command) {
 
       return { message, fullDishlist };
     }
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    logger.error(error);
   }
 }
 
