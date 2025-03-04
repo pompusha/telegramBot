@@ -37,8 +37,8 @@ function createKeyboard(request, userId, page) {
     finalArrayForKeyBoard = [...finalArrayForKeyBoard, ...[keys.splice(0, 5)]];
   }
   finalArrayForKeyBoard.push([
-    Key.callback(`${page} Previous`, "Previous"),
-    Key.callback(`${page} Next`, "Next"),
+    Key.callback(`Previous`, "Previous"),
+    Key.callback(`Next`, "Next"),
   ]);
 
   return Keyboard.make(finalArrayForKeyBoard).inline();

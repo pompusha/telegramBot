@@ -1,5 +1,3 @@
-// controlPrefiousPage
-
 async function controlPrefiousPage(userRequest) {
   if (userRequest[userId]) {
     if (userRequest[userId]["data"]["page"] > 0) {
@@ -14,10 +12,7 @@ async function controlPrefiousPage(userRequest) {
         return;
       }
     }
-
-    //
   }
 }
-//
-//
+
 module.exports = { controlPrefiousPage };

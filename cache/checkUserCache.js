@@ -23,8 +23,6 @@ async function checkUserCache(
         url: "",
       },
     };
-    //
-    //
   }
   if (
     userCache[userId][currDate][dishFromMessage]["data"]["text"].size === 0 ||

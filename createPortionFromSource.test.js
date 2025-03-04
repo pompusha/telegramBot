@@ -1,14 +1,3 @@
-// import { describe, test, it, expect } from "vitest";
-// import { createPortionFromSource } from "./handlers/AllfunctionhandlerQueryKeyboard/allVariablesmodules/createPortionFromSource";
-// describe("createPortionFromSource", () => {
-//   it("should extract 'Average chocolate' from the input string", () => {
-//     const a =
-//       "Calories in Quality Street Chocolates (individual) Per Average chocolate - 45 calories | 1.9 fat";
-//     const result = createPortionFromSource(a);
-//     expect(result).toBe("1g");
-//   });
-// });
-
 import { describe, it, expect } from "vitest";
 import { createPortionFromSource } from "./handlers/AllfunctionhandlerQueryKeyboard/allVariablesmodules/createPortionFromSource";
 

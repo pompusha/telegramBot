@@ -36,15 +36,11 @@ function addDataIntoUserCache(
         `${urlForUnusualChoosenDish}`,
       ]),
     ];
-    //
 
-    //
     userCache[userId][currDate][dishFromMessage]["data"]["text"].add([
       JSON.parse(JSON.stringify(dishFromRequest)),
     ]);
-    // ВоТ эта сука
   }
-  // ВоТ эта сука
 }
 
 module.exports = { addDataIntoUserCache };

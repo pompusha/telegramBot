@@ -1,5 +1,4 @@
 const { createMessageReply } = require("../createrMessages/createMessageReply");
-// const { summOfCallories } = require("./summOfCallories");
 const {
   keyboardForSevenDaysStatistic,
   keyboardAcceptDecline,

@@ -1,11 +1,12 @@
 const cheerio = require("cheerio");
 const axios = require("axios");
 const URL = require("url");
+const { logger } = require("../handlers/logger/logger_winston");
 const { text } = require("stream/consumers");
 const { stringify } = require("querystring");
 async function getProductCalories(product) {
   const url = `https://www.nutracheck.co.uk/CaloriesIn/Product/Search?${product}`;
-  console.log(`getProductCalories.js URL : ${url}`);
+
   try {
     const response = await axios.get(url);
     const $ = cheerio.load(response.data);
@@ -48,7 +49,7 @@ async function getProductCalories(product) {
 
     return calorieInfo;
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     return "Request error";
   }
 }

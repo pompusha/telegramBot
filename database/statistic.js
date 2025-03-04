@@ -1,8 +1,8 @@
 const mysql = require("mysql2");
 const { pool } = require("./pool");
+const { logger } = require("../handlers/logger/logger_winston");
 
 async function getStatistic(id, command, fullDishlist) {
-  console.log("WAKE UP DATABASE");
   let sqlSELECT;
   try {
     const selectValues = [id];
@@ -30,8 +30,8 @@ WHERE dc.id_from_phone_contact = ?
 
       return list;
     }
-  } catch (err) {
-    `error ${err}`;
+  } catch (error) {
+    logger.error(error);
   }
 }
 

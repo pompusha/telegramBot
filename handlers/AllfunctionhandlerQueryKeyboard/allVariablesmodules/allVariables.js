@@ -1,6 +1,5 @@
 const { summOfCallories } = require("../summOfCallories");
 const { createDishFromRequest } = require("./createDishFromRequest");
-// const { deeperRequestForUnusualDish } = require("../../../api/deeperRequest");
 const { createPortionFromSource } = require("./createPortionFromSource");
 async function allVariables(queryData, userMessageText, userRequestUserId) {
   let dishFromRequest;
@@ -58,20 +57,12 @@ async function allVariables(queryData, userMessageText, userRequestUserId) {
           userRequestUserId["data"]["page"]
         ][numberFromQueruData];
     }
-
-    console.log(
-      `allVariables.js something wrong into non digts zone ${dishFromRequest}`
-    );
   }
 
   portionFromSource = await createPortionFromSource(
     dishFromRequest,
     queryData,
     cashOrDownoladed
-  );
-
-  console.log(
-    `\nallVariab  caloriesFromRequestChosenPortion:${caloriesFromRequestChosenPortion}\nportionFromSource:${portionFromSource}\ndishPortionFromUserMessage:${dishPortionFromUserMessage}`
   );
 
   caloriesPerUserPortion = summOfCallories(

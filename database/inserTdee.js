@@ -1,5 +1,5 @@
 require("dotenv").config();
-
+const { logger } = require("../handlers/logger/logger_winston");
 const { pool } = require("./pool");
 
 async function insertTdee(tde, userId) {
@@ -9,8 +9,8 @@ async function insertTdee(tde, userId) {
     const insertParam =
       "INSERT INTO `tdee` (`PersonID`, `TDEE`) VALUES ( ? , ? ) ON DUPLICATE KEY UPDATE `TDEE`=?";
     const [result, fields] = await pool.query(insertParam, parametersData);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    logger.error(error);
   }
 }
 module.exports = {

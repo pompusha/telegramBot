@@ -35,7 +35,6 @@ async function createPortionFromSource(
       portionMathFraction1st[0];
 
     portion = portion + "g";
-    console.log(`portion newFunctional :${portion}`);
 
     return portion;
   } else if (regExpGMLper.test(firstMatchPortionFromSource)) {
@@ -45,7 +44,6 @@ async function createPortionFromSource(
     return portion;
   } else if (regExpOnlyWords.test(firstMatchPortionFromSource)) {
     portion = firstMatchPortionFromSource;
-    console.log(`checkPortionFromSource false: ${portion}`);
 
     return portion;
   } else {

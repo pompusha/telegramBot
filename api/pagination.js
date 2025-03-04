@@ -2,8 +2,8 @@ const cheerio = require("cheerio");
 const axios = require("axios");
 const { URL } = require("url");
 const { getProductCalories } = require("./getProductCalories");
+const { logger } = require("../handlers/logger/logger_winston");
 
-// const { Url } = require("url");
 async function pagination(userRequestUserId, command, page) {
   if (command === "Next") {
     let newUrl;
@@ -17,7 +17,7 @@ async function pagination(userRequestUserId, command, page) {
           return getProductCalories(newUrl.searchParams.toString());
         }
       }
-      //
+
       if (
         !userRequestUserId["cacheData"] ||
         userRequestUserId["cacheData"]["page"] === "downloaded"
@@ -35,12 +35,9 @@ async function pagination(userRequestUserId, command, page) {
         }
       }
     } catch (error) {
-      console.error(error);
-      return "Request error";
+      logger.error(error);
     }
-  }
-  //
-  else if (command === "Previous") {
+  } else if (command === "Previous") {
     try {
       if (page > 0) {
         return;
@@ -52,7 +49,7 @@ async function pagination(userRequestUserId, command, page) {
         }
       }
     } catch (error) {
-      console.log(error);
+      logger.error(error);
     }
   }
 }
