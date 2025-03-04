@@ -1,5 +1,5 @@
 const { controlNextPage } = require("./controlNextPage");
-const { controlPrefiousPage } = require("./controlPrefiousPage");
+const { controlPreviousPage } = require("./controlPreviousPage");
 
 async function nextPrevPage(userRequest, query) {
   if (query.data === "Next") {
@@ -8,7 +8,7 @@ async function nextPrevPage(userRequest, query) {
     }
   }
   if (query.data === "Previous") {
-    await controlPrefiousPage(userRequest);
+    await controlPreviousPage(userRequest);
   }
 }
 
