@@ -4,15 +4,21 @@ const { pool } = require("./pool");
 
 async function insertTdee(tde, userId) {
   try {
-    let parametersData = [userId, tde, tde];
+    const parametersData = [userId, tde];
 
-    const insertParam =
-      "INSERT INTO `tdee` (`PersonID`, `TDEE`) VALUES ( ? , ? ) ON DUPLICATE KEY UPDATE `TDEE`=?";
-    const [result, fields] = await pool.query(insertParam, parametersData);
+    const insertParam = `
+      INSERT INTO tdee ("personid", "tdee") 
+      VALUES ($1, $2) 
+      ON CONFLICT ("personid") 
+      DO UPDATE SET "tdee" = EXCLUDED."tdee";
+    `;
+
+    const { rows } = await pool.query(insertParam, parametersData);
   } catch (error) {
     logger.error(error);
   }
 }
+
 module.exports = {
   insertTdee,
 };

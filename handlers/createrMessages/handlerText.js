@@ -5,19 +5,19 @@ async function handlerText(msg, fullDishlist, command) {
     if (command === "sumGet") {
       let avgPerPeriod = await getStatistic(msg.from.id, command);
 
-      if (avgPerPeriod[0]["TDEE"]) {
-        resultCall = avgPerPeriod[0]["TDEE"] - avgPerPeriod[0]["SUMCall"];
+      if (avgPerPeriod[0]["tdee"]) {
+        resultCall = avgPerPeriod[0]["tdee"] * 0.8 - avgPerPeriod[0]["SUMCall"];
       }
 
       if (avgPerPeriod[0]?.["SUMCall"] != null) {
         let message;
         message = "";
-        if (avgPerPeriod[0]?.["TDEE"] != null) {
+        if (avgPerPeriod[0]?.["tdee"] != null) {
           message = `You consume ${Math.floor(
             avgPerPeriod[0]["SUMCall"]
           )} calories per day. Your usual norm is ${Math.floor(
-            avgPerPeriod[0]["TDEE"]
-          )}. You have ${resultCall} calories left to eat.`;
+            avgPerPeriod[0]["tdee"]
+          )}. You have  ${Math.round(resultCall)} calories left to eat.`;
         } else {
           message = `You consume ${Math.floor(
             avgPerPeriod[0]["SUMCall"]

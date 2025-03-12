@@ -1,14 +1,13 @@
-const mysql = require("mysql2/promise");
-require("dotenv").config();
+const { Pool } = require("pg");
 
-const pool = mysql.createPool({
-  connectionLimit: 10,
-  host: "localhost",
-  user: "Ermax",
-  password: process.env.DB_PASSWORD,
-  database: `calloriesbotdata`,
+const connectionString =
+  "postgresql://postgres.nzsxzigvqeidfyfldyff:proTyberanec1@aws-0-eu-west-2.pooler.supabase.com:6543/postgres";
+
+const pool = new Pool({
+  connectionString: connectionString,
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
 
-module.exports = {
-  pool,
-};
+module.exports = { pool };
