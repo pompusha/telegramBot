@@ -57,11 +57,8 @@ bot.on("message", async (msg, match) => {
       if (msg.text === "Calories Consumed Per Day") {
         bot.sendMessage(
           msg.chat.id,
-          //
-          (await handlerText(msg, fullDishlist, "sumGet")) || "Error 404"
-          //
 
-          //
+          (await handlerText(msg, fullDishlist, "sumGet")) || "Error 404"
         );
       } else if (msg.text === "All dishes for the current day.") {
         message =
