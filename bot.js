@@ -35,7 +35,18 @@ let safetedMessageForChancge;
 let currDate;
 let dishFromMessage;
 comeback = [];
+const express = require("express");
 const regExpSlashStart = /\/start/;
+const app = express();
+app.get("/", (req, res) => {
+  res.send("Bot is running...");
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server is listening on port ${PORT}`);
+});
+
 bot.on("polling_error", (error) => {
   console.log(`[polling_error] ${error.code}: ${error.message}`);
 });
