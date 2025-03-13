@@ -43,7 +43,7 @@ console.log("Wake up SERVER");
 bot.onText(regExpSlashStart, (msg) => {
   bot.sendMessage(
     msg.chat.id,
-    "Welcome! If you want to find the calories of your dishes, write the name of your dish followed by the weight in grams after /, like /chicken 200.",
+    "Welcome! To find the calorie content of your dish, type the dish name followed by the weight in grams after a /, like /chicken 200. You can also add your personal parameters and weight. If you're interested, type .param for further instructions.",
     keyboardForSevenDaysStatistic
   );
 });
@@ -57,10 +57,14 @@ bot.on("message", async (msg, match) => {
       if (msg.text === "Calories Consumed Per Day") {
         bot.sendMessage(
           msg.chat.id,
-          await handlerText(msg, fullDishlist, "sumGet")
+
+          (await handlerText(msg, fullDishlist, "sumGet")) ||
+            "You haven't consumed any food today, or there may be an issue with the DailyCalories database."
         );
       } else if (msg.text === "All dishes for the current day.") {
-        message = await handlerText(msg, fullDishlist, "listget");
+        message =
+          (await handlerText(msg, fullDishlist, "listget")) ||
+          "We have an issue with the DailyCalories table";
         bot
           .sendMessage(
             msg.chat.id,
@@ -81,7 +85,8 @@ If you would like to remove anything, please use /del followed by the dish numbe
         if (fullDishlist[msg.from.id]) {
           await deletefromDB(msg, fullDishlist);
         }
-        message = await handlerText(msg, fullDishlist, "listget");
+        message =
+          (await handlerText(msg, fullDishlist, "listget")) || "Error 404";
         fullDishlist = { ...fullDishlist, ...message["fullDishlist"] };
 
         if (safetedMessageForChancge != undefined) {
@@ -103,8 +108,10 @@ If you would like to remove anything, please use /del followed by the dish numbe
         if (userParamiters[msg.from.id]) {
           insertTdee(userParamiters[msg.from.id], msg.from.id);
 
-          message = `Your daily calorie equivalent is ${
+          message = `Your daily calorie requirement is ${
             userParamiters[msg.from.id]
+          }. To lose weight, you should consume ${
+            userParamiters[msg.from.id] * 0.8
           }. If you want to change your parameters, you can do so again.`;
           bot.sendMessage(msg.chat.id, message);
         }

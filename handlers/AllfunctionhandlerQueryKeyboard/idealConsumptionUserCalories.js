@@ -50,8 +50,7 @@ function idealConsumptionUserCalories(userParamiters, msg) {
     ) {
     } else {
       if (
-        fullBoduParam["gender"]?.match(/\b(male)|(female)/g).toString() ===
-        "male"
+        fullBoduParam["gender"]?.match(/\b(male|female)/g).toString() === "male"
       ) {
         value = Math.round(
           (66.5 +

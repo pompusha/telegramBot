@@ -4,15 +4,16 @@ const { pool } = require("./pool");
 
 async function insert(postData) {
   try {
-    const sqlINSERTtdee = "INSERT INTO `tdee` ( `PersonID`, `TDEE` )";
+    const sqlINSERT = `
+      INSERT INTO dailycalories 
+      (id_from_phone_contact, dish, dish_portion, calories_per_portion, date) 
+      VALUES ($1, $2, $3, $4, CURRENT_DATE)
+    `;
 
-    const sqlINSERT =
-      "INSERT INTO `dailycalories` ( `id_from_phone_contact`, `dish`, `dish_portion`, `calories_per_portion`, `date`) VALUES (?, ?, ?, ?, CURDATE())";
-    const [result, fields] = await pool.query(sqlINSERT, postData);
+    await pool.query(sqlINSERT, postData);
   } catch (error) {
-    logger.error(error);
+    console.error(error);
   }
 }
-module.exports = {
-  insert,
-};
+
+module.exports = { insert };
