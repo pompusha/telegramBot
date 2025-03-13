@@ -5,7 +5,7 @@ async function handlerText(msg, fullDishlist, command) {
     if (command === "sumGet") {
       let avgPerPeriod = await getStatistic(msg.from.id, command);
 
-      if (avgPerPeriod[0]["tdee"]) {
+      if (avgPerPeriod?.[0]?.["tdee"]) {
         resultCall = avgPerPeriod[0]["tdee"] * 0.8 - avgPerPeriod[0]["SUMCall"];
       }
 
@@ -25,7 +25,7 @@ async function handlerText(msg, fullDishlist, command) {
         }
         return message;
       } else {
-        return `I don't have enough data to generate this.You need to add parameters (use the command: .param)`;
+        return `I don't have enough data to generate this. You need to eat something or add parameters (use the command: .param)`;
       }
     } else if (command === "listget") {
       let avgPerPeriod = await getStatistic(msg.from.id, command);

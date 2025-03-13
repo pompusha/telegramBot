@@ -58,11 +58,13 @@ bot.on("message", async (msg, match) => {
         bot.sendMessage(
           msg.chat.id,
 
-          (await handlerText(msg, fullDishlist, "sumGet")) || "Error 404"
+          (await handlerText(msg, fullDishlist, "sumGet")) ||
+            "You haven't consumed any food today, or there may be an issue with the DailyCalories database."
         );
       } else if (msg.text === "All dishes for the current day.") {
         message =
-          (await handlerText(msg, fullDishlist, "listget")) || "Error 404";
+          (await handlerText(msg, fullDishlist, "listget")) ||
+          "We have an issue with the DailyCalories table";
         bot
           .sendMessage(
             msg.chat.id,
